@@ -1,11 +1,6 @@
 package com.structure.SimQ;
 
-public class SimQTransition {
+public class SimQssHATrans {
 	private String from, to;
 	private String Guard;
-	private 
-	
-	SimQTransition(){
-		
-	}
 }
