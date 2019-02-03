@@ -1,0 +1,38 @@
+CC     = "X:\MATLAB\R2013b\sys\lcc64\lcc64\bin\lcc64.exe"
+LD     = "X:\MATLAB\R2013b\sys\lcc64\lcc64\bin\lcclnk64.exe"
+LIBCMD = "X:\MATLAB\R2013b\sys\lcc64\lcc64\bin\lcclib64.exe"
+CFLAGS = -dll -noregistrylookup  -c -Zp8 -DLCC_WIN64 -DMATLAB_MEX_FILE -DMX_COMPAT_32 -nodeclspec 
+LDFLAGS = -s -dll -L"X:\MATLAB\R2013b\sys\lcc64\lcc64\lib64" -entry LibMain -map sfun.map 
+LIBFLAGS = 
+
+OBJECTS = \
+	"example1_sfun.obj"\
+	"c1_example1.obj"\
+	"example1_sfun_registry.obj"\
+	"lccstub.obj"\
+	"example1_sfun.def"\
+	"X:\MATLAB\R2013b\stateflow\c\mex\lib\win64\sfc_mexlcc64.lib"\
+	"X:\MATLAB\R2013b\stateflow\c\debugger\lib\win64\sfc_debuglcc64.lib"\
+	"X:\MATLAB\R2013b\extern\lib\win64\microsoft\libmwblas.lib"\
+	"X:\MATLAB\R2013b\extern\lib\win64\microsoft\libmx.lib"\
+	"X:\MATLAB\R2013b\extern\lib\win64\microsoft\libmex.lib"\
+	"X:\MATLAB\R2013b\extern\lib\win64\microsoft\libmat.lib"\
+	"X:\MATLAB\R2013b\extern\lib\win64\microsoft\libfixedpoint.lib"\
+	"X:\MATLAB\R2013b\extern\lib\win64\microsoft\libut.lib"\
+	"X:\MATLAB\R2013b\extern\lib\win64\microsoft\libmwmathutil.lib"\
+	"X:\MATLAB\R2013b\extern\lib\win64\microsoft\libemlrt.lib"\
+	"X:\MATLAB\R2013b\lib\win64\libippmwipt.lib"\
+
+INCLUDE_PATH= -I"X:\MATLAB\R2013b\sys\lcc64\lcc64\include64"  -I"X:\MATLAB\R2013b\extern\include"  -I"X:\MATLAB\R2013b\simulink\include"  -I"X:\MATLAB\R2013b\rtw\c\src"  -I"X:\MATLAB\R2013b\stateflow\c\mex\include"  -I"X:\MATLAB\R2013b\stateflow\c\debugger\include"  -I"X:\MATLAB\R2013b\toolbox\stateflow\src\sf_runtime\export\include\sf_runtime" 
+ 
+
+example1_sfun.mexw64 : $(MAKEFILE) $(OBJECTS)
+	$(LD) $(LDFLAGS) -o example1_sfun.mexw64 @example1_sfun.lmko
+example1_sfun.obj :	"example1_sfun.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "example1_sfun.c"
+c1_example1.obj :	"c1_example1.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c1_example1.c"
+example1_sfun_registry.obj :	"example1_sfun_registry.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "example1_sfun_registry.c"
+lccstub.obj :	"X:\MATLAB\R2013b\sys\lcc64\lcc64\mex\lccstub.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "X:\MATLAB\R2013b\sys\lcc64\lcc64\mex\lccstub.c"
