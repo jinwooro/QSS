@@ -35,6 +35,6 @@ public class SimQssHALoc {
 
 	@Override
 	public String toString() {
-		return "SimQssHALoc [name=" + name + ", inv=" + inv + ", f=" + f + ", h=" + h + "]";
+		return "[\n\t name=" + name + "\n\t inv=" + inv + "\n\t f=" + f + "\n\t h=" + h + "]\n";
 	}	
 }

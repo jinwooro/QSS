@@ -20,6 +20,7 @@ import com.structure.SimQ.SimQssHA;
 
 import org.conqat.lib.simulink.model.stateflow.StateflowBlock;
 import org.conqat.lib.simulink.model.stateflow.StateflowChart;
+import org.conqat.lib.simulink.model.stateflow.StateflowData;
 import org.conqat.lib.simulink.model.stateflow.StateflowDeclContainerBase;
 import org.conqat.lib.simulink.model.stateflow.StateflowMachine;
 import org.conqat.lib.simulink.model.stateflow.StateflowNodeBase;
@@ -31,33 +32,59 @@ import java.util.HashSet;
 
 public class SimulinkConvert {
 
+	SimulinkUtils utils = new SimulinkUtils();
+
+	public static SimQssHA getHA(StateflowChart chart) {
+		// Create a new HA instance with the chart name
+		SimQssHA ha = new SimQssHA(chart.getName());
+		
+		// Extract location and edge information
+		for (StateflowNodeBase n : chart.getNodes()) {
+			ha.addLocation(n.getResolvedId().toString());
+			// Extract transitions associated with each location
+			for (StateflowTransition t : n.getInTransitions()) {
+				if (t.getSrc() == null) {
+					ha.setInitLoc(t.getDst().getResolvedId().toString().split("\\r?\\n")[0]);
+				}
+				else {
+					String src = t.getSrc().getResolvedId().toString().split("\\r?\\n")[0];
+					String dst = t.getDst().getResolvedId().toString().split("\\r?\\n")[0];
+					ha.addEdge(src, dst, t.obtainLabelData().getText());
+				}
+			}
+		}
+		
+		// Extract the variable names and the initial values
+		for (StateflowData data : chart.getData()) {
+			ha.addVariable("name", 0);
+		}
+		return ha;
+	}
+	
 	public static void main(String[] args) throws SimulinkModelBuildingException, ZipException, IOException {
-	    File file = new File("resource/example1.mdl");
+	    File file = new File("resource/example1.slx");
 	    try (SimulinkModelBuilder builder = new SimulinkModelBuilder(file, new SimpleLogger())) {
 	    	 
 	    	SimulinkModel model = builder.buildModel();
 	    	HashSet<String> namesStateflowCharts = new HashSet<String>();
-	    	SimulinkUtils utils = new SimulinkUtils();
 	    	HashMap<String, SimQssHA> HAs = new HashMap<String, SimQssHA>();
-	    	
-	    	
-	    	
 	    	
 	    	// Iterate over the stateflow blocks first
 	    	for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
 	    		namesStateflowCharts.add(chart.getName());
-	    		SimQssHA ha = new SimQssHA(chart.getName(), "Stateflow");
+	    		
+				System.out.println("***************HA generated: " + getHA(chart) + "\n");	
+				
 	    		
 	    		// Add the location names
 	    		for (StateflowNodeBase b : chart.getNodes()) {
-	    			String[] parts = b.getResolvedId().split("\\r?\\n");
-	    			ha.addLocation(parts[0]);
 	    			// TODO: add f and h
 	    			// How to filter the string is the problem
+	    			
 		    	} 
 	    		
 		    }
-	    	
+    	
 	    	// Extracting information of the Simulink blocks
 	    	// Name, type, inputs, outputs
 	    	for (SimulinkBlock block : model.getSubBlocks()) {
@@ -65,17 +92,9 @@ public class SimulinkConvert {
 				System.out.println("Type: " + block.getType());
 				System.out.println("Input ports: " + block.getInPorts());
 				System.out.println("Output ports: " + block.getOutPorts());
-				System.out.println("Parameter Value: " + block.obtainLabelData().getText());
+				System.out.println("Parameter Value: " + block.getParameter("Value"));
 	    	}
 	      
-	    	// Extracting information of the stateflow charts. 
-	      
-	    	
-	    	System.out.println("All the targets: " + model.getStateflowMachine().getTargets().toString());
-	    	for (StateflowTarget a : model.getStateflowMachine().getTargets()) {
-	    		System.out.println("Each target: " + a.getName());
-	    	}
-	    	
 			for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
 				System.out.println("Chart name: " + chart.getName());
 
@@ -86,9 +105,7 @@ public class SimulinkConvert {
 					System.out.println("Nodes: " + parts[0]);
 				}
 				
-				for (StateflowTransition trans : utils.getAllTransitions(chart)) {
-					System.out.println("Transition Text:" + trans.obtainLabelData().getText());
-				}
+
 			}
 	      	      
 	      
