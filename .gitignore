@@ -1,4 +1,4 @@
-resource/slprj/*
+resource/slprj*
 *.png
 generated*
 bin*
