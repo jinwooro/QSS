@@ -25,7 +25,10 @@ public class SimQssHA {
 	// A set of continuous variables is a structure that includes:
 	// 1. Name of the valuation
 	// 2. Initial value
-	private HashMap<String, Double> variables  = new HashMap<String, Double>();
+	private HashMap<String, Double> contVar  = new HashMap<String, Double>();
+	private HashMap<String, Double> inputs  = new HashMap<String, Double>();
+	private HashMap<String, Double> outputs  = new HashMap<String, Double>();
+	private HashMap<String, Double> discVar  = new HashMap<String, Double>();
 	
 	private String initLoc;
 	
@@ -41,6 +44,23 @@ public class SimQssHA {
 		
 		String[] parts = node.split("\\r?\\n");
 		locName = parts[0];
+		
+		int mode = 0; // A temporary variable that indicates "du" or "en" or "du, en"
+		for (String p : parts) {
+			if (p.contains("du:")) {
+				mode = 1;
+				continue;
+			}
+			else if (p.contains("en:")) {
+				mode = 2;
+				continue;
+			}
+			
+			if (mode == 1) {
+				// here we need to parse the equation as String
+				
+			}
+		}
 				
 		// If 'loc' is not found in the dictionary, then add it
 		if (this.locations.containsKey(locName) == false){
@@ -79,15 +99,13 @@ public class SimQssHA {
 	}
 
 	public void addVariable(String name, double value) {
-		this.variables.put(name, value);
+		//this.variables.put(name, value);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
-	public String toString() {		
-		return "Printing HA =" + name + "\n locations=" + locations + "\n InitLoc=" + initLoc + "\n transitions=" + transitions + "\n variables="
-				+ variables + "]";
-	}	
+	public String toString() {
+		return "HA [name=" + name + ", locations=" + locations + ", transitions=" + transitions + "\n contVar="
+				+ contVar + "\n inputs=" + inputs + "\n outputs=" + outputs + "\n discVar=" + discVar + "\n initLoc="
+				+ initLoc + "]";
+	}
 }

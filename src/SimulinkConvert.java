@@ -17,6 +17,7 @@ import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
 import org.conqat.lib.simulink.util.SimulinkUtils;
 
 import com.structure.SimQ.SimQssHA;
+import com.writer.SimQ.HaWriter;
 
 import org.conqat.lib.simulink.model.stateflow.StateflowBlock;
 import org.conqat.lib.simulink.model.stateflow.StateflowChart;
@@ -33,11 +34,32 @@ import java.util.HashSet;
 public class SimulinkConvert {
 
 	SimulinkUtils utils = new SimulinkUtils();
+	private static final String defaultFilePath = "resource/example1.mdl";
 
 	public static SimQssHA getHA(StateflowChart chart) {
 		// Create a new HA instance with the chart name
 		SimQssHA ha = new SimQssHA(chart.getName());
 		
+		
+		// Extract the variable names and the initial values
+		for (StateflowData data : chart.getData()) {
+			String scope = data.getParameter("scope");
+			switch (scope) {
+				case "INPUT_DATA":
+					ha.addVariable(data.getName(), 0);
+					break;
+				case "OUTPUT_DATA":
+					break;
+				case "LOCAL_DATA":
+					break;
+				default:
+					System.out.println("Unknown scope variable is detected!!");
+			}
+				
+			
+			System.out.println("Variable parameter list: " + data.getDeclaredParameterNames());
+		}
+				
 		// Extract location and edge information
 		for (StateflowNodeBase n : chart.getNodes()) {
 			ha.addLocation(n.getResolvedId().toString());
@@ -54,20 +76,23 @@ public class SimulinkConvert {
 			}
 		}
 		
-		// Extract the variable names and the initial values
-		for (StateflowData data : chart.getData()) {
-			ha.addVariable("name", 0);
-		}
+		
 		return ha;
 	}
 	
 	public static void main(String[] args) throws SimulinkModelBuildingException, ZipException, IOException {
-	    File file = new File("resource/example1.slx");
-	    try (SimulinkModelBuilder builder = new SimulinkModelBuilder(file, new SimpleLogger())) {
-	    	 
+		File file = null;
+		if (args.length == 0) {	file = new File("resource/example1.slx");
+		} else {file = new File(args[0]);}
+		System.out.println("Target file : " + file.getName());
+		
+		try (SimulinkModelBuilder builder = new SimulinkModelBuilder(file, new SimpleLogger())) {
+	    	
 	    	SimulinkModel model = builder.buildModel();
 	    	HashSet<String> namesStateflowCharts = new HashSet<String>();
 	    	HashMap<String, SimQssHA> HAs = new HashMap<String, SimQssHA>();
+	    	HaWriter hw = new HaWriter(file.getName());
+
 	    	
 	    	// Iterate over the stateflow blocks first
 	    	for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
