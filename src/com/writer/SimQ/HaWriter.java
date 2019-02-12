@@ -8,19 +8,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
 
 import org.assertj.core.util.Files;
+import org.conqat.lib.simulink.model.SimulinkBlock;
+import org.conqat.lib.simulink.model.SimulinkOutPort;
+import org.conqat.lib.simulink.model.stateflow.StateflowChart;
 
 import net.bytebuddy.asm.Advice.This;
 
 // it is recommended to use only one of this object class
 public class HaWriter {
-	private static final String path = "generated";
-	private static final String blocks = "generated/blocks.py";
-	private static final String mainFile = "generated/main.py";
+	public static final String PATH = "generated";
+	public static final String CHART_FILE = "generated/charts.py";
+	public static final String BLOCK_FILE = "generated/blocks.py";
+	public static final String MAIN_FILE = "generated/main.py";
 	
-	public HaWriter (String filename) throws IOException {
-		File directory = new File(path);
+	public HaWriter (String filename, double simulationTime) throws IOException {
+		File directory = new File(PATH);
 		
 		// check if "generated" folder exists
 		if (!directory.exists()) {
@@ -46,26 +51,29 @@ public class HaWriter {
 			}
 		}
 		
-		this.copyFile(new File("resource/python/ode.py"), new File("generated/ode.py"));
-		this.makeFile("generated/__init__.py");
-		this.makeFile(blocks);
-		this.makeFile(mainFile);
+		copyFile(new File("resource/python/ode.py"), new File("generated/ode.py"));
+		makeFile("generated/__init__.py");
+		makeFile(MAIN_FILE);
 	
-		this.addLine(mainFile, "#!/usr/bin/env python3\r\n\r\n" 
+		write(MAIN_FILE, "#!/usr/bin/env python3\r\n\r\n" 
 						+ "# This file is the conversion of " + filename + " to python\r\n" 
 						+ "import simpy\r\n" + "import sympy as S\r\n" 
 						+ "from ode import ODE\r\n"
-						+ "from blocks import *\r\n\r\n");
+						+ "from blocks import *\r\n\r\n"
+						+ "def main():\r\n"
+						+ "\tenv = simpy.Environment()\r\n"
+						+ "\t#Here needs to run each HA\r\n"
+						+ "\tenv.run(until=" + simulationTime + ")\r\n");
 	}
 	
-	public void addLine(String f, String s) throws IOException {
+	private void write(String f, String s) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));
 		writer.write(s);
 		writer.close();
 	}
 	
 	public String getMainFileName() {
-		return mainFile;
+		return MAIN_FILE;
 	}
 	
 	private void makeFile(String s) {
@@ -108,4 +116,35 @@ public class HaWriter {
 			}
 		}
     }
+
+	public void initBlockFile() {
+		this.makeFile(BLOCK_FILE);
+	}
+	
+	public void initChartFile() {
+		this.makeFile(CHART_FILE);
+	}
+
+	public void writeBlocks(HashSet<SimulinkBlock> blocks) throws IOException {
+		HashSet<String> types = new HashSet<>();
+		for (SimulinkBlock block : blocks) {
+			types.add(block.getType());
+			String s = BlockTemplate.getFunctionDef(block);
+			write(BLOCK_FILE, s);
+		}
+		for (String type : types) {
+			String func = BlockTemplate.getTemplate(type);
+			if (!func.isEmpty()) {
+				write(BLOCK_FILE, func);	
+			}
+		}
+		
+	}
+		//System.out.println("Name: " + block.getName());
+		//System.out.println("Type: " + block.getType());
+		//System.out.println("Input ports: " + block.getInPorts());
+		//System.out.println("Output ports: " + block.getOutPorts());
+		//System.out.println("Parameter Value: " + block.getParameter("Value"));
+		
+	
 }

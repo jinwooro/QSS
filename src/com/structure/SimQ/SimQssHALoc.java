@@ -12,25 +12,30 @@ public class SimQssHALoc {
 	private Set<String> inv = new HashSet<>();
 	private Set<String> f = new HashSet<>();
 	private Set<String> h = new HashSet<>();
+	private Set<String> init = new HashSet<>();
 	
 	public SimQssHALoc(String loc) {
 		this.name = loc;
 	}
 	
-	public void addInvariant(String inv) {
-		this.inv.add(inv);
+	public void addInvariant(String s) {
+		inv.add(s);
 	}
 	
-	public void addODE(String f) {
-		this.f.add(f);
+	public void addODE(String s) {
+		f.add(s);
 	}
 	
-	public void addOutputUpdate(String h) {
-		this.h.add(h);
+	public void addOutputUpdate(String s) {
+		h.add(s);
+	}
+	
+	public void addExtraInit(String s) {
+		init.add(s);
 	}
 	
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	@Override

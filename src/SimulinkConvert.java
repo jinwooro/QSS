@@ -32,127 +32,74 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class SimulinkConvert {
-
-	SimulinkUtils utils = new SimulinkUtils();
-	private static final String defaultFilePath = "resource/example1.mdl";
-
-	public static SimQssHA getHA(StateflowChart chart) {
-		// Create a new HA instance with the chart name
-		SimQssHA ha = new SimQssHA(chart.getName());
-		
-		
-		// Extract the variable names and the initial values
-		for (StateflowData data : chart.getData()) {
-			String scope = data.getParameter("scope");
-			switch (scope) {
-				case "INPUT_DATA":
-					ha.addVariable(data.getName(), 0);
-					break;
-				case "OUTPUT_DATA":
-					break;
-				case "LOCAL_DATA":
-					break;
-				default:
-					System.out.println("Unknown scope variable is detected!!");
-			}
-				
-			
-			System.out.println("Variable parameter list: " + data.getDeclaredParameterNames());
-		}
-				
-		// Extract location and edge information
-		for (StateflowNodeBase n : chart.getNodes()) {
-			ha.addLocation(n.getResolvedId().toString());
-			// Extract transitions associated with each location
-			for (StateflowTransition t : n.getInTransitions()) {
-				if (t.getSrc() == null) {
-					ha.setInitLoc(t.getDst().getResolvedId().toString().split("\\r?\\n")[0]);
-				}
-				else {
-					String src = t.getSrc().getResolvedId().toString().split("\\r?\\n")[0];
-					String dst = t.getDst().getResolvedId().toString().split("\\r?\\n")[0];
-					ha.addEdge(src, dst, t.obtainLabelData().getText());
-				}
-			}
-		}
-		
-		
-		return ha;
-	}
-	
+	// The program can accept two arguments
+	// 1. file name, 2. simulation time
 	public static void main(String[] args) throws SimulinkModelBuildingException, ZipException, IOException {
 		File file = null;
-		if (args.length == 0) {	file = new File("resource/example1.slx");
-		} else {file = new File(args[0]);}
-		System.out.println("Target file : " + file.getName());
+		double simTime = 0;
+		if (args.length == 0) {	
+			file = new File("resource/example1.mdl");
+			simTime = 10;
+		} else if (args.length == 1) {
+			file = new File(args[0]);
+			simTime = 10;
+		} else {
+			file = new File(args[0]);
+			simTime = Double.parseDouble(args[1]);
+		}
 		
+		System.out.println("Target file : " + file.getName());
+		HaWriter hw = new HaWriter(file.getName(), simTime);
+		
+		// Step 1: Extract information and sort them in HashSets
+    	HashSet<String> namesStateflowCharts = new HashSet<String>();
+    	HashSet<StateflowChart> charts = new HashSet<StateflowChart>();
+    	HashSet<SimulinkBlock> blocks = new HashSet<SimulinkBlock>();
+    	// Obtain stateflow charts and simulink blocks
 		try (SimulinkModelBuilder builder = new SimulinkModelBuilder(file, new SimpleLogger())) {
-	    	
 	    	SimulinkModel model = builder.buildModel();
-	    	HashSet<String> namesStateflowCharts = new HashSet<String>();
-	    	HashMap<String, SimQssHA> HAs = new HashMap<String, SimQssHA>();
-	    	HaWriter hw = new HaWriter(file.getName());
-
-	    	
-	    	// Iterate over the stateflow blocks first
+	    	// Obtain the list of Stateflow charts
 	    	for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
 	    		namesStateflowCharts.add(chart.getName());
-	    		
-				System.out.println("***************HA generated: " + getHA(chart) + "\n");	
-				
-	    		
-	    		// Add the location names
-	    		for (StateflowNodeBase b : chart.getNodes()) {
-	    			// TODO: add f and h
-	    			// How to filter the string is the problem
-	    			
-		    	} 
-	    		
-		    }
-    	
-	    	// Extracting information of the Simulink blocks
-	    	// Name, type, inputs, outputs
-	    	for (SimulinkBlock block : model.getSubBlocks()) {
-				System.out.println("Name: " + block.getName());
-				System.out.println("Type: " + block.getType());
-				System.out.println("Input ports: " + block.getInPorts());
-				System.out.println("Output ports: " + block.getOutPorts());
-				System.out.println("Parameter Value: " + block.getParameter("Value"));
+	    		charts.add(chart);
+	    		// Consider using chart.getNodes() to extract the location information
 	    	}
-	      
-			for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
-				System.out.println("Chart name: " + chart.getName());
-
-				for (StateflowNodeBase b : chart.getNodes()) {
-					String[] parts = b.getResolvedId().split("\\r?\\n");
-					System.out.println("Full String: " + b.getResolvedId().toString());
-					
-					System.out.println("Nodes: " + parts[0]);
-				}
-				
-
-			}
-	      	      
-	      
-	      // Distinguishing the duplicated reading process for stateflow chart
-	      // It is read as a simulink block (subsystem) while also detected as a stateflow chart
-	      // Thus, it is read twice. Use the name to find the intersection between simulink blocks and stateflow charts.
-	      HashSet<String> namesSimulinkBlocks = new HashSet<String>();
-	      
-	      for (SimulinkBlock block : model.getSubBlocks()) {
-	    	  namesSimulinkBlocks.add(block.getName());
-	      }
-	      for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
-	    	  namesStateflowCharts.add(chart.getName());
-	    	  namesSimulinkBlocks.remove(chart.getName());
-	      }
-	      System.out.println("Simulink blocks:"+ namesSimulinkBlocks.toString() + " || Stateflow charts:" + namesStateflowCharts.toString());
-	            
-	      
+    	
+	    	// Obtain the list of Simulink blocks
+	    	for (SimulinkBlock block : model.getSubBlocks()) {
+	    		if (namesStateflowCharts.contains(block.getName())){
+	    			continue;
+	    		} else {
+	    			blocks.add(block);
+	    		}
+	    	}	      	      
+	      // For debugging purpose, produce a png file for the Simulink model
+	      drawModel(model, file);
+	    }
+		
+		
+		// Step 2: Translate charts and blocks into HAs
+    	HashSet<SimQssHA> HAs = new HashSet<SimQssHA>();
+		for (StateflowChart chart : charts) {
+			SimQssHA ha = new SimQssHA(chart.getName());
+			ha.convert(chart);
+			HAs.add(ha);
+			System.out.println(ha.toString());
+		}
+		
+		// Step 3: Transpose all Simulink blocks into functions
+		if (blocks.size() > 0) {
+			hw.initBlockFile();
+		}
+		hw.writeBlocks(blocks);
+		System.out.println("Program complted");
+    	//hw.addLine(hw.MAIN_FILE, "\r\nif __name__ == '__main__':\r\n\tmain()");
+	}
+	
+	public static void drawModel(SimulinkModel model, File file) throws IOException {
 	      // render a block or model as PNG image
 	      SimulinkBlockRenderer simulinkBlockRenderer = new SimulinkBlockRenderer();
 	      BufferedImage image = simulinkBlockRenderer.renderBlock(model);
-	      ImageIO.write(image, "PNG", new File(file.getPath() + ".png"));
-	    }
-	  }
+	      ImageIO.write(image, "PNG", new File("generated/" + file.getName() + ".png"));
+	}
 }

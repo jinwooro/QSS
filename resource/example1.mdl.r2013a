@@ -1,13 +1,13 @@
 Model {
   Name			  "example1"
-  Version		  8.2
+  Version		  8.1
   MdlSubVersion		  0
   SavedCharacterEncoding  "windows-949"
   GraphicalInterface {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.15"
+    ComputedModelVersion    "1.12"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -52,11 +52,11 @@ Model {
 	$ObjectID		5
 	$ClassName		"Simulink.EditorInfo"
 	IsActive		[1]
-	ViewObjType		"StateflowChart"
-	LoadSaveID		"5"
+	ViewObjType		"SimulinkTopLevel"
+	LoadSaveID		"0"
 	Extents			[1886.0, 881.0]
-	ZoomFactor		[4.9937578027465666]
-	Offset			[356.202, 195.479]
+	ZoomFactor		[1.0]
+	Offset			[0.0, 0.0]
       }
     }
   }
@@ -66,9 +66,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Jin"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Feb 12 20:31:54 2019"
-  RTWModifiedTimeStamp	  471904295
-  ModelVersionFormat	  "1.%<AutoIncrement:15>"
+  LastModifiedDate	  "Mon Feb 04 00:58:38 2019"
+  RTWModifiedTimeStamp	  471142703
+  ModelVersionFormat	  "1.%<AutoIncrement:12>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -94,11 +94,6 @@ Model {
   BrowserShowLibraryLinks off
   BrowserLookUnderMasks	  off
   SimulationMode	  "normal"
-  PauseTimes		  "5"
-  NumberOfSteps		  1
-  SnapshotBufferSize	  10
-  SnapshotInterval	  10
-  NumberOfLastSnapshots	  0
   LinearizationMsg	  "none"
   Profile		  off
   ParamWorkspaceSource	  "MATLABWorkspace"
@@ -132,7 +127,6 @@ Model {
   CovNameIncrementing	  off
   CovHtmlReporting	  on
   CovForceBlockReductionOff on
-  CovEnableCumulative	  on
   covSaveCumulativeToWorkspaceVar on
   CovSaveSingleToWorkspaceVar on
   CovCumulativeVarName	  "covCumulativeData"
@@ -169,13 +163,13 @@ Model {
     Dimension		    1
     Simulink.ConfigSet {
       $ObjectID		      7
-      Version		      "1.13.1"
+      Version		      "1.13.0"
       Array {
 	Type			"Handle"
 	Dimension		9
 	Simulink.SolverCC {
 	  $ObjectID		  8
-	  Version		  "1.13.1"
+	  Version		  "1.13.0"
 	  StartTime		  "0.0"
 	  StopTime		  "10.0"
 	  AbsTol		  "auto"
@@ -210,7 +204,7 @@ Model {
 	}
 	Simulink.DataIOCC {
 	  $ObjectID		  9
-	  Version		  "1.13.1"
+	  Version		  "1.13.0"
 	  Decimation		  "1"
 	  ExternalInput		  "[t, u]"
 	  FinalStateName	  "xFinal"
@@ -242,7 +236,7 @@ Model {
 	}
 	Simulink.OptimizationCC {
 	  $ObjectID		  10
-	  Version		  "1.13.1"
+	  Version		  "1.13.0"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    8
@@ -262,7 +256,6 @@ Model {
 	  InlineParams		  off
 	  UseIntDivNetSlope	  off
 	  UseFloatMulNetSlope	  off
-	  DefaultUnderspecifiedDataType	"double"
 	  UseSpecifiedMinMax	  off
 	  InlineInvariantSignals  off
 	  OptimizeBlockIOStorage  on
@@ -282,7 +275,6 @@ Model {
 	  SystemCodeInlineAuto	  off
 	  StateBitsets		  off
 	  DataBitsets		  off
-	  ActiveStateOutputEnumStorageType "Native Integer"
 	  UseTempVars		  off
 	  ZeroExternalMemoryAtStartup on
 	  ZeroInternalMemoryAtStartup on
@@ -300,7 +292,7 @@ Model {
 	}
 	Simulink.DebuggingCC {
 	  $ObjectID		  11
-	  Version		  "1.13.1"
+	  Version		  "1.13.0"
 	  RTPrefix		  "error"
 	  ConsistencyChecking	  "none"
 	  ArrayBoundsChecking	  "none"
@@ -390,7 +382,7 @@ Model {
 	}
 	Simulink.HardwareCC {
 	  $ObjectID		  12
-	  Version		  "1.13.1"
+	  Version		  "1.13.0"
 	  ProdBitPerChar	  8
 	  ProdBitPerShort	  16
 	  ProdBitPerInt		  32
@@ -431,7 +423,7 @@ Model {
 	}
 	Simulink.ModelReferenceCC {
 	  $ObjectID		  13
-	  Version		  "1.13.1"
+	  Version		  "1.13.0"
 	  UpdateModelReferenceTargets "IfOutOfDateOrStructuralChange"
 	  CheckModelReferenceTargetMessage "error"
 	  EnableParallelModelReferenceBuilds off
@@ -446,7 +438,7 @@ Model {
 	}
 	Simulink.SFSimCC {
 	  $ObjectID		  14
-	  Version		  "1.13.1"
+	  Version		  "1.13.0"
 	  SFSimEnableDebug	  on
 	  SFSimOverflowDetection  on
 	  SFSimEcho		  on
@@ -457,12 +449,11 @@ Model {
 	  SimUseLocalCustomCode	  off
 	  SimParseCustomCode	  on
 	  SimBuildMode		  "sf_incremental_build"
-	  SimGenImportedTypeDefs  off
 	}
 	Simulink.RTWCC {
 	  $BackupClass		  "Simulink.RTWCC"
 	  $ObjectID		  15
-	  Version		  "1.13.1"
+	  Version		  "1.13.0"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    15
@@ -515,8 +506,6 @@ Model {
 	  CustomLibrary		  ""
 	  CustomInitializer	  ""
 	  CustomTerminator	  ""
-	  Toolchain		  "Automatically locate an installed toolchain"
-	  BuildConfiguration	  "Faster Builds"
 	  IncludeHyperlinkInReport off
 	  LaunchReport		  off
 	  PortableWordSizes	  off
@@ -544,13 +533,12 @@ Model {
 	  CheckMdlBeforeBuild	  "Off"
 	  CustomRebuildMode	  "OnUpdate"
 	  DataInitializer	  ""
-	  SharedConstantsCachingThreshold 1024
 	  Array {
 	    Type		    "Handle"
 	    Dimension		    2
 	    Simulink.CodeAppCC {
 	      $ObjectID		      16
-	      Version		      "1.13.1"
+	      Version		      "1.13.0"
 	      Array {
 		Type			"Cell"
 		Dimension		23
@@ -603,7 +591,6 @@ Model {
 	      CustomSymbolStrBlkIO    "rtb_$N$M"
 	      CustomSymbolStrTmpVar   "$N$M"
 	      CustomSymbolStrMacro    "$R$N$M"
-	      CustomSymbolStrUtil     "$N$C"
 	      DefineNamingRule	      "None"
 	      ParamNamingRule	      "None"
 	      SignalNamingRule	      "None"
@@ -620,7 +607,7 @@ Model {
 	    Simulink.GRTTargetCC {
 	      $BackupClass	      "Simulink.TargetCC"
 	      $ObjectID		      17
-	      Version		      "1.13.1"
+	      Version		      "1.13.0"
 	      Array {
 		Type			"Cell"
 		Dimension		15
@@ -702,7 +689,7 @@ Model {
 	}
 	hdlcoderui.hdlcc {
 	  $ObjectID		  18
-	  Version		  "1.13.1"
+	  Version		  "1.13.0"
 	  Description		  "HDL Coder custom configuration component"
 	  Name			  "HDL Coder"
 	  Array {
@@ -717,7 +704,7 @@ Model {
       }
       Name		      "Configuration"
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition     [ 420, 220, 1500, 860 ] 
+      ConfigPrmDlgPosition    [ 420, 220, 1500, 860 ]  
     }
     PropName		    "ConfigurationSets"
   }
@@ -889,7 +876,6 @@ Model {
       SFBlockType	      "NONE"
       Variant		      off
       GeneratePreprocessorConditionals off
-      ContentPreviewEnabled   off
     }
     Block {
       BlockType		      Sum
@@ -948,7 +934,7 @@ Model {
       ZOrder		      5
       LibraryVersion	      "1.263"
       ErrorFcn		      "Stateflow.Translate.translate"
-      PermitHierarchicalResolution "ExplicitOnly"
+      PermitHierarchicalResolution "ParametersOnly"
       TreatAsAtomicUnit	      on
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
@@ -961,7 +947,7 @@ Model {
       System {
 	Name			"Chart"
 	Location		[-8, 0, 1928, 1056]
-	Open			on
+	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -973,7 +959,7 @@ Model {
 	TiledPageScale		1
 	ShowPageBoundaries	off
 	ZoomFactor		"100"
-	SIDHighWatermark	"53"
+	SIDHighWatermark	"50"
 	Block {
 	  BlockType		  Inport
 	  Name			  "a"
@@ -985,23 +971,23 @@ Model {
 	Block {
 	  BlockType		  Demux
 	  Name			  " Demux "
-	  SID			  "5::52"
+	  SID			  "5::46"
 	  Ports			  [1, 1]
 	  Position		  [270, 230, 320, 270]
-	  ZOrder		  32
+	  ZOrder		  26
 	  Outputs		  "1"
 	}
 	Block {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
-	  SID			  "5::51"
+	  SID			  "5::45"
 	  Tag			  "Stateflow S-Function example1 1"
 	  Ports			  [1, 2]
 	  Position		  [180, 100, 230, 160]
-	  ZOrder		  31
+	  ZOrder		  25
 	  FunctionName		  "sf_sfun"
 	  PortCounts		  "[1 2]"
-	  EnableBusSupport	  off
+	  EnableBusSupport	  on
 	  Port {
 	    PortNumber		    2
 	    Name		    "x_out"
@@ -1012,9 +998,9 @@ Model {
 	Block {
 	  BlockType		  Terminator
 	  Name			  " Terminator "
-	  SID			  "5::53"
+	  SID			  "5::47"
 	  Position		  [460, 241, 480, 259]
-	  ZOrder		  33
+	  ZOrder		  27
 	}
 	Block {
 	  BlockType		  Outport
@@ -1025,7 +1011,6 @@ Model {
 	  IconDisplay		  "Port number"
 	}
 	Line {
-	  ZOrder		  5
 	  SrcBlock		  "a"
 	  SrcPort		  1
 	  DstBlock		  " SFunction "
@@ -1033,7 +1018,6 @@ Model {
 	}
 	Line {
 	  Name			  "x_out"
-	  ZOrder		  6
 	  Labels		  [0, 0]
 	  SrcBlock		  " SFunction "
 	  SrcPort		  2
@@ -1041,14 +1025,12 @@ Model {
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  7
 	  SrcBlock		  " Demux "
 	  SrcPort		  1
 	  DstBlock		  " Terminator "
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  8
 	  SrcBlock		  " SFunction "
 	  SrcPort		  1
 	  DstBlock		  " Demux "
@@ -1105,7 +1087,6 @@ Model {
       SampleTime	      "0"
     }
     Line {
-      ZOrder		      1
       SrcBlock		      "Constant"
       SrcPort		      1
       Points		      [35, 0; 0, 45]
@@ -1113,7 +1094,6 @@ Model {
       DstPort		      1
     }
     Line {
-      ZOrder		      2
       SrcBlock		      "Add"
       SrcPort		      1
       Points		      [47, 0; 0, -70]
@@ -1121,7 +1101,6 @@ Model {
       DstPort		      1
     }
     Line {
-      ZOrder		      3
       SrcBlock		      "Chart"
       SrcPort		      1
       Points		      [35, 0; 0, -55]
@@ -1129,7 +1108,6 @@ Model {
       DstPort		      2
     }
     Line {
-      ZOrder		      4
       SrcBlock		      "Constant1"
       SrcPort		      1
       DstBlock		      "Chart"
@@ -1142,22 +1120,21 @@ Model {
 #    Stateflow Version 7.6 (R2013a) dated Aug  8 2013, 23:20:01
 #
 #
-
 Stateflow {
   machine {
     id			    1
     name		    "example1"
     created		    "03-Feb-2019 00:01:01"
     isLibrary		    0
-    firstTarget		    12
+    firstTarget		    11
     defaultActionLanguage   CLASSIC_BITOPS
-    sfVersion		    76014001.0016
+    sfVersion		    60014000.000006
   }
   chart {
     id			    2
     name		    "Chart"
     windowPosition	    [169.5 246.75 417 348.75]
-    viewLimits		    [356.202 733.874 195.479 384.515]
+    viewLimits		    [356.202 733.874 195.479 371.899]
     zoomFactor		    0.267
     stateColor		    [0.3803921568627451 0.2745098039215687 0.1803921568627451]
     stateLabelColor	    [0.4588235294117647 0.2980392156862745 0.1411764705882353]
@@ -1167,10 +1144,10 @@ Stateflow {
     chartColor		    [1 0.9882352941176471 0.9254901960784314]
     screen		    [1 1 1920 1200 1.333333333333333]
     treeNode		    [0 3 0 0]
-    firstTransition	    9
+    firstTransition	    8
     viewObj		    2
     machine		    1
-    ssIdHighWaterMark	    9
+    ssIdHighWaterMark	    7
     decomposition	    CLUSTER_CHART
     firstData		    5
     updateMethod	    CONTINUOUS
@@ -1179,7 +1156,6 @@ Stateflow {
     userSpecifiedStateTransitionExecutionOrder 1
     disableImplicitCasting  1
     actionLanguage	    1
-    supportVariableSizing   0
   }
   state {
     id			    3
@@ -1203,13 +1179,13 @@ Stateflow {
     treeNode		    [2 0 3 0]
     visible		    0
     subviewer		    2
-    ssIdNumber		    2
+    ssIdNumber		    6
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
   }
   data {
     id			    5
-    ssIdNumber		    5
+    ssIdNumber		    2
     name		    "x"
     linkNode		    [2 0 6]
     scope		    LOCAL_DATA
@@ -1226,13 +1202,12 @@ Stateflow {
   }
   data {
     id			    6
-    ssIdNumber		    6
+    ssIdNumber		    3
     name		    "x_out"
     linkNode		    [2 5 7]
     scope		    OUTPUT_DATA
     machine		    1
     props {
-      initialValue	      "3"
       type {
 	primitive		SF_DOUBLE_TYPE
 	isSigned		1
@@ -1244,9 +1219,9 @@ Stateflow {
   }
   data {
     id			    7
-    ssIdNumber		    7
+    ssIdNumber		    4
     name		    "a"
-    linkNode		    [2 6 8]
+    linkNode		    [2 6 0]
     scope		    INPUT_DATA
     machine		    1
     props {
@@ -1258,24 +1233,8 @@ Stateflow {
     }
     dataType		    "double"
   }
-  data {
-    id			    8
-    ssIdNumber		    9
-    name		    "y"
-    linkNode		    [2 7 0]
-    scope		    LOCAL_DATA
-    machine		    1
-    props {
-      type {
-	primitive		SF_DOUBLE_TYPE
-	isSigned		1
-	wordLength		"16"
-      }
-    }
-    dataType		    "double"
-  }
   transition {
-    id			    9
+    id			    8
     labelString		    "{x = 1;}"
     labelPosition	    [478.802 221.758 39.5 17]
     fontSize		    12
@@ -1288,7 +1247,7 @@ Stateflow {
     }
     midPoint		    [471.087 232.4794]
     chart		    2
-    linkNode		    [2 0 10]
+    linkNode		    [2 0 9]
     dataLimits		    [468.687 473.487 217.479 247.479]
     subviewer		    2
     drawStyle		    SMART
@@ -1296,10 +1255,10 @@ Stateflow {
       sticky		      BOTH_STICK
     }
     executionOrder	    1
-    ssIdNumber		    3
+    ssIdNumber		    5
   }
   transition {
-    id			    10
+    id			    9
     labelString		    "[x >= 7]"
     labelPosition	    [551.802 269.879 41.75 17]
     fontSize		    12
@@ -1313,7 +1272,7 @@ Stateflow {
     }
     midPoint		    [566.501 281.7794]
     chart		    2
-    linkNode		    [2 9 0]
+    linkNode		    [2 8 0]
     dataLimits		    [520 621.002 279.479 284.279]
     subviewer		    2
     drawStyle		    SMART
@@ -1321,18 +1280,18 @@ Stateflow {
       sticky		      BOTH_STICK
     }
     executionOrder	    1
-    ssIdNumber		    4
+    ssIdNumber		    7
   }
   instance {
-    id			    11
+    id			    10
     name		    "Chart"
     machine		    1
     chart		    2
   }
   target {
-    id			    12
+    id			    11
     name		    "sfun"
-    codeFlags		    ""
+    description		    "Default Simulink S-Function Target."
     machine		    1
     linkNode		    [1 0 0]
   }
