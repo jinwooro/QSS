@@ -10,12 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 
-import org.assertj.core.util.Files;
 import org.conqat.lib.simulink.model.SimulinkBlock;
-import org.conqat.lib.simulink.model.SimulinkOutPort;
-import org.conqat.lib.simulink.model.stateflow.StateflowChart;
 
-import net.bytebuddy.asm.Advice.This;
+import com.structure.SimQ.SimQssHA;
 
 // it is recommended to use only one of this object class
 public class HaWriter {
@@ -145,6 +142,15 @@ public class HaWriter {
 		//System.out.println("Input ports: " + block.getInPorts());
 		//System.out.println("Output ports: " + block.getOutPorts());
 		//System.out.println("Parameter Value: " + block.getParameter("Value"));
+
+	public void writeCharts(HashSet<SimQssHA> HAs) {
+		for (SimQssHA ha : HAs){
+			String s = "class " + ha.getName() + ":\r\n";
+			s += "\tdef __init__(self, " + ha.getName() + "):\r\n"
+					+ "\t\tself.cstate = 0\r\n";
+			for ()
+		}
+	}
 		
 	
 }

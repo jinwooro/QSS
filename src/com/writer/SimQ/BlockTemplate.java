@@ -1,8 +1,6 @@
 package com.writer.SimQ;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
-import org.conqat.lib.simulink.model.SimulinkLine;
-import org.conqat.lib.simulink.model.SimulinkOutPort;
 import org.conqat.lib.simulink.model.SimulinkPortBase;
 
 public class BlockTemplate {

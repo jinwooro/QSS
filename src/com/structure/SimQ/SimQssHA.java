@@ -43,8 +43,7 @@ public class SimQssHA {
 	public SimQssHA(String name){
 		this.name = name;
 	}
-	
-	// Getters 
+	 
 	public String getName() {
 		return name;
 	}
@@ -53,7 +52,6 @@ public class SimQssHA {
 		//this.variables.put(name, value);
 	}
 
-	@Override
 	public String toString() {
 		return "name=" + name + "\n locations=" + locations + "\n transitions=" + transitions + "\n X_C="
 				+ X_C + X_C_DOT + "\n X_D=" + X_D + "\n I=" + I + "\n O=" + O + "\n X_D=" + X_D + "\n init_loc="

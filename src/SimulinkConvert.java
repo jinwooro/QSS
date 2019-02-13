@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.zip.ZipException;
 
 import javax.imageio.ImageIO;
@@ -10,26 +11,11 @@ import org.conqat.lib.simulink.builder.SimulinkModelBuilder;
 import org.conqat.lib.simulink.builder.SimulinkModelBuildingException;
 import org.conqat.lib.simulink.model.SimulinkBlock;
 import org.conqat.lib.simulink.model.SimulinkModel;
-import org.conqat.lib.simulink.model.datahandler.ESimulinkBlockType;
-import org.conqat.lib.simulink.model.datahandler.ModelDataHandler;
-import org.conqat.lib.simulink.model.datahandler.simulink.SimulinkLayoutHandler;
+import org.conqat.lib.simulink.model.stateflow.StateflowChart;
 import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
-import org.conqat.lib.simulink.util.SimulinkUtils;
 
 import com.structure.SimQ.SimQssHA;
 import com.writer.SimQ.HaWriter;
-
-import org.conqat.lib.simulink.model.stateflow.StateflowBlock;
-import org.conqat.lib.simulink.model.stateflow.StateflowChart;
-import org.conqat.lib.simulink.model.stateflow.StateflowData;
-import org.conqat.lib.simulink.model.stateflow.StateflowDeclContainerBase;
-import org.conqat.lib.simulink.model.stateflow.StateflowMachine;
-import org.conqat.lib.simulink.model.stateflow.StateflowNodeBase;
-import org.conqat.lib.simulink.model.stateflow.StateflowTarget;
-import org.conqat.lib.simulink.model.stateflow.StateflowTransition;
-
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class SimulinkConvert {
 	// The program can accept two arguments
@@ -58,14 +44,12 @@ public class SimulinkConvert {
     	// Obtain stateflow charts and simulink blocks
 		try (SimulinkModelBuilder builder = new SimulinkModelBuilder(file, new SimpleLogger())) {
 	    	SimulinkModel model = builder.buildModel();
-	    	// Obtain the list of Stateflow charts
+	    	// iterate over charts
 	    	for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
 	    		namesStateflowCharts.add(chart.getName());
 	    		charts.add(chart);
-	    		// Consider using chart.getNodes() to extract the location information
 	    	}
-    	
-	    	// Obtain the list of Simulink blocks
+	    	// iterate over blocks
 	    	for (SimulinkBlock block : model.getSubBlocks()) {
 	    		if (namesStateflowCharts.contains(block.getName())){
 	    			continue;
@@ -78,7 +62,7 @@ public class SimulinkConvert {
 	    }
 		
 		
-		// Step 2: Translate charts and blocks into HAs
+		// Step 2: Translate each chart into a HA
     	HashSet<SimQssHA> HAs = new HashSet<SimQssHA>();
 		for (StateflowChart chart : charts) {
 			SimQssHA ha = new SimQssHA(chart.getName());
@@ -87,11 +71,18 @@ public class SimulinkConvert {
 			System.out.println(ha.toString());
 		}
 		
-		// Step 3: Transpose all Simulink blocks into functions
+		// Step 3: Write all blocks in python
 		if (blocks.size() > 0) {
 			hw.initBlockFile();
+			hw.writeBlocks(blocks);
 		}
-		hw.writeBlocks(blocks);
+		
+		// Step 4: Write all charts in python
+		if (HAs.size() > 0){
+			hw.initChartFile();
+			hw.writeCharts(HAs);
+		}
+		
 		System.out.println("Program complted");
     	//hw.addLine(hw.MAIN_FILE, "\r\nif __name__ == '__main__':\r\n\tmain()");
 	}
