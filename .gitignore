@@ -1,4 +1,5 @@
-resource/slprj*
-*.png
-generated*
-bin*
+*
+!src/*.java
+!resource/*.slx
+!resource/*.mdl
+!resource/python/ode.py
