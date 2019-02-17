@@ -48,8 +48,24 @@ public class SimQssHA {
 		return name;
 	}
 
-	public void addVariable(String name, double value) {
-		//this.variables.put(name, value);
+	public HashMap<String,Double> getXC() {
+		return X_C;
+	}
+	
+	public HashMap<String,Double> getXD() {
+		return X_D;
+	}
+	
+	public HashMap<String,Double> getO() {
+		return O;
+	}
+	
+	public HashSet<String> getI() {
+		return I;
+	}
+	
+	public HashSet<SimQssHALoc> getLoc(){
+		return locations;
 	}
 
 	public String toString() {

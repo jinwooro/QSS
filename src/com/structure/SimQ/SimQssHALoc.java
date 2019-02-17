@@ -34,6 +34,10 @@ public class SimQssHALoc {
 		init.add(s);
 	}
 	
+	public Set<String> getf() {
+		return f;
+	}
+	
 	public String getName() {
 		return name;
 	}

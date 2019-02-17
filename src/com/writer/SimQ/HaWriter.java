@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 
 import com.structure.SimQ.SimQssHA;
+import com.structure.SimQ.SimQssHALoc;
 
 // it is recommended to use only one of this object class
 public class HaWriter {
@@ -143,14 +145,42 @@ public class HaWriter {
 		//System.out.println("Output ports: " + block.getOutPorts());
 		//System.out.println("Parameter Value: " + block.getParameter("Value"));
 
-	public void writeCharts(HashSet<SimQssHA> HAs) {
+	public void writeCharts(HashSet<SimQssHA> HAs) throws IOException {
 		for (SimQssHA ha : HAs){
 			String s = "class " + ha.getName() + ":\r\n";
-			s += "\tdef __init__(self, " + ha.getName() + "):\r\n"
+			s += "\t#ODE declarations\r\n";
+			// TODO: need to write codes for defining the ODE
+			// E.g., loc1_ode_x = ODE(env, lvalue=S.sympify('diff(x(t))'), rvalue=S.sympify('v(t)'), ttol=10**-2, iterations=1000)
+			for (SimQssHALoc l : ha.getLoc()) {
+				String prefix = "\t\tself." + l.getName() + "_ode_";
+				for (String eq : l.getf()) {
+					
+				}
+				String temp = "ODE(env, lvalue=S.sympify(), rvalue=S.sympify(), ttol=10**-2, iterations=1000)";
+			}
+			
+			s += "\tdef __init__(self):\r\n"
 					+ "\t\tself.cstate = 0\r\n";
-			for ()
+			s += "\t\t#Continuous variables X_C\r\n";
+			for (Entry<String, Double> x : ha.getXC().entrySet()) {
+				s += "\t\tself." + x.getKey() + " = " + x.getValue() + "\r\n";
+			}
+			s += "\t\t#Discrete variables X_D\r\n";
+			for (Entry<String, Double> x : ha.getXD().entrySet()) {
+				s += "\t\tself." + x.getKey() + " = " + x.getValue() + "\r\n";
+			}
+			s += "\t\t#Output variables O\r\n";
+			for (Entry<String, Double> o : ha.getO().entrySet()) {
+				s += "\t\tself." + o.getKey() + " = " + o.getValue() + "\r\n";
+			}
+			s += "\t\t#Input variables I\r\n";
+			for (String i : ha.getI()) {
+				s += "\t\tself." + i + "=0\r\n";
+			}
+			
+			s+= "\r\n";
+			write(CHART_FILE, s);
+			
 		}
 	}
-		
-	
 }
