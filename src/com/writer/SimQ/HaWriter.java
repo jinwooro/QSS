@@ -10,6 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.swing.text.Highlighter.Highlight;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 
@@ -146,18 +149,23 @@ public class HaWriter {
 		//System.out.println("Parameter Value: " + block.getParameter("Value"));
 
 	public void writeCharts(HashSet<SimQssHA> HAs) throws IOException {
+		// For each HA object
 		for (SimQssHA ha : HAs){
+			// Open the class definition statement
 			String s = "class " + ha.getName() + ":\r\n";
+			
+			// Local scope variables declaration
 			s += "\t#ODE declarations\r\n";
+			for (SimQssHALoc l :  ha.getLoc()) {
+				for (String f : l.getf()) {
+					String var = l.getLHS(f, true);
+					s+= "\t" + l.getName() + "_ode_" + var + " = ODE(env, lvalue=S.sympify('diff(" + var + "))'), "
+							+ "rvalue=S.sympify('" + l.getRHS(f) + "'), ttol=10**-2, iterations=1000)\r\n";
+				}
+			}
+			
 			// TODO: need to write codes for defining the ODE
 			// E.g., loc1_ode_x = ODE(env, lvalue=S.sympify('diff(x(t))'), rvalue=S.sympify('v(t)'), ttol=10**-2, iterations=1000)
-			for (SimQssHALoc l : ha.getLoc()) {
-				String prefix = "\t\tself." + l.getName() + "_ode_";
-				for (String eq : l.getf()) {
-					
-				}
-				String temp = "ODE(env, lvalue=S.sympify(), rvalue=S.sympify(), ttol=10**-2, iterations=1000)";
-			}
 			
 			s += "\tdef __init__(self):\r\n"
 					+ "\t\tself.cstate = 0\r\n";

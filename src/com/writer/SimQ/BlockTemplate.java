@@ -3,6 +3,7 @@ package com.writer.SimQ;
 import org.conqat.lib.simulink.model.SimulinkBlock;
 import org.conqat.lib.simulink.model.SimulinkPortBase;
 
+// This class provides templates for the simulink block implmentation in python
 public class BlockTemplate {
 	public static final String Sum = "def sum_block(a, b):\r\n"
 									+ "\treturn a+b\r\n\r\n" ;

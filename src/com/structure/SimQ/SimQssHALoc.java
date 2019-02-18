@@ -42,6 +42,32 @@ public class SimQssHALoc {
 		return name;
 	}
 
+	public String getLHS(String eq, boolean ode) {
+		String LHS[] = eq.split("=");
+		if (LHS[0].isEmpty()) {
+			System.out.println("Error: ODE is defined incorrectly (" + eq + ")");
+			System.exit(0);
+		}
+		if (ode) {
+			return LHS[0].split("_dot")[0];
+		}
+		else {
+			return LHS[0];
+		}
+	}
+	
+	public String getRHS(String eq) {
+		try {
+			if (eq.split("=")[1].isEmpty()) {
+				System.out.println("Error: ODE has no RHS (" + eq + ")");
+				System.exit(0);
+			}
+		}catch(Exception e){
+			System.out.println("Error: invalid equation (" + eq + ")");
+		}
+		return eq.split("=")[1];
+	}
+	
 	@Override
 	public String toString() {
 		return "[\n\t name=" + name + "\n\t inv=" + inv + "\n\t f=" + f + "\n\t h=" + h + "]\n";

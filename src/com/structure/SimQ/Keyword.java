@@ -1,5 +1,6 @@
 package com.structure.SimQ;
 
+// This class 'Keyword' stores useful keywords for extracting information from the Simulink model
 public class Keyword{
 	// Stateflow charts
 	public static final String LOCAL_DATA = "LOCAL_DATA";

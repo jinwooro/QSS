@@ -10,6 +10,7 @@ import org.conqat.lib.simulink.model.stateflow.StateflowData;
 import org.conqat.lib.simulink.model.stateflow.StateflowNodeBase;
 import org.conqat.lib.simulink.model.stateflow.StateflowTransition;
 
+// This class defines the HA object
 public class SimQssHA {
 	// Name of this HA
 	private String name;
@@ -99,7 +100,8 @@ public class SimQssHA {
 	private void extractLocation(String node) {
 		String s = node.trim().replaceAll("\\s", "");
 		String[] parts = s.split("\\\\n|\\\\r|\\r|\\n");
-		SimQssHALoc loc = new SimQssHALoc(parts[0].replaceAll("/", "_"));
+		String locname[] = parts[0].split("/");
+		SimQssHALoc loc = new SimQssHALoc(locname[locname.length-1]);
 
 		// TODO: this string extraction needs improvement
 		int mode = 0;
@@ -120,16 +122,16 @@ public class SimQssHA {
 			if (mode == 1) {
 				String LHS = parts[i].split("=")[0];
 				if (X_C_DOT.contains(LHS)){
-					loc.addODE(parts[i]);
+					loc.addODE(parts[i].replaceAll(";", ""));
 				} else if (O.containsKey(LHS)) {
 					loc.addOutputUpdate(parts[i]);
 				}
 			} else if (mode == 2) {
-				loc.addExtraInit(parts[i]);
+				loc.addExtraInit(parts[i].replaceAll(";",""));
 			} else if (mode == 3) {
 				String LHS = parts[i].split("=")[0];
 				if (X_C_DOT.contains(LHS)){
-					loc.addODE(parts[i]);
+					loc.addODE(parts[i].replaceAll(";", ""));
 				} else if (O.containsKey(LHS)) {
 					loc.addOutputUpdate(parts[i]);
 				}
