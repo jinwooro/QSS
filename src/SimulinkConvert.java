@@ -14,8 +14,8 @@ import org.conqat.lib.simulink.model.SimulinkModel;
 import org.conqat.lib.simulink.model.stateflow.StateflowChart;
 import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
 
-import com.structure.SimQ.SimQssHA;
-import com.writer.SimQ.HaWriter;
+import com.pretzel.solver.qss.HaWriter;
+import com.pretzel.structure.HIOA;
 
 public class SimulinkConvert {
 	// The program can accept two arguments
@@ -62,10 +62,10 @@ public class SimulinkConvert {
 	    }
 		
 		
-		// Step 2: Translate each chart into a HA
-    	HashSet<SimQssHA> HAs = new HashSet<SimQssHA>();
+		// Step 2: Translate each chart into a HA (of type SimQssHA)
+    	HashSet<HIOA> HAs = new HashSet<HIOA>();
 		for (StateflowChart chart : charts) {
-			SimQssHA ha = new SimQssHA(chart.getName());
+			HIOA ha = new HIOA(chart.getName());
 			ha.convert(chart);
 			HAs.add(ha);
 			System.out.println(ha.toString());
@@ -80,8 +80,10 @@ public class SimulinkConvert {
 		// Step 4: Write all charts in python
 		if (HAs.size() > 0){
 			hw.initChartFile();
-			hw.writeCharts(HAs);
+			//hw.writeCharts(HAs);
 		}
+		
+		// 
 		
 		System.out.println("Program complted");
     	//hw.addLine(hw.MAIN_FILE, "\r\nif __name__ == '__main__':\r\n\tmain()");

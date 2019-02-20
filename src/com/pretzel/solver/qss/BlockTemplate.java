@@ -1,4 +1,4 @@
-package com.writer.SimQ;
+package com.pretzel.solver.qss;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 import org.conqat.lib.simulink.model.SimulinkPortBase;

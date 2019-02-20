@@ -1,5 +1,6 @@
-package com.structure.SimQ;
+package com.pretzel.structure;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Matcher;
@@ -10,38 +11,28 @@ import org.conqat.lib.simulink.model.stateflow.StateflowData;
 import org.conqat.lib.simulink.model.stateflow.StateflowNodeBase;
 import org.conqat.lib.simulink.model.stateflow.StateflowTransition;
 
-// This class defines the HA object
-public class SimQssHA {
-	// Name of this HA
+import com.pretzel.reader.Keyword;
+/**
+ * This class defines the structure of Hybrid Input Output Automata (HIOA).
+ * @author Jin Woo Ro
+ *
+ */
+public class HIOA {
+	/**
+	 * Name of the HIOA object instance.
+	 */
 	private String name;
-	
-	// A location data structure includes:
-	// 1. Name of the location (String)
-	// 2. Invariants of the location (Set of Strings)
-	// 3. f of the location (String)
-	// 4. h of the location (String)
-	private HashSet<SimQssHALoc> locations = new HashSet<SimQssHALoc>();
-	
-	// A transition data structure includes:
-	// 1. Source location (String)
-	// 2. Destination location (String)
-	// 3. Guard conditions (Set of Strings)
-	// 4. Reset functions (Set of Strings)
-	private HashSet<SimQssHATran> transitions = new HashSet<SimQssHATran>();
-	
-	// A set of continuous variables is a structure that includes:
-	// 1. Name of the valuation
-	// 2. Initial value
+	private HashSet<Location> locations = new HashSet<Location>();
+	private HashSet<Transition> transitions = new HashSet<Transition>();
 	private HashMap<String, Double> X_C  = new HashMap<String, Double>();
 	private HashSet<String> X_C_DOT  = new HashSet<String>();
 	private HashSet<String> I  = new HashSet<String>();
 	private HashMap<String, Double> O  = new HashMap<String, Double>();
 	private HashMap<String, Double> X_D  = new HashMap<String, Double>();
+	private int init_loc_id;
+	private HashSet<String> init_val = new HashSet<String>();
 	
-	private String init_loc;
-	private String init_val;
-	
-	public SimQssHA(String name){
+	public HIOA(String name){
 		this.name = name;
 	}
 	 
@@ -53,8 +44,33 @@ public class SimQssHA {
 		return X_C;
 	}
 	
+	public HashSet<Transition> getTransitionsBySrc(int src_id){
+		HashSet<Transition> transitions_subset = new HashSet<Transition>();
+		for (Transition t : transitions) {
+			if (t.getSrcId() == src_id) {
+				transitions_subset.add(t);
+			}
+		}
+		return transitions_subset;
+	}
+	
 	public HashMap<String,Double> getXD() {
 		return X_D;
+	}
+	
+	public int getInitLocID() {
+		return init_loc_id;
+	}
+	
+	public String getInitLocName() {
+		for (Location l : locations) {
+			if (l.checkByID(init_loc_id)) {
+				return l.getName();
+			}
+		}
+		// Error due to unknown initial location
+		System.exit(0);
+		return null;
 	}
 	
 	public HashMap<String,Double> getO() {
@@ -65,46 +81,57 @@ public class SimQssHA {
 		return I;
 	}
 	
-	public HashSet<SimQssHALoc> getLoc(){
+	public HashSet<Location> getLocations(){
 		return locations;
 	}
 
 	public String toString() {
 		return "name=" + name + "\n locations=" + locations + "\n transitions=" + transitions + "\n X_C="
 				+ X_C + X_C_DOT + "\n X_D=" + X_D + "\n I=" + I + "\n O=" + O + "\n X_D=" + X_D + "\n init_loc="
-				+ init_loc + "\n init_val=" + init_val;
+				+ init_loc_id + "\n init_val=" + init_val;
 	}
 
 	public void convert(StateflowChart chart) {
+		// extractData extracts variables
 		extractData(chart);
-		// Extract location and edge information
+		// extract location information
 		for (StateflowNodeBase n : chart.getNodes()) {
-			extractLocation(n.getResolvedId().toString());
+			int id = Integer.parseInt(n.getId());
+			extractLocation(n.getResolvedId().toString(), id);
+			// extract transition information
 			for (StateflowTransition t : n.getInTransitions()) {
 				if (t.getSrc() == null) {
-					setInitLoc(t.getDst().getResolvedId().toString().split("\\\\n|\\\\r|\\r|\\n")[0].replaceAll("/", "_"));
-					// TODO: need to resolve the initialization
-					
+					init_loc_id = Integer.parseInt(t.getDst().getId());
+					// Capture the value assignments within {} bracket on the starting transition
 					Matcher m = Pattern.compile("\\{(.*?)\\}").matcher(t.obtainLabelData().getText());
-					while(m.find()) init_val = m.group(1);
+					while(m.find()) {
+						String members[] = m.group(1).replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
+						init_val = new HashSet<String>(Arrays.asList(members)); 
+					}
 				}
 				else {
-					String src = t.getSrc().getResolvedId().toString().split("\\\\n|\\\\r|\\r|\\n")[0].replaceAll("/", "_");
-					String dst = t.getDst().getResolvedId().toString().split("\\\\n|\\\\r|\\r|\\n")[0].replaceAll("/", "_");
-					addEdge(src, dst, t.obtainLabelData().getText());
+					int src_id = Integer.parseInt(t.getSrc().getId());
+					int dst_id = Integer.parseInt(t.getDst().getId());
+					addEdge(src_id, dst_id, t.obtainLabelData().getText());
 				}
 			}
 		}
+		System.out.print("Initial location : " + init_loc_id);
 	}
 	
-	private void extractLocation(String node) {
+	private void extractLocation(String node, int id) {
 		String s = node.trim().replaceAll("\\s", "");
 		String[] parts = s.split("\\\\n|\\\\r|\\r|\\n");
 		String locname[] = parts[0].split("/");
-		SimQssHALoc loc = new SimQssHALoc(locname[locname.length-1]);
+		// Set the location name and id
+		Location loc = new Location(locname[locname.length-1]);
+		loc.setID(id);
+		System.out.println("Location: " + loc.getName() + " id is : " + loc.getID());
 
-		// TODO: this string extraction needs improvement
+		// TODO: this string extraction needs improvement in terms of
+		// detecting du and en keywords to distinguish f, h, and reset
 		int mode = 0;
+		// "i" is the line count
 		for (int i = 1; i < parts.length; i++) {
 			if (parts[i].contains(":")){
 				if (parts[i].contains("du") == true && parts[i].contains("en") == false) {
@@ -122,7 +149,7 @@ public class SimQssHA {
 			if (mode == 1) {
 				String LHS = parts[i].split("=")[0];
 				if (X_C_DOT.contains(LHS)){
-					loc.addODE(parts[i].replaceAll(";", ""));
+					loc.addODE(parts[i].replace(";", ""));
 				} else if (O.containsKey(LHS)) {
 					loc.addOutputUpdate(parts[i]);
 				}
@@ -142,19 +169,24 @@ public class SimQssHA {
 		//System.out.println("Location: " + loc.toString());
 	}
 	
-	private void setInitLoc(String loc) {
-		init_loc = loc;
-	}
-	
-	private void addEdge(String src, String dst, String label) {
-		SimQssHATran tra = new SimQssHATran(src, dst);
+	private void addEdge(int src, int dst, String label) {
+		Transition tran = new Transition(src, dst);
 		
 		Matcher m = Pattern.compile("\\[(.*?)\\]").matcher(label);
-		while(m.find()) tra.setGuard(m.group(1));
+		while(m.find()) tran.setGuard(m.group(1));
 		m = Pattern.compile("\\{(.*?)\\}").matcher(label);
-		while(m.find()) tra.setReset(m.group(1));
-		transitions.add(tra);
+		while(m.find()) tran.setReset(m.group(1));
+		transitions.add(tran);
 		//System.out.println("Transitions: " + tra);
+	}
+	
+	public Location getLocationByID(int id) {
+		for (Location h : locations) {
+			if (h.checkByID(id) == true) {
+				return h;
+			}
+		}
+		return null;
 	}
 	
 	private void extractData(StateflowChart chart) {
@@ -179,16 +211,15 @@ public class SimQssHA {
 					if (data.getDeclaredParameterNames().contains("props.initialValue")) {
 						ival = Double.parseDouble(data.getParameter("props.initialValue"));
 					}
-					O.put(data.getName(), ival);
+					O.put(chart.getName() + "_" + data.getName(), ival);
 					break;
 				case Keyword.INPUT_DATA:
-					I.add(data.getName());
+					I.add(chart.getName() + "_" + data.getName());
 					break;
 				default:
 					System.out.println("Unknown scope variable is detected!!");
 					break;
 			}
-			//System.out.println("Variable parameter list: " + data.getDeclaredParameterNames());
 		}
 	}
 }

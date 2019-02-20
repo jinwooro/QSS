@@ -1,4 +1,4 @@
-package com.structure.SimQ;
+package com.pretzel.structure;
 import java.util.HashSet;
 import java.util.Set; 
 
@@ -7,14 +7,15 @@ import java.util.Set;
 // 2. Invariants (set of Strings)
 // 3. f (set of Strings)
 // 4. h (set of Strings)
-public class SimQssHALoc {
+public class Location {
 	private String name;
+	private int id;
 	private Set<String> inv = new HashSet<>();
 	private Set<String> f = new HashSet<>();
 	private Set<String> h = new HashSet<>();
 	private Set<String> init = new HashSet<>();
 	
-	public SimQssHALoc(String loc) {
+	public Location(String loc) {
 		this.name = loc;
 	}
 	
@@ -34,14 +35,40 @@ public class SimQssHALoc {
 		init.add(s);
 	}
 	
+	public void setID(int id) {
+		this.id = id;
+	}
+	
 	public Set<String> getf() {
 		return f;
+	}
+	
+	public Set<String> geth(){
+		return h;
 	}
 	
 	public String getName() {
 		return name;
 	}
+	
+	public int getID() {
+		return id;
+	}
 
+	public boolean checkByID(int id) {
+		if (this.id == id) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkByName(String name) {
+		if (this.name.equals(name)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public String getLHS(String eq, boolean ode) {
 		String LHS[] = eq.split("=");
 		if (LHS[0].isEmpty()) {
@@ -71,5 +98,18 @@ public class SimQssHALoc {
 	@Override
 	public String toString() {
 		return "[\n\t name=" + name + "\n\t inv=" + inv + "\n\t f=" + f + "\n\t h=" + h + "]\n";
-	}	
+	}
+
+	public String getInvariantString() {
+		String s = "";
+		boolean first = true;
+		for (String temp : inv) {
+			if (first) {
+				s += "(" + temp + ")";
+			} else {
+				s += " and (" + temp + ")";
+			}
+		}
+		return null;
+	}
 }

@@ -1,4 +1,4 @@
-package com.writer.SimQ;
+package com.pretzel.solver.qss;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -16,14 +18,18 @@ import javax.swing.text.Highlighter.Highlight;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 
-import com.structure.SimQ.SimQssHA;
-import com.structure.SimQ.SimQssHALoc;
+import com.pretzel.structure.HIOA;
+import com.pretzel.structure.Location;
+import com.pretzel.structure.Transition;
+
+
 
 // it is recommended to use only one of this object class
 public class HaWriter {
 	public static final String PATH = "generated";
 	public static final String CHART_FILE = "generated/charts.py";
 	public static final String BLOCK_FILE = "generated/blocks.py";
+	public static final String ASSET_FILE = "generated/assets.py";
 	public static final String MAIN_FILE = "generated/main.py";
 	
 	public HaWriter (String filename, double simulationTime) throws IOException {
@@ -147,48 +153,92 @@ public class HaWriter {
 		//System.out.println("Input ports: " + block.getInPorts());
 		//System.out.println("Output ports: " + block.getOutPorts());
 		//System.out.println("Parameter Value: " + block.getParameter("Value"));
-
-	public void writeCharts(HashSet<SimQssHA> HAs) throws IOException {
-		// For each HA object
-		for (SimQssHA ha : HAs){
-			// Open the class definition statement
-			String s = "class " + ha.getName() + ":\r\n";
-			
-			// Local scope variables declaration
-			s += "\t#ODE declarations\r\n";
-			for (SimQssHALoc l :  ha.getLoc()) {
+	
+	public void writeCharts(HashSet<HIOA> HAs) throws IOException {
+		String s = "";		
+		// ODEs are stored in one class
+		s = "class ODEs:\r\n\t#ODE declaration\r\n";
+		for (HIOA ha: HAs) {
+			// ODE declaration
+			// Each ODE has a name syntax: $loc_ode_$var
+			for (Location l :  ha.getLocations()) {
 				for (String f : l.getf()) {
 					String var = l.getLHS(f, true);
 					s+= "\t" + l.getName() + "_ode_" + var + " = ODE(env, lvalue=S.sympify('diff(" + var + "))'), "
 							+ "rvalue=S.sympify('" + l.getRHS(f) + "'), ttol=10**-2, iterations=1000)\r\n";
 				}
 			}
+		}
+		write(ASSET_FILE, s);
+		
+		// Output variables are created
+		s = "\r\nclass Outputs:\r\n\t#Output variables\r\n";
+		for (HIOA ha: HAs) {
+			Iterator it = ha.getO().entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry pair = (Map.Entry)it.next();
+				s += "\t" + pair.getKey() + " = " + pair.getValue() + "\r\n";
+			}
+		}
+		write(ASSET_FILE, s);
+		
+		// Each HA is a class in charts.py file
+		for (HIOA ha : HAs){
+			s = "class " + ha.getName() + ":\r\n";
 			
-			// TODO: need to write codes for defining the ODE
-			// E.g., loc1_ode_x = ODE(env, lvalue=S.sympify('diff(x(t))'), rvalue=S.sympify('v(t)'), ttol=10**-2, iterations=1000)
-			
-			s += "\tdef __init__(self):\r\n"
-					+ "\t\tself.cstate = 0\r\n";
-			s += "\t\t#Continuous variables X_C\r\n";
+			// Variable initialization
+			s += "\t#Internal continuous variables X_C\r\n";
 			for (Entry<String, Double> x : ha.getXC().entrySet()) {
-				s += "\t\tself." + x.getKey() + " = " + x.getValue() + "\r\n";
+				s += "\t" + x.getKey() + " = " + x.getValue() + "\r\n";
 			}
-			s += "\t\t#Discrete variables X_D\r\n";
+			s += "\t#Internal discrete variables X_D\r\n";
 			for (Entry<String, Double> x : ha.getXD().entrySet()) {
-				s += "\t\tself." + x.getKey() + " = " + x.getValue() + "\r\n";
+				s += "\t" + x.getKey() + " = " + x.getValue() + "\r\n";
 			}
-			s += "\t\t#Output variables O\r\n";
-			for (Entry<String, Double> o : ha.getO().entrySet()) {
-				s += "\t\tself." + o.getKey() + " = " + o.getValue() + "\r\n";
+			
+			// Location dictionary
+			s += "\r\n\tloc = {\r\n\t\t" + ha.getInitLocID() + ": " + ha.getInitLocName() + "\r\n";
+			for (Location l : ha.getLocations()) {
+				if (l.getID() == ha.getInitLocID()) {
+					// skip the initial location
+					continue;
+				}
+				s += "\t\t" + l.getID() + ": " + l.getName() + "\r\n";
 			}
-			s += "\t\t#Input variables I\r\n";
-			for (String i : ha.getI()) {
-				s += "\t\tself." + i + "=0\r\n";
+			s+= "\t}\r\n";
+			
+			// Constructor that initiate the cstate variable
+			s += "\r\n\tdef __init__(self):\r\n"
+					+ "\t\tself.cstate = " + ha.getInitLocID() + " \r\n\r\n";
+			
+			// Each location is a method
+			for (Location l : ha.getLocations()) {
+				s += "\tdef " + l.getName() + "(self):\r\n";
+				s += "\t\t# Check guard conditions before invariants\r\n"; 
+				for (Transition t : ha.getTransitionsBySrc(l.getID())) {
+					s += "\t\tif (" + t.getGuardString() + "):\r\n";
+					// Write reset assignments
+					for (String r : t.getReset()) {
+						s += "\t\t\t" + r + "\r\n";
+					}
+					s += "\t\t\tself.cstate = " + t.getDstId() + "\r\n";
+				}
+				
+				s += "\t\t# Check Invariants\r\n"
+					+ "\t\tif (" + l.getInvariantString() + "):\r\n";
+				
+				// write f and h vectors
+				for (String h : l.geth()) {
+					
+				}
+				
 			}
+			
+			
+			s += "\r\n\tdef run(self):\r\n" + "\t\tdelta = loc[self.cstate]()\r\n" + "\t\treturn delta\r\n";
 			
 			s+= "\r\n";
 			write(CHART_FILE, s);
-			
 		}
 	}
 }
