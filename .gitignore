@@ -1,5 +1,5 @@
 *
-!src/*.java
+!src/*
 !resource/*.slx
 !resource/*.mdl
 !resource/python/ode.py

@@ -34,8 +34,6 @@ public class Main {
 		
 		/*	
 		HaWriter hw = new HaWriter(file.getName(), simTime);
-		
-		
 
 		// Step 2: Translate each chart into a HA (of type SimQssHA)
     	HashSet<HIOA> HAs = new HashSet<HIOA>();
