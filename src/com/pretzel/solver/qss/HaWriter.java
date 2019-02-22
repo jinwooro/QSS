@@ -154,6 +154,7 @@ public class HaWriter {
 		//System.out.println("Output ports: " + block.getOutPorts());
 		//System.out.println("Parameter Value: " + block.getParameter("Value"));
 	
+	/*
 	public void writeCharts(HashSet<HIOA> HAs) throws IOException {
 		String s = "";		
 		// ODEs are stored in one class
@@ -241,4 +242,5 @@ public class HaWriter {
 			write(CHART_FILE, s);
 		}
 	}
+	*/
 }

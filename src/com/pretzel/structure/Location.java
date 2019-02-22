@@ -15,8 +15,8 @@ public class Location {
 	private Set<String> h = new HashSet<>();
 	private Set<String> init = new HashSet<>();
 	
-	public Location(String loc) {
-		this.name = loc;
+	public Location(String name) {
+		this.name = name;
 	}
 	
 	public void addInvariant(String s) {
@@ -110,6 +110,6 @@ public class Location {
 				s += " and (" + temp + ")";
 			}
 		}
-		return null;
+		return s;
 	}
 }

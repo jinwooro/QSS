@@ -42,15 +42,14 @@ public class Transition {
 		return R;
 	}
 	
-	public void setGuard(String guard) {
-		String members[] = guard.replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
-		G.addAll(Arrays.asList(members));
+	public void setGuard(String[] guard) {
+		if (guard.length != 0) 
+			G.addAll(Arrays.asList(guard));
 	}
 	
-	public void setReset(String reset) {
-		System.out.println("hell~~~~~ " + reset);
-		String members[] = reset.replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
-		R.addAll(Arrays.asList(members));
+	public void setReset(String[] reset) {
+		if (reset != null)
+			R.addAll(Arrays.asList(reset));
 	}
 
 	/* (non-Javadoc)

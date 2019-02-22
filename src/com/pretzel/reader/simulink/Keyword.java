@@ -1,6 +1,10 @@
-package com.pretzel.reader;
+package com.pretzel.reader.simulink;
 
-// This class 'Keyword' stores useful keywords for extracting information from the Simulink model
+/**
+ * This class is a collection of keywords for Simulink model parameters.
+ * @author Jin Woo Ro
+ *
+ */
 public class Keyword{
 	public static final String LOCAL_DATA = "LOCAL_DATA";
 	public static final String OUTPUT_DATA = "OUTPUT_DATA";
