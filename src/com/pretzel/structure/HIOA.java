@@ -127,9 +127,11 @@ public class HIOA {
 				X_D.put(name, value);
 				break;
 			case INPUT:
+				I_ports.put(port, name);
 				I.add(name);
 				break;
 			case OUTPUT:
+				O_ports.put(port, name);
 				O.put(name, value);
 				break;
 			default:
@@ -158,7 +160,7 @@ public class HIOA {
 		
 	public String toString() {
 		return "name=" + name + "\n locations=" + locations + "\n transitions=" + transitions + "\n X_C="
-				+ X_C + "\n X_C_DOT ="+ X_C_DOT + "\n X_D=" + X_D + "\n I=" + I + "\n O=" + O + "\n X_D=" + X_D + "\n init_loc="
+				+ X_C + "\n X_C_DOT ="+ X_C_DOT + "\n X_D=" + X_D + "\n I=" + I + I_ports + "\n O=" + O + O_ports + "\n X_D=" + X_D + "\n init_loc="
 				+ init_loc + "\n init_val=" + initialization;
 	}
 }

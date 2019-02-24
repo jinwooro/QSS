@@ -97,7 +97,7 @@ public class Location {
 	
 	@Override
 	public String toString() {
-		return "[\n\t name=" + name + "\n\t inv=" + inv + "\n\t f=" + f + "\n\t h=" + h + "]\n";
+		return "[\n\t name=" + name + "\n\t id=" + id + "\n\t inv=" + inv + "\n\t f=" + f + "\n\t h=" + h + "]\n";
 	}
 
 	public String getInvariantString() {
