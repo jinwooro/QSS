@@ -18,6 +18,7 @@ import com.pretzel.reader.simulink.SimulinkReader;
 import com.pretzel.solver.qss.HaWriter;
 import com.pretzel.structure.Block;
 import com.pretzel.structure.HIOA;
+import com.pretzel.structure.Line;
 
 public class Main {
 	public static void main(String[] args) throws ZipException, IOException, SimulinkModelBuildingException {
@@ -27,7 +28,7 @@ public class Main {
 		
 		HashSet<HIOA> HIOAs = SR.extractHIOAs();
 		HashSet<Block> Blocks = SR.extractBlocks();
-		
+		HashSet<Line> Lines = SR.extractLines();
 		for (HIOA h : HIOAs) {
 			System.out.println(h);
 		}

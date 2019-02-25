@@ -27,6 +27,7 @@ import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
 
 import com.pretzel.structure.Block;
 import com.pretzel.structure.HIOA;
+import com.pretzel.structure.Line;
 import com.pretzel.structure.Location;
 import com.pretzel.structure.Transition;
 
@@ -45,12 +46,16 @@ public class SimulinkReader {
 	public SimulinkReader(String input_file_name) throws ZipException, IOException, SimulinkModelBuildingException {
 		file = new File("resource/example1.mdl");
 		HashSet<String> namesStateflowCharts = new HashSet<String>();
+		
+		// Distinguish between Simulink Stateflow Charts and Simulink Blocks
 		try (SimulinkModelBuilder builder = new SimulinkModelBuilder(file, new SimpleLogger())) {
 			model = builder.buildModel();
-			for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
-	    		namesStateflowCharts.add(chart.getName());
-	    		charts.add(chart);
-	    	}
+			if (model.getStateflowMachine() != null) {
+				for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
+		    		namesStateflowCharts.add(chart.getName());
+		    		charts.add(chart);
+		    	}
+			}
 			for (SimulinkBlock block : model.getSubBlocks()) {
 	    		if (namesStateflowCharts.contains(block.getName())){
 	    			continue;
@@ -61,10 +66,23 @@ public class SimulinkReader {
 	    }
 	}
 	
+	
+	
 	public void drawDiagram() throws IOException {
 		// render a block or model as PNG image
 		BufferedImage image = SimulinkBlockRenderer.renderBlock(model);
 		ImageIO.write(image, "PNG", new File(file.getName() + ".png"));
+	}
+	
+	public HashSet<Line> extractLines(){
+		HashSet<Line> lines = new HashSet<Line>();
+		// iterate over all the input and output ports of charts
+		for (StateflowChart c : charts) {
+			for (SimulinkLine l : c.getStateflowBlock().getInLines()) {
+				System.out.println(l.getParameterNames());				
+			}
+		}
+		return lines; 
 	}
 	
 	public HashSet<HIOA> extractHIOAs(){
