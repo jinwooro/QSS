@@ -215,9 +215,9 @@ public class SimulinkReader {
 		
 		for (SimulinkBlock b : blocks) {
 			Block block = new Block(b.getName(), b.getType());
-			
+			FBlock.add(block);
 		}
-	
+		
 		return FBlock;
 	}
 }
