@@ -7,6 +7,8 @@ public class Block {
 	private String type;
 	private HashMap<Integer, String> InPorts = new HashMap<Integer, String>();
 	private HashMap<Integer, String> OutPorts = new HashMap<Integer, String>();
+	private int samplingRate = -1; // -1 means it is called only by other charts or blocks
+	private int initialValue = 0; // 0 by default
 	
 	public Block(String name, String type) {
 		this.name = name;
@@ -34,8 +36,6 @@ public class Block {
 		}
 		return OutPorts.get(index);
 	}
-
-	
 	
 	public void addInPort(int port, String name) {
 		InPorts.put(port, name);
