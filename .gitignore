@@ -1,0 +1,13 @@
+*
+
+!.classpath
+!.gitignore
+!.project
+!.settings/*
+!src/*
+!lib/*
+!Latex/*.tex
+!resource/*.slx
+!resource/*.mdl
+!resource/*.py
+!doc/*
