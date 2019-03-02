@@ -1,17 +1,17 @@
 *
 
+!.gitignore
 !.classpath
 !.project
 
-!**.py
-!**.tex
-!**.java
-!**.jar
-!**.mdl
-!**.slx
+!*.java
+!*.jar
+!*.tex
+!*.py
+!*.mdl
+!*.slx
 
-!/*
+!*/
 
-generated/
-*DS_Store
-src/.DS_Store
+generated/*
+
