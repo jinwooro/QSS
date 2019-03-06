@@ -39,8 +39,8 @@ public class SimulinkReader {
 	private HashSet<StateflowChart> charts = new HashSet<StateflowChart>();
 	private HashSet<SimulinkBlock> blocks = new HashSet<SimulinkBlock>();
 	
-	public SimulinkReader(String input_file_name) throws ZipException, IOException, SimulinkModelBuildingException {
-		file = new File("resource/example1.mdl");
+	public SimulinkReader(String inputFileName) throws ZipException, IOException, SimulinkModelBuildingException {
+		file = new File(inputFileName);
 		HashSet<String> namesStateflowCharts = new HashSet<String>();
 		
 		// Distinguish between Simulink Stateflow Charts and Simulink Blocks
@@ -166,6 +166,7 @@ public class SimulinkReader {
 						hioa.setInitialization(tran);
 					}
 					else {
+						System.out.println(t);
 						int src_id = Integer.parseInt(t.getSrc().getId());
 						int dst_id = Integer.parseInt(t.getDst().getId());
 						Transition tran = new Transition(src_id, dst_id);
