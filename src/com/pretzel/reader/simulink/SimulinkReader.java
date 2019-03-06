@@ -39,8 +39,8 @@ public class SimulinkReader {
 	private HashSet<StateflowChart> charts = new HashSet<StateflowChart>();
 	private HashSet<SimulinkBlock> blocks = new HashSet<SimulinkBlock>();
 	
-	public SimulinkReader(String input_file_name) throws ZipException, IOException, SimulinkModelBuildingException {
-		file = new File("resource/example1.mdl");
+	public SimulinkReader(String inputFileName) throws ZipException, IOException, SimulinkModelBuildingException {
+		file = new File(inputFileName);
 		HashSet<String> namesStateflowCharts = new HashSet<String>();
 		
 		// Distinguish between Simulink Stateflow Charts and Simulink Blocks

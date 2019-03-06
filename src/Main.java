@@ -24,7 +24,7 @@ import com.pretzel.structure.Line;
 public class Main {
 	public static void main(String[] args) throws ZipException, IOException, SimulinkModelBuildingException {
 		
-		String filename = "resource/example1.mdl";
+		String filename = "resource/example3.mdl";
 		System.out.println("Target file : " + filename);
 		SimulinkReader SR = new SimulinkReader(filename);
 		
