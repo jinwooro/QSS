@@ -1,4 +1,4 @@
-package com.pretzel.solver.qss;
+package com.pretzel.generator;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -146,6 +146,7 @@ public class HaWriter {
 			buff = "";
 		}
 	}
+	
 
 	public void writeBlocks(HashSet<SimulinkBlock> blocks) throws IOException {
 		HashSet<String> types = new HashSet<>();

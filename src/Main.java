@@ -14,8 +14,9 @@ import org.conqat.lib.simulink.model.SimulinkModel;
 import org.conqat.lib.simulink.model.stateflow.StateflowChart;
 import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
 
+import com.pretzel.generator.HaWriter;
+import com.pretzel.generator.Kieler.adapterKieler;
 import com.pretzel.reader.simulink.SimulinkReader;
-import com.pretzel.solver.qss.HaWriter;
 import com.pretzel.structure.Block;
 import com.pretzel.structure.HIOA;
 import com.pretzel.structure.Line;
@@ -27,17 +28,28 @@ public class Main {
 		System.out.println("Target file : " + filename);
 		SimulinkReader SR = new SimulinkReader(filename);
 		
-		HashSet<HIOA> HIOAs = SR.extractHIOAs();
+		HashSet<HIOA> HIOAs = SR.extractHIOAs(false);
 		HashSet<Block> Blocks = SR.extractBlocks();
 		HashSet<Line> Lines = SR.extractLines();
+		
 		for (HIOA h : HIOAs) {
 			System.out.println(h);
 		}
 		
+		for (Block b : Blocks) {
+			System.out.println(b);
+		}
 		
-		HaWriter hw = new HaWriter(filename, 10);
+		for (Line l : Lines) {
+			System.out.println(l);
+		}
 		
-		hw.writeCharts(HIOAs);
+		//HaWriter hw = new HaWriter(filename, 10);
+		//hw.writeCharts(HIOAs);
+		
+		adapterKieler ak = new adapterKieler(filename);
+		ak.generateCode(HIOAs, Blocks, Lines);
+		
 		/*
 		// Step 2: Translate each chart into a HA (of type SimQssHA)
     	HashSet<HIOA> HAs = new HashSet<HIOA>();

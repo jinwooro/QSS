@@ -14,6 +14,7 @@ public class Location {
 	private Set<String> f = new HashSet<>();
 	private Set<String> h = new HashSet<>();
 	private Set<String> init = new HashSet<>();
+	private Set<Transition> tran_out = new HashSet<>();
 	
 	public Location(String name) {
 		this.name = name;

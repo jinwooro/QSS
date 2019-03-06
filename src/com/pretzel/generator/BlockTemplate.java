@@ -1,4 +1,4 @@
-package com.pretzel.solver.qss;
+package com.pretzel.generator;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 import org.conqat.lib.simulink.model.SimulinkPortBase;
