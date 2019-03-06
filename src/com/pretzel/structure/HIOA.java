@@ -28,8 +28,7 @@ public class HIOA {
 	}
 	
 	public String getInputNameByPort(int num) {
-		// TODO:
-		return "";
+		return I_ports.get(num);
 	}
 	
 	public int getInputPortByName(String name) {
@@ -38,8 +37,7 @@ public class HIOA {
 	}
 	
 	public String getOutputNameByPort(int num) {
-		// TODO
-		return "";
+		return O_ports.get(num);
 	}
 	 
 	public int getOutputPortByName(String name) {
@@ -58,6 +56,7 @@ public class HIOA {
 	public HashMap<String,Double> getXC() {
 		return X_C;
 	}
+
 
 	public HashMap<String,Double> getXD() {
 		return X_D;
@@ -155,6 +154,6 @@ public class HIOA {
 	public String toString() {
 		return "name=" + name + "\n locations=" + locations + "\n transitions=" + transitions + "\n X_C="
 				+ X_C + "\n X_C_DOT ="+ X_C_DOT + "\n X_D=" + X_D + "\n I=" + I + I_ports + "\n O=" + O + O_ports + "\n X_D=" + X_D + "\n init_loc="
-				+ init_loc + "\n init_val=" + initialization;
+				+ init_loc + "\n init_val=" + initialization + "\n Input ports=" + I_ports + "\n Output ports=" + O_ports;
 	}
 }

@@ -1,64 +1,52 @@
 package com.pretzel.structure;
 
 public class Line {
-	private boolean type; // it is an indicator if this line is incoming (true), otherwise false.
-	private String SrcName; 
-	private int SrcPort;
-	private String DstName;
-	private int DstPort;
+	private String SrcBlockName; 
+	private int SrcPortIndex;
+	private String DstBlockName;
+	private int DstPortIndex;
+	private String SrcPortName;
+	private String DstPortName;
 	
-	public Line(String inname, int inport, String outname, int outport, boolean type) {
-		SrcPort = inport;
-		SrcName = inname;
-		DstPort = outport;
-		DstName = outname;
-		this.type = type;
+	public Line(String SrcBlockName, int SrcPortIndex, String DstBlockName, int DstPortIndex) {
+		this.SrcBlockName = SrcBlockName;
+		this.DstBlockName = DstBlockName;
+		this.SrcPortIndex = SrcPortIndex;
+		this.DstPortIndex = DstPortIndex;
+		// TODO:
+		//this.SrcPortName = SrcPortName; 
+		//this.DstPortName = DstPortName;
 	}
 
-	public String getSrcName() {
-		return SrcName;
+	public String getSrcBlockName() {
+		return SrcBlockName;
 	}
 
-	public void setSrcName(String srcName) {
-		SrcName = srcName;
+	public int getSrcPortIndex() {
+		return SrcPortIndex;
 	}
 
-	public int getSrcPort() {
-		return SrcPort;
+	public String getDstBlockName() {
+		return DstBlockName;
 	}
 
-	public void setSrcPort(int srcPort) {
-		SrcPort = srcPort;
+	public int getDstPortIndex() {
+		return DstPortIndex;
 	}
 
-	public String getDstName() {
-		return DstName;
+	public String getSrcPortName() {
+		return SrcPortName;
 	}
 
-	public void setDstName(String dstName) {
-		DstName = dstName;
-	}
-
-	public int getDstPort() {
-		return DstPort;
-	}
-
-	public void setDstPort(int dstPort) {
-		DstPort = dstPort;
-	}
-
-	public boolean isOutward() {
-		return !type;
-	}
-
-	public boolean isInward() {
-		return type;
+	public String getDstPortName() {
+		return DstPortName;
 	}
 
 	@Override
 	public String toString() {
-		return "Line [SrcName=" + SrcName + ", SrcPort=" + SrcPort + ", DstName=" + DstName + ", DstPort=" + DstPort
-				+ "]";
+		return "Line [SrcBlockName=" + SrcBlockName + ", SrcPortIndex=" + SrcPortIndex + ", DstBlockName="
+				+ DstBlockName + ", DstPortIndex=" + DstPortIndex + ", SrcPortName=" + SrcPortName + ", DstPortName="
+				+ DstPortName + "]";
 	}
 
 }

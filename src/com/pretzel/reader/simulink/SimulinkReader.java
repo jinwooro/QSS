@@ -14,11 +14,8 @@ import org.conqat.lib.commons.logging.SimpleLogger;
 import org.conqat.lib.simulink.builder.SimulinkModelBuilder;
 import org.conqat.lib.simulink.builder.SimulinkModelBuildingException;
 import org.conqat.lib.simulink.model.SimulinkBlock;
-import org.conqat.lib.simulink.model.SimulinkInPort;
 import org.conqat.lib.simulink.model.SimulinkLine;
 import org.conqat.lib.simulink.model.SimulinkModel;
-import org.conqat.lib.simulink.model.SimulinkOutPort;
-import org.conqat.lib.simulink.model.SimulinkPortBase;
 import org.conqat.lib.simulink.model.stateflow.StateflowChart;
 import org.conqat.lib.simulink.model.stateflow.StateflowData;
 import org.conqat.lib.simulink.model.stateflow.StateflowNodeBase;
@@ -65,8 +62,6 @@ public class SimulinkReader {
 	    }
 	}
 	
-	
-	
 	public void drawDiagram() throws IOException {
 		// render a block or model as PNG image
 		BufferedImage image = SimulinkBlockRenderer.renderBlock(model);
@@ -78,30 +73,31 @@ public class SimulinkReader {
 		// iterate over all the input and output ports of charts
 		for (StateflowChart c : charts) {
 			for (SimulinkLine l : c.getStateflowBlock().getInLines()) {
-				String outname = l.getParameter("DstBlock");
-				int outport = Integer.parseInt(l.getParameter("DstPort"));
-				String inname = l.getParameter("SrcBlock");
-				int inport = Integer.parseInt(l.getParameter("SrcPort"));
-				
-				Line line = new Line(inname, inport, outname, outport, true);
+				// since we consider getInLines, the transition is always inward to this chart c
+				String DstBlockName = l.getParameter("DstBlock");
+				int DstPortIndex = Integer.parseInt(l.getParameter("DstPort"));
+				String SrcBlockName = l.getParameter("SrcBlock");
+				int SrcPortIndex = Integer.parseInt(l.getParameter("SrcPort"));
+
+				Line line = new Line(SrcBlockName, SrcPortIndex, DstBlockName, DstPortIndex);
 				lines.add(line);
 			}
 		}
 		
 		for (SimulinkBlock b : blocks) {
 			for (SimulinkLine l: b.getInLines()) {
-				String outname = l.getParameter("DstBlock");
-				int outport = Integer.parseInt(l.getParameter("DstPort"));
-				String inname = l.getParameter("SrcBlock");
-				int inport = Integer.parseInt(l.getParameter("SrcPort"));
-				Line line = new Line(inname, inport, outname, outport, true);
+				String DstBlockName = l.getParameter("DstBlock");
+				int DstPortIndex = Integer.parseInt(l.getParameter("DstPort"));
+				String SrcBlockName = l.getParameter("SrcBlock");
+				int SrcPortIndex = Integer.parseInt(l.getParameter("SrcPort"));
+				Line line = new Line(SrcBlockName, SrcPortIndex, DstBlockName, DstPortIndex);
 				lines.add(line);
 			}
 		}
 		return lines; 
 	}
 	
-	public HashSet<HIOA> extractHIOAs(){
+	public HashSet<HIOA> extractHIOAs(boolean fullChartNameEnabler){
 		HashSet<HIOA> HIOAs = new HashSet<HIOA>();
 		
 		for (StateflowChart chart : charts) {
@@ -195,7 +191,13 @@ public class SimulinkReader {
 				String contain = n.getResolvedId().toString();
 				String[] lines = contain.split("\\\\n|\\\\r|\\r|\\n");
 				
-				Location l = new Location(lines[0]);
+				String name = "";
+				if (fullChartNameEnabler == true) {
+					name = lines[0];
+				} else {
+					name = lines[0].split("/")[lines[0].split("/").length-1];
+				}
+				Location l = new Location(name);
 				l.setID(id);
 				
 				// TODO: improve identifying f and o

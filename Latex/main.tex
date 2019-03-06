@@ -33,7 +33,12 @@
 
 
 \begin{document}
-	
+
+For modeling of Cyber-physical systems (CPSs), it is required to capture the continuous physical phenomena and the discrete computer processes. Many useful tools such as Simulink allow modeling of CPS.
+
+\section{Structure definitions}
+\subsection{Hybrid Input Output Automata}
+In general, the hybrid behavior is captured using Hybrid Input Output Automata (HIOA).
 \begin{definition}
 	A \emph{Hybrid Input Output Automaton (HIOA)} is a tuple:
 	\begin{equation}
@@ -46,7 +51,7 @@
 		\item $I = I_D \cup I_C$ is a finite collection of input variables, where $I_D$ is discrete inputs and $I_C$ is continuous inputs, with their domains $\mathbf{I}$, $\mathbf{I}_D$, and $\mathbf{I}_C$, respectively.
 		\item $O = O_D \cup O_C$ is a finite collection of output variables, where
 		$O_D$ is discrete outputs and $O_C$ is continuous outputs. Their domains are $\mathbf{O}$, $\mathbf{O}_D$, and $\mathbf{O}_C$.
-		\item $Init \subseteq \{l_0\} \times \mathbf{X}$ is the system initialization. \jin{Should we not set the initial output values? because these values will be consumed in the dependent blocks.}
+		\item $Init \subseteq \{l_0\} \times \mathbf{X}$ is the system initialization.
 		\item $f:Loc \times \mathbf{X} \times \mathbf{I} \rightarrow \mathbf{X}$ is a vector field for specification of the ODEs. Function $f(l,x,i)$ is globally \emph{Lipschitz} continuous in $x \in \mathbf{X}$ and $i \in \mathbf{I}$.
 		\item $h : Loc \times \mathbf{X} \rightarrow \mathbf{O}$ is a vector field. Function $h(i,x)$ is globally \emph{Lipschitz} continuous in $ x\in \mathbf{X}$.
 		\item $Inv : Loc \rightarrow 2^{ \mathbf{X} \times \mathbf{I} }$ assigns to each $l \in Loc$ an invariant set. For example, $Inv(l)$ constrains the possible valuations for the continuous variables and input variables when the control of the hybrid system is in location $l$.
@@ -57,18 +62,156 @@
 	\label{def:HIOA}
 \end{definition}
 
-\pagebreak
-
-
+\subsection{Block}
 \begin{definition}
-	A discrete hybrid timeset is a sequence of intervals $\tau = \{ \tau_0, \tau_1, \tau_2, ..., \tau_{k-1} \}$
-	Consider a predefined time bound $T$ and a fixed length $\delta \in \mathbb{R}^{\geq0}$. Then, a discrete timeset is a collection of time instances , such that:
-	\begin{enumerate}
-		\item The number of time instances $k = \lfloor{\frac{T}{\delta}}\rfloor$, i.e., the cardinality of the set $| \tau | = k$.
-		\item The value of each time instance $\tau_i = i \times \delta$. Hence, $\tau_i < \tau_j$ is always true if $i < j$.
-	\end{enumerate}
+	A block is a tuple $B = <I, O, m>$, where $I$ is the set of input variables, $O$ is the output variables, $m : I \rightarrow O$ is the mapping function.
+\end{definition}
+The HIOA and Blocks are two types of objects in the system. 
+
+\subsection{Discrete timeset}
+Next, to describe the time progression of these blocks, we define a discrete timeset $\tau$.
+\begin{definition}
+	A discrete timeset is a sequence $\tau = \{ \tau_0, \tau_1, ..., \tau_{k-1}, \tau_{k} \}$, where $k \in \mathbb{N}$, $\tau_k \in \mathbb{R}$, $\tau_0 = 0$, and $\tau_{k-1} < \tau_{k}$.
 	\label{ch1:def:timeset}
 \end{definition}
+In piecewise continuous functions, there may be jumps (i.e., discontinuity between subintervals). To capture these, we define a discrete left-sided limit timeset.
+A left-sided limit timeset is a sequence $\tau^{-} = \{ \tau_1^{-}, \tau_2^{-}, ... , \tau_k^{-} \}$, such that for an arbitrary function $f(t)$, it satisfies:
+\begin{equation}
+f(\tau_i^{-}) = \lim\limits_{t\rightarrow\tau_i^{-}} f(t)
+\end{equation}
+Note that $\tau_0^-$ is missing in $\tau^-$ because $\tau$ starts from $\tau_0$. Since $\tau_0 = 0$ is the left end point (i.e., time cannot be smaller than zero), we do not consider the left-sided limit of $t=0$.
+
+The general idea of discrete timeset is that the system progresses the time in the order $\tau_0, \tau_1^-, \tau_1, \tau_2^-, \tau_2, ... , \tau_n^-, \tau_n$. For all $i$, the time progresses between $\tau_i$ and $\tau_{i+1}^-$, and the continuous variables are updated. We enforce that during this time interval, there is no change in location such that the location at $\tau_{i+1}^-$ is identical to the location at $\tau_i$ for all HIOAs in the system.
+Consequently, the ODEs active during this time interval are fixed and can be known.
+On the other hand, the progress from $\tau_{i}^-$ to $\tau_{i}$ takes zero time, which is useful to capture the instantaneous transition between the locations.
+Since the time is not passed, the continuous variables are not changed. 
+However, the continuous variables are assigned to new values through the reset relation on the edge transition if any edge is enabled by the guard condition.
+Since not all HIOAs enable the edge simultaneously, only some blocks may change the location.
+
+\subsection{Overall system structure}
+Consider two HIOA instances $H_1$ and $H_2$, and let $I^{H_1}$ and $I^{H_2}$ are their input variable sets, respectively.
+Then, we denote $I^{H_1}_k$ to indicate a specific input $i_k \in I^{H_1}$. Similarly, $I^{H_2}_k$ indicates the input $i_k \in I^{H_2}$ in $H_2$.
+Furthermore, we use the same notation for other components of HIOA. 
+For example, $O^{H_1}_k$ and $X^{H_1}_k$.
+The same indication applies to the Blocks, so that $I^{B_1}_k$ indicates the input variable $i_k$ in $B_1$.
+Now, we define the system.
+\begin{definition}
+	A system $S = <\tau, \mathcal{H}, \mathcal{B}, \mathcal{I}, \mathcal{O}, \mathcal{L}, \Omega, \Psi>$
+	\begin{itemize}
+		\item $\tau$ is the discrete timeset.
+		\item $\mathcal{H}$ is the set of HIOA.
+		\item $\mathcal{B}$ is the set of Blocks.
+		\item $\mathcal{I} = \bigcup\limits_{Z\in\mathcal{H} \cup \mathcal{B}}I^Z$ is the collection of all input variables of HIOAs and Blocks in the system.
+		\item $\mathcal{O} = \bigcup\limits_{Z\in\mathcal{H} \cup \mathcal{B}}O^Z$ is the collection of all output variables of HIOAs and Blocks in the system.
+		\item $\mathcal{L} : \mathcal{I} \rightarrow \mathcal{O}$ is the I/O relation. 
+		\item $\Omega(\tau_i, ODE(\tau_i), CN(\tau_i)) = \tau_{i+1}$ is the function that computes the next discrete time.
+		\item $\Psi(\tau_i^-, \mathcal{H}, \mathcal{B}) $
+	\end{itemize}
+\end{definition}
+
+\section{Execution semantics}
+The execution of a single HIOA is defined as follows.
+\begin{definition}
+Let $\tau$ be the discrete timeset, $l : \tau \rightarrow Loc$, $x : \tau \rightarrow X$, $i : \tau \rightarrow I$, $o: \tau \rightarrow O$. Then, a discrete execution of a single HIOA satisfies:
+	\begin{enumerate}
+		\item Initialization: $(l(\tau_0), x(\tau_0)) \in Init$
+		\item Invariant: $\forall \tau_i \in \tau$, $(x(\tau_i), i(\tau_i)) \in Inv(l(\tau_i))$, and $(x(\tau_{i+1}^-), i(\tau_{i+1}^-)) \in Inv(l(\tau_i))$. However, $(x(\tau_i^-), i(\tau_i^-)) \notin Inv(l(\tau_i))$ is allowed to capture the discontinuity between two consecutive discrete times.
+		\item Continuous variable update: for all times, $l(\tau_i) = l(\tau_{i+1}^-)$ is satisfied. The vector field $f$ is approximated by Taylor polynomial $F$ over the time interval $t \in [\tau_i, \tau_{i+1}^-]$, thus $x(t) = F(t)$. The radius of convergence $r$ must satisfy $r \geq \tau_{i+1} - \tau_i$ to ensure the approximation $F$ is valid.
+		\item Edge transition: $\forall \tau_i \in \tau$, $e = (l(\tau_{i+1}^-), l(\tau_{i+1})) \in E$, $(x(\tau_{i+1}^-), i(\tau_{i+1}^-))\in G(e)$, and $x(\tau_{i+1}) \in R(e, x(\tau_{i+1}^-), i(\tau_{i+1}^-))$
+		\item Output update: $\forall t \in \tau$, $o(t) = h( l(t), x(t) )$
+	\end{enumerate}
+\end{definition}
+
+On the other hand, the Blocks are executed differently depending on the Block types (e.g., arithmetic operations, integration, differentiation, etc...).
+
+\subsection{Integrator Block}
+\subsubsection{Continuous Integrator}
+An input $i_1 = [c_0, c_1, c_2, ... , c_n ] \in I$ is a fixed size vector, where each value is a real number representing the Taylor series coefficients, such that it implies a function
+\begin{equation}
+	 f(t) = c_0 + c_1 \cdot t + c_2 \cdot t^2 + ... c_n \cdot t^n
+\end{equation}
+The other input $i_2 = \Delta t$ which is the time elapsed from the previous computation.
+The output is the integration of the Taylor series over the time elapsed. Hence:
+\begin{align}
+	O(t) &= \int_{0}^{\Delta t} f(t) dt \\
+	&= \int_{0}^{\Delta t} \bigg( c_0 + c_1 \cdot t + c_2 \cdot t^2 + ... c_n \cdot t^n \bigg) dt \\
+	&= c_0 \cdot t + \frac{c_1}{2} \cdot t^2 + \frac{c_2}{3} \cdot t^3 ... \frac{c_n}{n+1} \cdot t^{n+1} \bigg|_0^{\Delta t}
+\end{align}
+The function $m:  \int_{0}^{\Delta t} c_0 + c_1 \cdot t + c_2 \cdot t^2 + ... c_n \cdot t^n dt$
+
+
+\section{Solving Coupled Non-linear ODEs}
+\subsection{One-dimensional Taylor series}
+Taylor Series is defined as:
+\begin{align}
+& f(x)  = c_0 + c_1(x-a) + c_2(x-a)^2 + \dots + c_n(x-a)^n + \dots \\
+\text{where, } & c_n  = \frac{f^n(a)}{n!} 
+\end{align}
+The general term $c_n$ is called Taylor Coefficient. The fully expressed Taylor series formula is:
+\begin{equation}
+	f(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \dots + \frac{f^n(a)}{n!}(x-a)^n + \dots
+\end{equation}
+\subsection{Lagrange error bound}
+The Lagrange error bound for the Taylor polynomial is the next term of Taylor series after the $x^n$ term:
+\begin{equation}
+	f(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \dots + \frac{f^n(a)}{n!}(x-a)^n + R_n(x)
+\end{equation}
+where, the reminder term $R_n(x)$ is
+\begin{equation}
+	R_n(x) = \frac{f^{n+1}(c)(x-a)^{n+1}}{(n+1)!}
+\end{equation}
+The bounded error can be found as a constraint called the Lagrange error bound.
+\begin{equation}
+	R_n(x) < max \bigg| \frac{f^{n+1}(c)(x-a)^{n+1}}{(n+1)!} \bigg|
+\end{equation}
+
+\subsection{Multi-variable Taylor series}
+Let $f$ be a function that is infinitely differentiable, and the initial values for two variables $(x,y) = (a,b)$.
+\begin{equation}
+	f(x,y) = f
+\end{equation}
+
+
+\subsection{Numerical differentiation}
+Numerical differentiation is the process of finding the numerical value of a derivative of a given function at a given point.
+\begin{equation}
+f'(t) = \lim\limits_{h\rightarrow 0} \frac{f(t+h)-f(t)}{h}
+\end{equation}
+for some extremely small numerical value of $h \ll 1$.
+The computational model of the numerical differentiation is as follow.
+Let $\varepsilon \in \mathbb{R}$ be an extremely small value, $f(t)$ a function, and $t$ is the point we are finding the derivatives. Then,
+\begin{align}
+f'(t) &= \frac{f(t+\varepsilon)-f(t)}{\varepsilon}
+\end{align}
+
+
+
+Suppose we have two coupled non-linear ODEs where the independent variable is $t$.
+\begin{gather}
+	\dot{x}(t) = X(x,y,t) \\
+	\dot{y}(t) = Y(x,y,t) 
+\end{gather}
+At $t=0$, the initial values are $x(0) = k_1$ and $y(0) = k_2$, where $k_1$ and $k_2$ are some constants.
+Based on the initial values, we can calculate the first derivative of $x$ and $y$. $\dot{x}(0) = X(k_1, k_2, 0)$ and $\dot{y}(0) = Y(k_1, k_2, 0)$.
+According to the Taylor series definition, we can approximate $x(t)$:
+\begin{equation}
+	x(t) = x(0) + x'(0) \cdot t + \frac{x''(0)}{2}\cdot t^2 + \frac{x'''(0)}{6}  \cdot t^3 + ... \frac{x^{(n)}(0)}{n!} \cdot t^n + ... 
+\end{equation}
+However, we only know $x(0)$ and $x'(0)$. It is straightforward to form the first order Taylor series, which is, in fact, identical to Euler's forward method.
+\begin{equation}
+	x(t) = x(0) + x'(0) \cdot t
+\end{equation}
+where the Lagrange error bound is $\frac{x''(0)}{2}\cdot t^2$ in this case.
+However, the first order Taylor series often result in very small interval of convergence, hence we cannot estimate the value of $x$ with large progression of $t$.
+To overcome, we need to know the value of the second, third, fourth derivatives to improve the approximation accuracy.
+
+
+
+
+
+
+
+
 
 \begin{definition}
 	The progression of the $\tau$ value is a function $\Omega$ which is defined as:
