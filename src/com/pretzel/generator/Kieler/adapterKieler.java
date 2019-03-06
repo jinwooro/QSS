@@ -178,13 +178,18 @@ public class adapterKieler extends adapterBase {
 				loc.append("initial ");
 			}
 			loc.append("state " + l.getName() + " {\r\n");
-			loc.append("\t\tduring do ");
+			if (l.getf().isEmpty() == false) {
+				loc.append("\t\tduring do ");
+			}
 			comma = "";
 			for (String fx : l.getf()) {
 				loc.append(comma).append(fx);
 				comma = ";";
 			}
-			loc.append("\r\n\t\tduring do ");
+			
+			if (l.geth().isEmpty() == false) {
+				loc.append("\r\n\t\tduring do ");	
+			}
 			comma = "";
 			for (String hx : l.geth()) {
 				loc.append(comma).append(hx);
@@ -224,7 +229,7 @@ public class adapterKieler extends adapterBase {
 
 	
 	protected String translateBlock(String type) {
-		String template = null;
+		String template = "";
 		if (type.equals("Constant")) {
 			template = "scchart Constant { \r\n"
 					+ "\toutput float O1 \r\n"
@@ -234,9 +239,14 @@ public class adapterKieler extends adapterBase {
 					+ "\tinput float I1 \r\n"
 					+ "}\r\n";
 		} else if (type.equals("Sum")) {
-			template = "scchart Scope { \r\n"
+			template = "scchart Sum { \r\n"
 					+ "\tinput float I1, I2 \r\n"
-					+ "\tinput float O1 \r\n"
+					+ "\toutput float O1 \r\n"
+					+ "}\r\n";
+		} else if (type.equals("DiscreteIntegrator")) {
+			template = "scchart DiscreteIntegrator { \r\n"
+					+ "\tinput float I1 \r\n"
+					+ "\toutput float O1 \r\n"
 					+ "}\r\n";
 		}
 		return template;

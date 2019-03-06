@@ -166,6 +166,7 @@ public class SimulinkReader {
 						hioa.setInitialization(tran);
 					}
 					else {
+						System.out.println(t);
 						int src_id = Integer.parseInt(t.getSrc().getId());
 						int dst_id = Integer.parseInt(t.getDst().getId());
 						Transition tran = new Transition(src_id, dst_id);

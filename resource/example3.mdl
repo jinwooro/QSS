@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.16"
+    ComputedModelVersion    "1.18"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -89,9 +89,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Jin"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu Mar 07 05:39:57 2019"
-  RTWModifiedTimeStamp	  471962218
-  ModelVersionFormat	  "1.%<AutoIncrement:16>"
+  LastModifiedDate	  "Thu Mar 07 05:55:03 2019"
+  RTWModifiedTimeStamp	  473838900
+  ModelVersionFormat	  "1.%<AutoIncrement:18>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -1137,16 +1137,6 @@ Model {
       Value		      "0"
     }
     Block {
-      BlockType		      DiscreteIntegrator
-      Name		      "Discrete-Time\nIntegrator"
-      SID		      "12"
-      Ports		      [1, 1]
-      Position		      [945, 264, 980, 296]
-      ZOrder		      25
-      ICPrevOutput	      "DiscIntNeverNeededParam"
-      ICPrevScaledInput	      "DiscIntNeverNeededParam"
-    }
-    Block {
       BlockType		      Scope
       Name		      "Scope"
       SID		      "6"
@@ -1179,6 +1169,16 @@ Model {
       LimitDataPoints	      off
       SampleTime	      "0"
     }
+    Block {
+      BlockType		      DiscreteIntegrator
+      Name		      "integrator"
+      SID		      "12"
+      Ports		      [1, 1]
+      Position		      [945, 264, 980, 296]
+      ZOrder		      25
+      ICPrevOutput	      "DiscIntNeverNeededParam"
+      ICPrevScaledInput	      "DiscIntNeverNeededParam"
+    }
     Line {
       ZOrder		      2
       SrcBlock		      "Add"
@@ -1203,7 +1203,7 @@ Model {
 	Branch {
 	  ZOrder		  33
 	  Points		  [0, -41; 262, 0; 0, 21]
-	  DstBlock		  "Discrete-Time\nIntegrator"
+	  DstBlock		  "integrator"
 	  DstPort		  1
 	}
 	Branch {
@@ -1230,7 +1230,7 @@ Model {
     }
     Line {
       ZOrder		      34
-      SrcBlock		      "Discrete-Time\nIntegrator"
+      SrcBlock		      "integrator"
       SrcPort		      1
       DstBlock		      "Scope"
       DstPort		      2
