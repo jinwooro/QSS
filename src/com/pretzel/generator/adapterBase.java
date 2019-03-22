@@ -10,9 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 
-import com.pretzel.structure.Block;
-import com.pretzel.structure.HIOA;
 import com.pretzel.structure.Line;
+import com.pretzel.structure.io.Block;
+import com.pretzel.structure.variants.HIOA;
 
 public abstract class adapterBase {
 	

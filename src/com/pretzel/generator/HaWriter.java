@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 
-import com.pretzel.structure.HIOA;
+import com.pretzel.structure.variants.HIOA;
 
 /**
  * This class writes python file based on the information of Hybrid Automata data structure and blocks.

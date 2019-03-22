@@ -1,40 +1,20 @@
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.zip.ZipException;
 
 import org.conqat.lib.simulink.builder.SimulinkModelBuildingException;
 
-import com.pretzel.generator.Kieler.adapterKieler;
-import com.pretzel.reader.simulink.SimulinkReader;
-import com.pretzel.structure.Block;
-import com.pretzel.structure.HIOA;
-import com.pretzel.structure.Line;
+import com.pretzel.solver.SimulinkModelConvertor;
+import com.pretzel.structure.SystemModel;
 
 public class Main {
 	public static void main(String[] args) throws ZipException, IOException, SimulinkModelBuildingException {
-		String filename = "resource/example3.mdl";
+		String filename = "resource/delays1.mdl";
 
 		System.out.println("Target file : " + filename);
-		SimulinkReader SR = new SimulinkReader(filename);
+		SimulinkModelConvertor convertor = new SimulinkModelConvertor(filename);
+		SystemModel model = convertor.getSystem();
 		
-		HashSet<HIOA> HIOAs = SR.extractHIOAs(false);
-		HashSet<Block> Blocks = SR.extractBlocks();
-		HashSet<Line> Lines = SR.extractLines();
 		
-		for (HIOA h : HIOAs) {
-			System.out.println(h);
-		}
 		
-		for (Block b : Blocks) {
-			System.out.println(b);
-		}
-		
-		for (Line l : Lines) {
-			System.out.println(l);
-		}
-		
-		adapterKieler ak = new adapterKieler(filename);
-		ak.generateCode(HIOAs, Blocks, Lines);
-	
 	}
 }
