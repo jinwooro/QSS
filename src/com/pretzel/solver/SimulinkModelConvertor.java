@@ -16,24 +16,20 @@ import org.conqat.lib.simulink.builder.SimulinkModelBuildingException;
 import org.conqat.lib.simulink.model.SimulinkBlock;
 import org.conqat.lib.simulink.model.SimulinkLine;
 import org.conqat.lib.simulink.model.SimulinkModel;
-import org.conqat.lib.simulink.model.SimulinkPortBase;
 import org.conqat.lib.simulink.model.stateflow.StateflowChart;
 import org.conqat.lib.simulink.model.stateflow.StateflowData;
 import org.conqat.lib.simulink.model.stateflow.StateflowNodeBase;
 import org.conqat.lib.simulink.model.stateflow.StateflowTransition;
 import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
 
-import com.pretzel.structure.BlockInterface;
 import com.pretzel.structure.Line;
-import com.pretzel.structure.Port;
+import com.pretzel.structure.NetworkQSHIOA;
 import com.pretzel.structure.automata.HIOA;
 import com.pretzel.structure.automata.QSHIOA;
-import com.pretzel.structure.NetworkQSHIOA;
 import com.pretzel.structure.basic.Formula;
 import com.pretzel.structure.basic.Location;
 import com.pretzel.structure.basic.Transition;
 import com.pretzel.structure.basic.Variable;
-import com.pretzel.structure.enums.Symbol;
 import com.pretzel.structure.enums.variableParam;
 
 public class SimulinkModelConvertor {
@@ -85,10 +81,29 @@ public class SimulinkModelConvertor {
 			sys.addQSHIOA(q);
 		}
 		
-		// Extract the information of the connections between the components
-		createLines();
-	
-		// for debugging purpose
+		// Convert each SimulinkLine -> a value assignment (namely just a line)
+		for (StateflowChart chart : charts) {
+			SimulinkBlock cb =  chart.getStateflowBlock();
+			for (SimulinkLine sl : cb.getInLines()) {
+				if (sl.getSrcPort() == null) {
+					continue;
+				}
+				Line line = makeLine(sl); 
+				sys.addLine(line);
+			}
+		}
+		
+		// TODO: the Simulink block conversion is now disabled
+		/*
+		for (SimulinkBlock b : blocks) {
+			for (SimulinkLine line : b.getInLines()) {
+				if (line.getSrcPort() == null) {
+					continue;
+				}
+				connections.add(line);
+			}
+		}
+		*/
 		System.out.println(sys);
 	}
 	
@@ -96,48 +111,27 @@ public class SimulinkModelConvertor {
 		return sys;
 	}
 	
-	private void createLines() {
-		HashSet<SimulinkLine> allLines = new HashSet<SimulinkLine>();
-		// it is sufficient to consider only the input lines (because the outgoing lines are
-		// essentially input lines of another block.
-		for (StateflowChart chart : charts) {
-			SimulinkBlock cb =  chart.getStateflowBlock();
-			for (SimulinkLine line : cb.getInLines()) {
-				allLines.add(line);
-			}
-		}
-		
-		for (SimulinkBlock b : blocks) {
-			for (SimulinkLine line : b.getInLines()) {
-				allLines.add(line);
-			}
-		}
-		
-		for (SimulinkLine l : allLines) {
-			String srcBlock = l.getSrcPort().getBlock().getName();
-			String dstBlock = l.getDstPort().getBlock().getName();
-			String srcVar = "";
-			String dstVar = "";
-			if (isChart(srcBlock)) {
-				srcVar = l.getSrcPort().obtainLabelData().getText();
+	private Line makeLine(SimulinkLine sl) {
+			String srcBlockName = sl.getSrcPort().getBlock().getName();
+			String dstBlockName = sl.getDstPort().getBlock().getName();
+			String srcVariableName = "";
+			String dstVariableName = "";
+			if (hasChart(srcBlockName)) {
+				srcVariableName = sl.getSrcPort().obtainLabelData().getText();
 			} else {
-				srcVar = "o" + l.getParameter("SrcPort");
+				// if not a chart, then it must be a simulink block
+				srcVariableName = "o" + sl.getParameter("SrcPort"); // give a dummy name
 			}
-			if (isChart(dstBlock)) {
-				dstVar = l.getDstPort().obtainLabelData().getText();
+			if (hasChart(dstBlockName)) {
+				dstVariableName = sl.getDstPort().obtainLabelData().getText();
 			} else {
-				dstVar = "i" + l.getParameter("DstPort");
+				dstVariableName = "i" + sl.getParameter("DstPort"); // give a dummy name
 			}
-			Port srcPort = sys.getBlockInterfaceByName(srcBlock).getOutPortByName(srcVar);
-			Port dstPort = sys.getBlockInterfaceByName(dstBlock).getInPortByName(dstVar);
-			Line line = new Line(srcBlock, srcPort, dstBlock, dstPort);
-			
-			sys.addLine(line);
-		}
-		
+			Line line = new Line(srcBlockName, srcVariableName, dstBlockName, dstVariableName);
+			return line;
 	}
 	
-	private boolean isChart(String name) {
+	private boolean hasChart(String name) {
 		// return true if the requested name exists in the set of charts
 		for (StateflowChart chart : charts) {
 			if (chart.getName().equals(name)) {
@@ -154,6 +148,7 @@ public class SimulinkModelConvertor {
 	}
 
 	private HIOA convertBlock_To_HIOA(SimulinkBlock block) {
+		/*
 		String BlockType = block.getType();
 		HIOA hioa = new HIOA(block.getName());
 		
@@ -185,12 +180,14 @@ public class SimulinkModelConvertor {
 			
 		}
 		return hioa;
+		*/
+		return null;
 	}
 		
 	// This function implements the algorithm for translating a Stateflow chart into a QSHIOA
 	private QSHIOA makeQSHIOA (StateflowChart chart) {
 		// Extract the name
-		QSHIOA hioa = new QSHIOA(chart.getName());
+		QSHIOA qshioa = new QSHIOA(chart.getName());
 		
 		// Extract the variables
 		for (StateflowData data : chart.getData()) {
@@ -205,11 +202,11 @@ public class SimulinkModelConvertor {
 					}
 					if (data.getDeclaredParameterNames().contains(VARIABLE_TYPE)) {
 						if (data.getParameter(VARIABLE_TYPE).contentEquals(CONTINUOUS_DATA)) {
-							hioa.addContinuousVariable(variableName, initialValue);
+							qshioa.addContinuousVariable(variableName, initialValue);
 						}
 					} else {
 						// TODO: here we assume that all the discrete variables are double type
-						hioa.addDiscreteVariable(variableName, initialValue, variableParam.Type.DOUBLE);
+						qshioa.addDiscreteVariable(variableName, initialValue, variableParam.Type.DOUBLE);
 					}
 					break;
 				case OUTPUT_DATA:
@@ -217,10 +214,10 @@ public class SimulinkModelConvertor {
 						initialValue = Double.parseDouble(data.getParameter(INITIAL_VALUE));
 					}
 					// TODO: here shows how to fetch the port index
-					hioa.addOutputVariable(variableName, initialValue);
+					qshioa.addOutputVariable(variableName, initialValue);
 					break;
 				case INPUT_DATA:
-					hioa.addInputVariable(variableName);
+					qshioa.addInputVariable(variableName);
 					break;
 				default:
 					System.out.println("Error: unknown scope variable is detected.");
@@ -230,14 +227,13 @@ public class SimulinkModelConvertor {
 		}
 		
 		
-		// extracting the locations
+		// Extract the locations
 		for (StateflowNodeBase n : chart.getNodes()) {
 			int nodeId = Integer.parseInt(n.getId());
 			String nodeContents = n.getResolvedId().toString();
 			String[] lines = nodeContents.split("\\\\n|\\\\r|\\r|\\n");
-			
+			// extract the node name
 			String locationName = lines[0].split("/")[lines[0].split("/").length-1];
-			
 			Location l = new Location(locationName);
 			l.setID(nodeId);
 			
@@ -259,28 +255,26 @@ public class SimulinkModelConvertor {
 				} 
 				
 				Formula fx = Formula.makeFormula(line);
+				// Check if the formula is invalid 
 				if (fx == null) {
-					System.out.println("Error: equation cannot be understood: " + line);
+					System.out.println("Error: this equation is invalid: " + line);
 					System.exit(0);
 				}
-				// Check if the subject variable exists in the HIOA instance
-				Variable x = hioa.hasVariable(fx.getSubject().getName());
+				Variable x = qshioa.hasVariable(fx.getSubject().getName());
 				if (x == null) {
-					System.out.println("Error: equation contains non-existing variable: " + line);
+					System.out.println("Error: this equation contains non-existing variables: " + line);
 					System.exit(0);
 				}
-				fx.setSubject(x);
 			
 				if ((currentMode == 1) || (currentMode == 3)){ // this mode includes "du"
 					if (x.getScope() == variableParam.Scope.LOCAL_CONTINUOUS_DERIVATIVE) {
+						// if the subject variable is a derivative, the equation is an ODE
 						l.addODE(fx);
 					} else if ((x.getScope() == variableParam.Scope.OUTPUT_VARIABLE) 
 							|| (x.getScope() == variableParam.Scope.OUTPUT_SIGNAL)) {
 						l.addOutputUpdateAction(fx);
 					} else {
-						System.out.println("Error: the subject variable in the equations in a location " 
-										+ "is strictly restricted to either the continuous local variable "
-										+ "or the output variable: " + line);
+						System.out.println("Error: the subject of any equation must be either a derivative or an output variable: " + line);
 						System.exit(0);
 					}
 				} 
@@ -290,75 +284,74 @@ public class SimulinkModelConvertor {
 							|| (x.getScope() == variableParam.Scope.OUTPUT_SIGNAL)) {
 						l.addEntryAction(fx);
 					} else {
-						System.out.println("Error: entry ations at a location should have the subject varible "
-											+ "either local continuous or output: " + line);
+						System.out.println("Error: entry ations at this location is invalid: " + line);
 						System.exit(0);
 					}
 				}
 			}
-			hioa.addLocation(l);
+			qshioa.addLocation(l);
 		}
 		
-		// extracting the transitions
+		// Extract the transitions
 		for (StateflowNodeBase n : chart.getNodes()) {
-			for (StateflowTransition t : n.getInTransitions()) {
+			for (StateflowTransition t : n.getInTransitions()) { 
+				String contents = "";
+				if (t.obtainLabelData() != null) {
+					contents = t.obtainLabelData().getText();
+				}
+				// A transition that represent the initialization
 				if (t.getSrc() == null) {
 					int initialLocationId = Integer.parseInt(t.getDst().getId());
-					Location loc = hioa.getLocation(initialLocationId);
-					hioa.setInitialLocation(loc);
-					Transition initialization = new Transition(null,loc);
+					Location loc = qshioa.getLocation(initialLocationId);
+					qshioa.setInitialLocation(loc);
+				
+					if (contents.contains("[")) {
+						System.out.println("Error: initialization should never be conditioned: " + contents);
+					}
 					
-					// TODO: currently we assume that the initialization transition does not include [] brackets
-					if (t.obtainLabelData() != null){
-						Matcher m = Pattern.compile("\\{(.*?)\\}").matcher(t.obtainLabelData().getText());
-						String resets[] = null;
-						while(m.find()) {
-							resets = m.group(1).replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
-						}
+					Matcher m = Pattern.compile("\\{(.*?)\\}").matcher(contents);
+					String resets[] = null;
+					while(m.find()) {
+						resets = m.group(1).replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
+					}
+					if (resets != null) {
 						for (String equation: resets) {
 							Formula fx = Formula.makeFormula(equation);
-							initialization.addReset(fx);
+							qshioa.addInitialization(fx);
 						}
 					}
-					hioa.setInitialization(initialization);
 				}
 				else {
 					int srcLocId = Integer.parseInt(t.getSrc().getId());
 					int dstLocId = Integer.parseInt(t.getDst().getId());
-					Location srcLoc = hioa.getLocation(srcLocId);
-					Location dstLoc = hioa.getLocation(dstLocId);
+					Location srcLocName = qshioa.getLocation(srcLocId);
+					Location dstLocName = qshioa.getLocation(dstLocId);
+					Transition tran = new Transition(srcLocName, dstLocName);
 					
-					Transition tran = new Transition(srcLoc, dstLoc);
-					
-					if (t.obtainLabelData() != null) {
-						String label = t.obtainLabelData().getText();
-						Matcher m = Pattern.compile("\\[(.*?)\\]").matcher(label);
-						String guards[] = null;
-						while(m.find()) {
-							guards = m.group(1).replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
-						}
-						
-						for (String equation: guards) {
-							Formula fx = Formula.makeFormula(equation);
-							tran.addGuard(fx);
-						}
-						m = Pattern.compile("\\{(.*?)\\}").matcher(label);
-						String resets[] = {};
-						while(m.find()) {
-							resets = m.group(1).replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
-						}
-						
-						for (String equation: resets) {
-							Formula fx = Formula.makeFormula(equation);
-							tran.addReset(fx);
-						}
+					Matcher m = Pattern.compile("\\[(.*?)\\]").matcher(contents);
+					String guards[] = null;
+					while(m.find()) {
+						guards = m.group(1).replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
 					}
-					hioa.addTransition(tran);
+
+					for (String equation: guards) {
+						Formula fx = Formula.makeFormula(equation);
+						tran.addGuard(fx);
+					}
+					m = Pattern.compile("\\{(.*?)\\}").matcher(contents);
+					String resets[] = {};
+					while(m.find()) {
+						resets = m.group(1).replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
+					}
+					for (String equation: resets) {
+						Formula fx = Formula.makeFormula(equation);
+						tran.addReset(fx);
+					}
+					qshioa.addTransition(tran);
 				}
 			}
-		}
-		
-		return hioa;
+		}	
+		return qshioa;
 	}	
 }
 	

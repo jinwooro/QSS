@@ -1,5 +1,6 @@
 package com.pretzel.structure.automata;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import com.pretzel.structure.basic.Formula;
@@ -10,25 +11,8 @@ import com.pretzel.structure.enums.variableParam;
 public class QSHIOA extends HIOA {
 
 	protected HashSet<Variable> X_QSS = new HashSet<Variable>();
-	protected HashSet<QssLocation> qLocations = new HashSet<QssLocation>();
-		
-	public class QssLocation extends Location {
-		private HashSet<Formula> qssODE = new HashSet<Formula>();
+	protected HashMap<String, HashSet<Formula> > f_qss = new HashMap<String, HashSet<Formula> >();
 
-		public QssLocation(String name) {
-			super(name);
-		}
-		
-		public void addQssODE(Formula s) {
-			qssODE.add(s);
-		}
-		
-		public HashSet<Formula> getQssODEs() {
-			return qssODE;
-		}
-		
-	}
-	
 	public QSHIOA(String name) {
 		super(name);
 	}	
@@ -36,13 +20,30 @@ public class QSHIOA extends HIOA {
 	@Override
 	public void addContinuousVariable(String name, double initialValue) {
 		super.addContinuousVariable(name, initialValue);
-		// Every continuous variable creates a qss variable
+		// Every continuous variable creates a respective QSS variable
 		String qss = name + "_qss";
 		Variable v_qss = new Variable(qss);
 		v_qss.setType(variableParam.Type.DOUBLE);
 		v_qss.setScope(variableParam.Scope.LOCAL_CONTINUOUS_QUANTIZED);
 		v_qss.setInitialValue(initialValue);
 		X_QSS.add(v_qss);
+	}
+	
+	@Override
+	public void addLocation(Location l) {
+		super.addLocation(l);
+		// For every location added, f also generates f_qss
+		HashSet<Formula> f_q = new HashSet<Formula>();
+		
+		for (Formula fx : l.getODEs()) {
+			Formula q = new Formula(fx); // create a clone
+			for (Variable x : X_C) {
+				String xq = x.getName() + "_qss";
+				q.substitute(x.getName(), xq);
+			}
+			f_q.add(q);
+		}
+		f_qss.put(l.getName(), f_q);
 	}
 
 	@Override

@@ -16,6 +16,11 @@ public class Formula {
 		this.relation = relation;
 		this.expr = expr;
 	}
+	// Copy constructor
+	public Formula(Formula f) {
+		this(f.getSubject(), f.getRelation(),f.getExpr());
+	}
+	
 	public Formula(Variable subject) {
 		this.subject = subject;
 	}
@@ -44,6 +49,11 @@ public class Formula {
 		return expr;
 	}
 	
+	public void substitute(String a, String b) {
+		// Substitute the variable a in the equation with the variable b, and update the equation  
+		expr = expr.replaceAll(a, b);
+	}
+	
 	// This is a helper function that detects and returns the relation symbol in the string equation
 	public static Symbol.Relation getRelation(String equation){
 		if (equation.contains("==")) { return Symbol.Relation.EQUAL_EQUAL; }
@@ -56,7 +66,7 @@ public class Formula {
 	}
 	
 	// A helper function that transforms a string equation into a formula
-	// TODO: detection of multiple relation symbol is not implemented yet
+	// TODO: detection of multiple relation symbol (for the error checking) is not implemented
 	public static Formula makeFormula(String stringEquation) {
 		Symbol.Relation relation = Formula.getRelation(stringEquation);
 		if (relation == null) { return null; }

@@ -5,10 +5,10 @@ public class Location {
 	private String name;
 	private int id; // id is used for a number representation of this location
 	private HashSet<Formula> invariants = new HashSet<Formula>();
-	private HashSet<Formula> ODEs = new HashSet<Formula>();
+	private HashSet<Formula> ODEs = new HashSet<Formula>();	
+	private HashSet<Formula> outputUpdates = new HashSet<Formula>(); // This is h
 	
-	// For hybrid automata, the set outputUpdates is empty
-	private HashSet<Formula> outputUpdates = new HashSet<Formula>();
+	// Extra information to ease the implementation:
 	private HashSet<Formula> entries = new HashSet<Formula>();
 	private HashSet<Transition> outwardTransition = new HashSet<Transition>();
 	

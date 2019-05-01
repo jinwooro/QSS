@@ -3,6 +3,7 @@ package com.pretzel.structure.automata;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.pretzel.structure.basic.Formula;
 import com.pretzel.structure.basic.Location;
 import com.pretzel.structure.basic.Transition;
 import com.pretzel.structure.basic.Variable;
@@ -23,7 +24,7 @@ public class HIOA {
 	protected HashSet<Variable> X_D = new HashSet<Variable>(); 
 	protected HashSet<Variable> X_DOT = new HashSet<Variable>();
 	protected Location initialLocation;
-	protected Transition initialTransition;
+	protected HashSet<Formula> initialization = new HashSet<Formula>();
 	
 	public HIOA(String name) {
 		this.name = name;
@@ -53,24 +54,18 @@ public class HIOA {
 		return initialLocation;
 	}
 
-	public Transition getInitialization() {
-		return initialTransition;
+	public HashSet<Formula> getInitialization() {
+		return initialization;
 	}
 	
 	public void setInitialLocation(Location l) {
 		initialLocation = l;
 	}
 	
-	// initialization is represented as a transition (arrow) which has no source node
-	public void setInitialization(Transition t) {
-		initialTransition = t;
+	public void addInitialization(Formula f) {
+		initialization.add(f);
 	}
 
-	public void makeEmptyInitialization(String initLocation) {
-		initialLocation = getLocation(initLocation);
-		initialTransition = new Transition(null, initialLocation);
-	}
-	
 	public void addInputVariable(String name) {
 		Variable v = new Variable(name);
 		v.setScope(variableParam.Scope.INPUT_VARIABLE);
