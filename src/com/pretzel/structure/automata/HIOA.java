@@ -1,19 +1,31 @@
-package com.pretzel.structure.basic;
+package com.pretzel.structure.automata;
 
+import java.util.HashMap;
 import java.util.HashSet;
+
+import com.pretzel.structure.basic.Location;
+import com.pretzel.structure.basic.Transition;
+import com.pretzel.structure.basic.Variable;
 import com.pretzel.structure.enums.variableParam;
 
-public class HybridAutomata {
+/**
+ * This class defines the structure of Hybrid Input Output Automata (HIOA).
+ * @author Jin Woo Ro
+ *
+ */
+public class HIOA {
 	protected String name;
 	protected HashSet<Location> locations = new HashSet<Location>();
 	protected HashSet<Transition> transitions = new HashSet<Transition>();
+	protected HashSet<Variable> I = new HashSet<Variable>();
+	protected HashSet<Variable> O = new HashSet<Variable>();
 	protected HashSet<Variable> X_C = new HashSet<Variable>();
 	protected HashSet<Variable> X_D = new HashSet<Variable>(); 
 	protected HashSet<Variable> X_DOT = new HashSet<Variable>();
 	protected Location initialLocation;
 	protected Transition initialTransition;
 	
-	public HybridAutomata(String name) {
+	public HIOA(String name) {
 		this.name = name;
 	}
 	
@@ -59,6 +71,19 @@ public class HybridAutomata {
 		initialTransition = new Transition(null, initialLocation);
 	}
 	
+	public void addInputVariable(String name) {
+		Variable v = new Variable(name);
+		v.setScope(variableParam.Scope.INPUT_VARIABLE);
+		I.add(v);
+	}
+	
+	public void addOutputVariable(String name, double initialValue) {
+		Variable v = new Variable(name);
+		v.setScope(variableParam.Scope.OUTPUT_VARIABLE);
+		v.setInitialValue(initialValue);
+		O.add(v);
+	}
+	
 	public void addContinuousVariable(String name, double initialValue) {
 		Variable v = new Variable (name);
 		v.setType(variableParam.Type.DOUBLE);
@@ -66,7 +91,7 @@ public class HybridAutomata {
 		v.setInitialValue(initialValue);
 		X_C.add(v);
 		
-		// Every continuous variable has its derivative as a separate variable
+		// Every continuous variable creates a derivative variable
 		String derivative = name + "_dot";
 		Variable v_dot = new Variable (derivative);
 		v_dot.setType(variableParam.Type.DOUBLE);
@@ -90,19 +115,6 @@ public class HybridAutomata {
 		transitions.add(t);
 	}
 	
-	public Variable hasVariable(String name) {
-		HashSet<Variable> X = new HashSet<Variable>();
-		X.addAll(X_C);
-		X.addAll(X_D);
-		X.addAll(X_DOT);
-		for (Variable var : X) {
-			if (var.getName().equals(name)) {
-				return var;
-			}
-		}
-		return null;
-	}
-	
 	public Location getLocation(int id) {
 		for (Location l : locations) {
 			if (l.getID() == id) {
@@ -116,6 +128,22 @@ public class HybridAutomata {
 		for (Location l : locations) {
 			if (l.getName().equals(name)){
 				return l;
+			}
+		}
+		return null;
+	}
+	
+	// Helper functions
+	public Variable hasVariable(String name) {
+		HashSet<Variable> V = new HashSet<Variable>();
+		V.addAll(X_C);
+		V.addAll(X_D);
+		V.addAll(X_DOT);
+		V.addAll(I);
+		V.addAll(O);
+		for (Variable var : V) {
+			if (var.getName().equals(name)) {
+				return var;
 			}
 		}
 		return null;

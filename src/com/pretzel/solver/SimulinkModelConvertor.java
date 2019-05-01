@@ -26,14 +26,15 @@ import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
 import com.pretzel.structure.BlockInterface;
 import com.pretzel.structure.Line;
 import com.pretzel.structure.Port;
-import com.pretzel.structure.SystemModel;
+import com.pretzel.structure.automata.HIOA;
+import com.pretzel.structure.automata.QSHIOA;
+import com.pretzel.structure.NetworkQSHIOA;
 import com.pretzel.structure.basic.Formula;
 import com.pretzel.structure.basic.Location;
 import com.pretzel.structure.basic.Transition;
 import com.pretzel.structure.basic.Variable;
 import com.pretzel.structure.enums.Symbol;
 import com.pretzel.structure.enums.variableParam;
-import com.pretzel.structure.variants.HIOA;
 
 public class SimulinkModelConvertor {
 	// Simulink model parameters
@@ -51,12 +52,12 @@ public class SimulinkModelConvertor {
 	private HashSet<SimulinkBlock> blocks = new HashSet<SimulinkBlock>();
 	
 	// Our system as a structure
-	private SystemModel sys = null;
+	private NetworkQSHIOA sys = null;
+
 	
 	public SimulinkModelConvertor(String inputFileName) throws ZipException, IOException, SimulinkModelBuildingException {
 		file = new File(inputFileName);
-		
-		HashSet<String> namesStateflowCharts = new HashSet<String>();
+		HashSet<String> namesStateflowCharts = new HashSet<String>(); // Set of chart names
 		// Distinguish between Simulink Stateflow Charts and Simulink Blocks
 		try (SimulinkModelBuilder builder = new SimulinkModelBuilder(file, new SimpleLogger())) {
 			model = builder.buildModel();
@@ -76,9 +77,14 @@ public class SimulinkModelConvertor {
 	    }
 		
 		// System model object instantiation with the name as the file name.
-		sys = new SystemModel(inputFileName);	
-		// Transform all Simulink model components into BlockInterface
-		createBlockInterfaces();
+		NetworkQSHIOA sys = new NetworkQSHIOA(inputFileName);	
+		
+		// Convert every chart -> QSHIOA 
+		for (StateflowChart chart : charts) {
+			QSHIOA q = makeQSHIOA(chart);
+			sys.addQSHIOA(q);
+		}
+		
 		// Extract the information of the connections between the components
 		createLines();
 	
@@ -86,7 +92,7 @@ public class SimulinkModelConvertor {
 		System.out.println(sys);
 	}
 	
-	public SystemModel getSystem() {
+	public NetworkQSHIOA getSystem() {
 		return sys;
 	}
 	
@@ -141,67 +147,6 @@ public class SimulinkModelConvertor {
 		return false;
 	}
 
-	private void createBlockInterfaces() {
-		// Direct mapping of a chart into a BlockInterface
-		for (StateflowChart chart : charts) {
-			String blockName = chart.getName();
-			BlockInterface blockInterface = new BlockInterface(blockName);
-			SimulinkBlock cb = chart.getStateflowBlock();
-			
-			// map all the input ports
-			for (SimulinkPortBase simInport : cb.getInPorts()) {
-				Port p = new Port(blockName, simInport.obtainLabelData().getText());
-				// TODO: the type is not handled. It must be handled with the variable type
-				p.setThisInputVariable();
-				blockInterface.addInputPort(p);	
-			}
-
-			// map all the output ports
-			for (SimulinkPortBase simOutport : cb.getOutPorts()) {
-				Port p = new Port(blockName, simOutport.obtainLabelData().getText());		
-				// TODO: the type is not handled. It must be handled with the variable type
-				p.setThisOutputVariable();
-				blockInterface.addOutputPort(p);
-			}
-		
-			// Here we transform the Simulink model into something else
-			HIOA hioa = convertStateflow_To_HIOA(chart);
-			blockInterface.setObject(hioa);
-			
-			sys.addAutomaton(blockInterface);
-		}
-		
-		// Direct mapping of a Simulink block into a BlockInterface
-		for (SimulinkBlock block : blocks) {
-			String blockName = block.getName();
-			BlockInterface blockInterface = new BlockInterface(blockName);
-			
-			// map all the input ports
-			for (SimulinkPortBase simInport : block.getInPorts()) {
-				String name = "i" + simInport.getIndex();
-				Port p = new Port(blockName, name);
-				// TODO: the type is not handled. It must be handled with the variable type
-				p.setThisInputVariable();
-				blockInterface.addInputPort(p);	
-			}
-
-			// map all the output ports
-			for (SimulinkPortBase simOutport : block.getOutPorts()) {
-				String name = "o" + simOutport.getIndex();
-				Port p = new Port(blockName, name);		
-				// TODO: the type is not handled. It must be handled with the variable type
-				p.setThisOutputVariable();
-				blockInterface.addOutputPort(p);
-			}
-			
-			HIOA hioa = convertBlock_To_HIOA(block);
-			blockInterface.setObject(hioa);
-			sys.addSimpleBlocks(blockInterface);
-			
-		}
-		
-	}
-	
 	public void drawDiagram() throws IOException {
 		// render a block or model as PNG image
 		BufferedImage image = SimulinkBlockRenderer.renderBlock(model);
@@ -217,7 +162,7 @@ public class SimulinkModelConvertor {
 			// Add I/O variable
 			hioa.addInputVariable("i1");
 			hioa.addInputVariable("i2");
-			hioa.addOutputVariable("o1");
+			hioa.addOutputVariable("o1", 0);
 			// Add location and the equation
 			Location l = new Location("Sum");
 			String signs = block.getParameter("Inputs");
@@ -228,7 +173,7 @@ public class SimulinkModelConvertor {
 			// Set initialization
 			hioa.makeEmptyInitialization("Sum");	
 		} else if (BlockType.equals("Constant")) {	
-			hioa.addOutputVariable("o1");
+			hioa.addOutputVariable("o1", 0);
 			Location l = new Location("Const");
 			String expr = block.getParameter("Value");
 			Formula equation = new Formula(hioa.hasVariable("o1"), Symbol.Relation.EQUAL, expr);
@@ -237,17 +182,17 @@ public class SimulinkModelConvertor {
 			hioa.makeEmptyInitialization("Const");
 		} else if (BlockType.equals("Memory")) {
 			// TODO: here all the other types of Simulink Blocks needs to be implemented
+			
 		}
 		return hioa;
 	}
 		
-	// This function maps Stateflow -> HIOA, and returns a new object of HIOA
-	private HIOA convertStateflow_To_HIOA (StateflowChart chart) {
-		// Extract the name of Stateflow
-		String objectName = chart.getName();
-		HIOA hioa = new HIOA(objectName);
+	// This function implements the algorithm for translating a Stateflow chart into a QSHIOA
+	private QSHIOA makeQSHIOA (StateflowChart chart) {
+		// Extract the name
+		QSHIOA hioa = new QSHIOA(chart.getName());
 		
-		// extracting the variables
+		// Extract the variables
 		for (StateflowData data : chart.getData()) {
 			String scope = data.getParameter("scope");
 			String variableName = data.getName();
@@ -263,24 +208,23 @@ public class SimulinkModelConvertor {
 							hioa.addContinuousVariable(variableName, initialValue);
 						}
 					} else {
-						// TODO: here we just assume that all the discrete variables are double
+						// TODO: here we assume that all the discrete variables are double type
 						hioa.addDiscreteVariable(variableName, initialValue, variableParam.Type.DOUBLE);
 					}
 					break;
 				case OUTPUT_DATA:
-					// TODO: initial value of the output variable is ignored
 					if (data.getDeclaredParameterNames().contains(INITIAL_VALUE)) {
 						initialValue = Double.parseDouble(data.getParameter(INITIAL_VALUE));
 					}
 					// TODO: here shows how to fetch the port index
-					hioa.addOutputVariable(variableName);
+					hioa.addOutputVariable(variableName, initialValue);
 					break;
 				case INPUT_DATA:
 					hioa.addInputVariable(variableName);
 					break;
 				default:
 					System.out.println("Error: unknown scope variable is detected.");
-					System.exit(0); // exit the program
+					System.exit(0); // terminate the program
 					break;
 			}
 		}

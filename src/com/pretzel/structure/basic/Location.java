@@ -3,7 +3,7 @@ import java.util.HashSet;
 
 public class Location {
 	private String name;
-	private int id;
+	private int id; // id is used for a number representation of this location
 	private HashSet<Formula> invariants = new HashSet<Formula>();
 	private HashSet<Formula> ODEs = new HashSet<Formula>();
 	

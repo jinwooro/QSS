@@ -9,10 +9,10 @@ import org.conqat.lib.simulink.model.SimulinkBlock;
 
 import com.pretzel.generator.adapterBase;
 import com.pretzel.structure.Line;
+import com.pretzel.structure.automata.HIOA;
 import com.pretzel.structure.basic.Location;
 import com.pretzel.structure.basic.Transition;
 import com.pretzel.structure.io.Block;
-import com.pretzel.structure.variants.HIOA;
 
 public class adapterKieler extends adapterBase {
 	

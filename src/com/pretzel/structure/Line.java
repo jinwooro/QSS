@@ -1,35 +1,35 @@
 package com.pretzel.structure;
 
 public class Line {
-	private String SrcBlockName, DstBlockName;
-	private Port SrcPort, DstPort;
+	private String srcBlockName, dstBlockName;
+	private String srcVarName, dstVarName;
 	
-	public Line(String SrcBlockName, Port SrcPort, String DstBlockName, Port DstPort) {
-		this.SrcPort = SrcPort;
-		this.DstPort = DstPort;
-		this.SrcBlockName = SrcBlockName;
-		this.DstBlockName = DstBlockName; 
+	public Line(String srcBlockName, String srcVarName, String dstBlockName, String dstVarName) {
+		this.srcVarName = srcVarName;
+		this.dstVarName = dstVarName;
+		this.srcBlockName = srcBlockName;
+		this.dstBlockName = dstBlockName; 
 	}
 	
-	public Port getSrcPort() {
-		return SrcPort;
+	public String getSrcPort() {
+		return srcVarName;
 	}
 	
-	public Port getDstPort() {
-		return DstPort;
+	public String getDstPort() {
+		return dstVarName;
 	}
 	
 	public String getDstBlockName() {
-		return this.DstBlockName;
+		return this.dstBlockName;
 	}
 	
 	public String getSrcBlockName() {
-		return this.SrcBlockName;
+		return this.srcBlockName;
 	}
 
 	@Override
 	public String toString() {
-		return "\r\nLine [SrcBlockName=" + SrcBlockName + ", DstBlockName=" + DstBlockName + ", SrcPort=" + SrcPort
-				+ ", DstPort=" + DstPort + "]";
+		return "\r\nLine [srcBlockName=" + srcBlockName + ", dstBlockName=" + dstBlockName + ", SrcPort=" + srcVarName
+				+ ", DstPort=" + dstVarName + "]";
 	}
 }
