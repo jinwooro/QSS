@@ -1,4 +1,4 @@
-package com.pretzel.generator.Kieler;
+package com.simqss.writer.Kieler;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,12 +7,12 @@ import java.util.Map.Entry;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 
-import com.pretzel.generator.adapterBase;
-import com.pretzel.structure.Line;
-import com.pretzel.structure.automata.HIOA;
-import com.pretzel.structure.basic.Location;
-import com.pretzel.structure.basic.Transition;
-import com.pretzel.structure.io.Block;
+import com.simqss.structure.automata.HIOA;
+import com.simqss.structure.basic.Location;
+import com.simqss.structure.basic.Transition;
+import com.simqss.structure.io.Block;
+import com.simqss.structure.system.Line;
+import com.simqss.writer.adapterBase;
 
 public class adapterKieler extends adapterBase {
 	

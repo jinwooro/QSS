@@ -1,4 +1,4 @@
-package com.pretzel.generator;
+package com.simqss.writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,20 +10,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 
-import com.pretzel.structure.Line;
-import com.pretzel.structure.automata.HIOA;
-import com.pretzel.structure.io.Block;
+import com.simqss.structure.automata.HIOA;
+import com.simqss.structure.system.Line;
 
-public abstract class adapterBase {
-	
+
+public abstract class writerBase {
+	// all the generated files will be located in the "generated" folder
 	protected static final String PATH = "generated";
 	protected String filename;
 	
-	public adapterBase (String filename) throws IOException {
+	public writerBase (String filename) throws IOException {
 		File directory = new File(PATH);
 		this.filename = filename;
 		
-		// check if "generated" folder exists
+		// check if "generated" folder remains from the previous writing
 		if (!directory.exists()) {
 			// if does not exist, then create the folder
 			System.out.println("folder does not exist");
@@ -47,20 +47,20 @@ public abstract class adapterBase {
 			}
 		}
 	}
-	
+
 	protected static void delete(File file) throws IOException {
 		String files[] = file.list();
 		for (String temp : files) {
 			File f = new File(file.toString()+"/"+temp);
 			if (f.isDirectory()) {
-				delete(f); // delete all files
-				f.delete(); // delete the folder
+				delete(f); // recursion for deleting each file in this folder
+				f.delete(); // after the recursion, delete this folder
 			} else {
-				f.delete();
+				f.delete(); // if this is just a file, then just delete this file
 			}
 		}
     }
-	
+
 	protected void write(String f, String s) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(PATH + "/" + f, true));
 		writer.write(s);
@@ -100,6 +100,6 @@ public abstract class adapterBase {
 	protected abstract String translateChart(HIOA h);
 	protected abstract String translateBlock(String type);
 	protected abstract String translateDataflow(Line l);
-	public abstract void generateCode(HashSet<HIOA> HIOAs, HashSet<Block> blocks, HashSet<Line> lines) throws IOException;
+	//public abstract void generateCode(HashSet<HIOA> HIOAs, HashSet<Block> blocks, HashSet<Line> lines) throws IOException;
 	
 }

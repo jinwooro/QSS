@@ -1,4 +1,4 @@
-package com.pretzel.generator;
+package com.simqss.writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 
-import com.pretzel.structure.automata.HIOA;
+import com.simqss.structure.automata.HIOA;
 
 /**
  * This class writes python file based on the information of Hybrid Automata data structure and blocks.

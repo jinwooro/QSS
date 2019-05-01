@@ -1,4 +1,4 @@
-package com.pretzel.solver;
+package com.simqss.converter;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,17 +22,17 @@ import org.conqat.lib.simulink.model.stateflow.StateflowNodeBase;
 import org.conqat.lib.simulink.model.stateflow.StateflowTransition;
 import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
 
-import com.pretzel.structure.Line;
-import com.pretzel.structure.NetworkQSHIOA;
-import com.pretzel.structure.automata.HIOA;
-import com.pretzel.structure.automata.QSHIOA;
-import com.pretzel.structure.basic.Formula;
-import com.pretzel.structure.basic.Location;
-import com.pretzel.structure.basic.Transition;
-import com.pretzel.structure.basic.Variable;
-import com.pretzel.structure.enums.variableParam;
+import com.simqss.structure.automata.HIOA;
+import com.simqss.structure.automata.QSHIOA;
+import com.simqss.structure.basic.Formula;
+import com.simqss.structure.basic.Location;
+import com.simqss.structure.basic.Transition;
+import com.simqss.structure.basic.Variable;
+import com.simqss.structure.enums.variableParam;
+import com.simqss.structure.system.Line;
+import com.simqss.structure.system.NetworkQSHIOA;
 
-public class SimulinkModelConvertor {
+public class SimulinkToQSHIOA {
 	// Simulink model parameters
 	public static final String LOCAL_DATA = "LOCAL_DATA";
 	public static final String OUTPUT_DATA = "OUTPUT_DATA";
@@ -51,7 +51,7 @@ public class SimulinkModelConvertor {
 	private NetworkQSHIOA sys = null;
 
 	
-	public SimulinkModelConvertor(String inputFileName) throws ZipException, IOException, SimulinkModelBuildingException {
+	public SimulinkToQSHIOA(String inputFileName) throws ZipException, IOException, SimulinkModelBuildingException {
 		file = new File(inputFileName);
 		HashSet<String> namesStateflowCharts = new HashSet<String>(); // Set of chart names
 		// Distinguish between Simulink Stateflow Charts and Simulink Blocks
@@ -71,13 +71,13 @@ public class SimulinkModelConvertor {
 	    		}
 	    	}
 	    }
-		
 		// System model object instantiation with the name as the file name.
 		NetworkQSHIOA sys = new NetworkQSHIOA(inputFileName);	
 		
 		// Convert every chart -> QSHIOA 
 		for (StateflowChart chart : charts) {
 			QSHIOA q = makeQSHIOA(chart);
+			System.out.println(q);
 			sys.addQSHIOA(q);
 		}
 		
@@ -88,11 +88,17 @@ public class SimulinkModelConvertor {
 				if (sl.getSrcPort() == null) {
 					continue;
 				}
+				// TODO: we also ignore the connections from the simulink blocks
+				String srcBlockName = sl.getSrcPort().getBlock().getName();
+				if (hasChart(srcBlockName) == false) {
+					continue;
+				}
+				
 				Line line = makeLine(sl); 
 				sys.addLine(line);
 			}
 		}
-		
+		System.out.println(sys);
 		// TODO: the Simulink block conversion is now disabled
 		/*
 		for (SimulinkBlock b : blocks) {
@@ -104,7 +110,6 @@ public class SimulinkModelConvertor {
 			}
 		}
 		*/
-		System.out.println(sys);
 	}
 	
 	public NetworkQSHIOA getSystem() {

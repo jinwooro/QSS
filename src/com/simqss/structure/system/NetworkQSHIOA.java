@@ -1,8 +1,8 @@
-package com.pretzel.structure;
+package com.simqss.structure.system;
 
 import java.util.HashSet;
 
-import com.pretzel.structure.automata.QSHIOA;
+import com.simqss.structure.automata.QSHIOA;
 
 public class NetworkQSHIOA {
 	private String systemName; // is the file name
@@ -36,6 +36,6 @@ public class NetworkQSHIOA {
 
 	@Override
 	public String toString() {
-		return "NetworkQSHIOA [systemName=" + systemName + ", QSHIOAs=" + QSHIOAs + ", Lines=" + Lines + "]";
+		return "NetworkQSHIOA [systemName=" + systemName + ",\r\nQSHIOAs=\r\n" + QSHIOAs + ",\r\nLines=\r\n" + Lines + "]";
 	}
 }

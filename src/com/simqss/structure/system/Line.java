@@ -1,4 +1,4 @@
-package com.pretzel.structure;
+package com.simqss.structure.system;
 
 public class Line {
 	private String srcBlockName, dstBlockName;
@@ -29,7 +29,7 @@ public class Line {
 
 	@Override
 	public String toString() {
-		return "\r\nLine [srcBlockName=" + srcBlockName + ", dstBlockName=" + dstBlockName + ", SrcPort=" + srcVarName
+		return "Line [srcBlockName=" + srcBlockName + ", dstBlockName=" + dstBlockName + ", SrcPort=" + srcVarName
 				+ ", DstPort=" + dstVarName + "]";
 	}
 }

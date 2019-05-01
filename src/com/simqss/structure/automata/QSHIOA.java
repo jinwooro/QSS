@@ -1,18 +1,27 @@
-package com.pretzel.structure.automata;
+package com.simqss.structure.automata;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
-import com.pretzel.structure.basic.Formula;
-import com.pretzel.structure.basic.Location;
-import com.pretzel.structure.basic.Variable;
-import com.pretzel.structure.enums.variableParam;
+import com.simqss.structure.basic.Formula;
+import com.simqss.structure.basic.Location;
+import com.simqss.structure.basic.Variable;
+import com.simqss.structure.enums.variableParam;
 
+/**
+ * This class contains the components of a single Quantized State Hybrid Input Output Automata (QSHIOA). This class inherits the HIOA class.
+ * @author Jin Woo Ro
+ * 
+ */
 public class QSHIOA extends HIOA {
 
 	protected HashSet<Variable> X_QSS = new HashSet<Variable>();
 	protected HashMap<String, HashSet<Formula> > f_qss = new HashMap<String, HashSet<Formula> >();
-
+	
+	/**
+	 * Constructor. 
+	 * @param name Name of this QSHIOA
+	 */
 	public QSHIOA(String name) {
 		super(name);
 	}	

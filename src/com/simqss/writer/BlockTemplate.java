@@ -1,4 +1,4 @@
-package com.pretzel.generator;
+package com.simqss.writer;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 import org.conqat.lib.simulink.model.SimulinkPortBase;
