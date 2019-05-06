@@ -1,4 +1,4 @@
-package com.simqss.writer.Kieler;
+package com.simqss.writer.kieler;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,16 +10,15 @@ import org.conqat.lib.simulink.model.SimulinkBlock;
 import com.simqss.structure.automata.HIOA;
 import com.simqss.structure.basic.Location;
 import com.simqss.structure.basic.Transition;
-import com.simqss.structure.io.Block;
 import com.simqss.structure.system.Line;
-import com.simqss.writer.adapterBase;
+import com.simqss.writer.writerBase;
 
-public class adapterKieler extends adapterBase {
-	
+public class adapterKieler extends writerBase {
 	public adapterKieler(String filename) throws IOException {
 		super(filename);
 		// TODO Auto-generated constructor stub
 	}
+	/*	
 	
 	@Override
 	public void generateCode(HashSet<HIOA> HIOAs, HashSet<Block> blocks, HashSet<Line> lines) throws IOException {
@@ -257,5 +256,5 @@ public class adapterKieler extends adapterBase {
 		return null;
 	}
 
-
+*/
 }

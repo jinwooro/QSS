@@ -1,13 +1,11 @@
 package com.simqss.structure.automata;
 
-import java.util.HashMap;
 import java.util.HashSet;
-
 import com.simqss.structure.basic.Formula;
 import com.simqss.structure.basic.Location;
 import com.simqss.structure.basic.Transition;
 import com.simqss.structure.basic.Variable;
-import com.simqss.structure.enums.variableParam;
+import com.simqss.utils.variableParam;
 
 /**
  * This class defines the structure of a single Hybrid Input Output Automata (HIOA).
@@ -57,7 +55,35 @@ public class HIOA {
 	public HashSet<Transition> getTransitions() {
 		return transitions;
 	}
+	
+	/**
+	 * @return Returns the input variables.
+	 */
+	public HashSet<Variable> getInputs(){
+		return I;
+	}
 
+	/**
+	 * @return Returns the number of input variables.
+	 */
+	public int getInputVarCount() {
+		return I.size();
+	}
+	
+	/**
+	 * @return Returns the number of output variables.
+	 */
+	public int getOutputVarCount() {
+		return O.size();
+	}
+	
+	/**
+	 * @return Returns the output variables.
+	 */
+	public HashSet<Variable> getOutputs(){
+		return O;
+	}
+	
 	/**
 	 * 
 	 * @return Returns the set of continuous variables.

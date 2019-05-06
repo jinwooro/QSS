@@ -5,14 +5,24 @@ import java.util.HashSet;
 import com.simqss.structure.automata.QSHIOA;
 
 public class NetworkQSHIOA {
-	private String systemName; // is the file name
+	private String originalFile; // is the file name
+	private String systemName;
 	private HashSet<QSHIOA> QSHIOAs = new HashSet<QSHIOA>();
 	private HashSet<Line> Lines = new HashSet<Line>();
 		
-	public NetworkQSHIOA(String systemName) {
-		this.systemName = systemName;
+	public NetworkQSHIOA(String filename) {
+		this.originalFile = filename;
+		this.systemName = filename.substring(filename.lastIndexOf("/")+1, filename.indexOf(".")); 
 	}
 
+	public String getFileName() {
+		return originalFile;
+	}
+	
+	public String getName() {
+		return systemName;
+	}
+	
 	public void addQSHIOA (QSHIOA q) {
 		QSHIOAs.add(q);
 	}
@@ -26,6 +36,10 @@ public class NetworkQSHIOA {
 		return null;
 	}
 	
+	public HashSet<QSHIOA> getQSHIOAs(){
+		return QSHIOAs;
+	}
+	
 	public void addLine(Line l) {
 		Lines.add(l);
 	}
@@ -36,6 +50,6 @@ public class NetworkQSHIOA {
 
 	@Override
 	public String toString() {
-		return "NetworkQSHIOA [systemName=" + systemName + ",\r\nQSHIOAs=\r\n" + QSHIOAs + ",\r\nLines=\r\n" + Lines + "]";
+		return "NetworkQSHIOA [systemName=" + originalFile + ",\r\nQSHIOAs=\r\n" + QSHIOAs + ",\r\nLines=\r\n" + Lines + "]";
 	}
 }

@@ -1,6 +1,6 @@
 package com.simqss.structure.basic;
 
-import com.simqss.structure.enums.variableParam;
+import com.simqss.utils.variableParam;
 
 /**
  * This class describes the structure of a variable.

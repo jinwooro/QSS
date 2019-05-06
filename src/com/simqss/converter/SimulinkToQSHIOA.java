@@ -28,29 +28,30 @@ import com.simqss.structure.basic.Formula;
 import com.simqss.structure.basic.Location;
 import com.simqss.structure.basic.Transition;
 import com.simqss.structure.basic.Variable;
-import com.simqss.structure.enums.variableParam;
 import com.simqss.structure.system.Line;
 import com.simqss.structure.system.NetworkQSHIOA;
+import com.simqss.utils.variableParam;
 
-public class SimulinkToQSHIOA {
-	// Simulink model parameters
-	public static final String LOCAL_DATA = "LOCAL_DATA";
-	public static final String OUTPUT_DATA = "OUTPUT_DATA";
-	public static final String INPUT_DATA = "INPUT_DATA";
-	public static final String CONTINUOUS_DATA = "SF_CONTINUOUS_TIME_DATA";
-	public static final String INITIAL_VALUE = "props.initialValue";
-	public static final String VARIABLE_TYPE = "props.updateMethod";
-	
+/**
+ * This class converts a slx and mdl files into a network of QSHIOAs. This network of QSHIOAs is stored in an object instance called NetworkQSHIOA. 
+ * @author Jin Woo Ro
+ *
+ */
+public class SimulinkToQSHIOA extends SimulinkKeywords {
 	// Simulink model components (being extracted)
 	private File file = null;
 	private SimulinkModel model = null;
 	private HashSet<StateflowChart> charts = new HashSet<StateflowChart>();
 	private HashSet<SimulinkBlock> blocks = new HashSet<SimulinkBlock>();
-	
-	// Our system as a structure
 	private NetworkQSHIOA sys = null;
-
 	
+	/**
+	 * Constructor.
+	 * @param inputFileName The target file name.
+	 * @throws ZipException An exception.
+	 * @throws IOException An exception.
+	 * @throws SimulinkModelBuildingException An exception.
+	 */
 	public SimulinkToQSHIOA(String inputFileName) throws ZipException, IOException, SimulinkModelBuildingException {
 		file = new File(inputFileName);
 		HashSet<String> namesStateflowCharts = new HashSet<String>(); // Set of chart names
@@ -70,14 +71,14 @@ public class SimulinkToQSHIOA {
 	    			blocks.add(block);
 	    		}
 	    	}
-	    }
+	    } 
+		// TODO: extract the simulation time information and store it.
 		// System model object instantiation with the name as the file name.
-		NetworkQSHIOA sys = new NetworkQSHIOA(inputFileName);	
+		sys = new NetworkQSHIOA(inputFileName);
 		
 		// Convert every chart -> QSHIOA 
 		for (StateflowChart chart : charts) {
 			QSHIOA q = makeQSHIOA(chart);
-			System.out.println(q);
 			sys.addQSHIOA(q);
 		}
 		
@@ -98,7 +99,6 @@ public class SimulinkToQSHIOA {
 				sys.addLine(line);
 			}
 		}
-		System.out.println(sys);
 		// TODO: the Simulink block conversion is now disabled
 		/*
 		for (SimulinkBlock b : blocks) {
@@ -112,10 +112,18 @@ public class SimulinkToQSHIOA {
 		*/
 	}
 	
+	/**
+	 * @return Returns the network of QSHIOAs.
+	 */
 	public NetworkQSHIOA getSystem() {
 		return sys;
 	}
 	
+	/**
+	 * Converts the SimulinkLine into a simpler line for QSHIOA connections.
+	 * @param sl A SimulinkLine instance.
+	 * @return A QSHIOA line.
+	 */
 	private Line makeLine(SimulinkLine sl) {
 			String srcBlockName = sl.getSrcPort().getBlock().getName();
 			String dstBlockName = sl.getDstPort().getBlock().getName();
@@ -136,6 +144,10 @@ public class SimulinkToQSHIOA {
 			return line;
 	}
 	
+	/**
+	 * @param name Checks if there is a charted with the requested name.
+	 * @return Returns true if the chart is found, otherwise, false.
+	 */
 	private boolean hasChart(String name) {
 		// return true if the requested name exists in the set of charts
 		for (StateflowChart chart : charts) {
@@ -146,12 +158,21 @@ public class SimulinkToQSHIOA {
 		return false;
 	}
 
+	/**
+	 * Generate a png file that visualize the original Simulink model.
+	 * @throws IOException
+	 */
 	public void drawDiagram() throws IOException {
 		// render a block or model as PNG image
 		BufferedImage image = SimulinkBlockRenderer.renderBlock(model);
 		ImageIO.write(image, "PNG", new File(file.getName() + ".png"));
 	}
 
+	/**
+	 * Converts a Simulink block into a QSHIOA.
+	 * @param block The Simulink block instance.
+	 * @return Returns the converted QSHIOA instance.
+	 */
 	private HIOA convertBlock_To_HIOA(SimulinkBlock block) {
 		/*
 		String BlockType = block.getType();
@@ -189,7 +210,11 @@ public class SimulinkToQSHIOA {
 		return null;
 	}
 		
-	// This function implements the algorithm for translating a Stateflow chart into a QSHIOA
+	/**
+	 * This function implements the algorithm for translating a Stateflow chart into a QSHIOA
+	 * @param chart A chart instance.
+	 * @return Returns the converted QSHIOA
+	 */
 	private QSHIOA makeQSHIOA (StateflowChart chart) {
 		// Extract the name
 		QSHIOA qshioa = new QSHIOA(chart.getName());
@@ -359,4 +384,3 @@ public class SimulinkToQSHIOA {
 		return qshioa;
 	}	
 }
-	

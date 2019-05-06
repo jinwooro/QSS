@@ -6,7 +6,7 @@ import java.util.HashSet;
 import com.simqss.structure.basic.Formula;
 import com.simqss.structure.basic.Location;
 import com.simqss.structure.basic.Variable;
-import com.simqss.structure.enums.variableParam;
+import com.simqss.utils.variableParam;
 
 /**
  * This class contains the components of a single Quantized State Hybrid Input Output Automata (QSHIOA). This class inherits the HIOA class.

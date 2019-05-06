@@ -8,22 +8,35 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashSet;
-
-import com.simqss.structure.automata.HIOA;
-import com.simqss.structure.system.Line;
 
 
+/**
+ * This is the writer base class. It creates the root folder, delete files, and write to a file.
+ * @author Jin Woo Ro
+ *
+ */
 public abstract class writerBase {
-	// all the generated files will be located in the "generated" folder
-	protected static final String PATH = "generated";
-	protected String filename;
+	protected static final String ROOT_PATH = "generated";
+	protected String mainName;
+	protected int errorCode = 0;
 	
-	public writerBase (String filename) throws IOException {
-		File directory = new File(PATH);
-		this.filename = filename;
-		
-		// check if "generated" folder remains from the previous writing
+	/**
+	 * Constructor. Creates the "generated" folder automatically. If it exists, then this folder is cleaned.
+	 * @param filename Name of the main file.
+	 * @throws IOException Exception if fail to create the folder or fail to clean the folder.
+	 */
+	public writerBase (String mainName) throws IOException  {
+		this.mainName = mainName;
+		makeFolder(ROOT_PATH);
+	}
+	
+	/**
+	 * Creates a new folder. If it already exist, then delete all the files in this folder.
+	 * @param name Name of the folder to be created.
+	 */
+	protected void makeFolder(String name) {
+		File directory = new File(name);
+		// check if "generated" folder remains from the previous program
 		if (!directory.exists()) {
 			// if does not exist, then create the folder
 			System.out.println("folder does not exist");
@@ -46,8 +59,22 @@ public abstract class writerBase {
 				System.exit(0);
 			}
 		}
+		// Wait until all the process completes
+		while (!directory.exists());
 	}
-
+	
+	/**
+	 * @return Returns the error code.
+	 */
+	public int getErrorCode() {
+		return errorCode;
+	}
+	
+	/**
+	 * A helper function for deleting a file or a folder.
+	 * @param file
+	 * @throws IOException
+	 */
 	protected static void delete(File file) throws IOException {
 		String files[] = file.list();
 		for (String temp : files) {
@@ -61,24 +88,54 @@ public abstract class writerBase {
 		}
     }
 
-	protected void write(String f, String s) throws IOException {
-		BufferedWriter writer = new BufferedWriter(new FileWriter(PATH + "/" + f, true));
-		writer.write(s);
+	/**
+	 * A function that writes to a file.
+	 * @param file The file name.
+	 * @param contents The string contents to be written.
+	 * @throws IOException
+	 */
+	protected void write(String file, String contents) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+		writer.write(contents);
 		writer.close();
 	}
 	
-	protected void createFile(String s) {
-		File f = new File (PATH + "/" + s);
+	/**
+	 * It creates a file.
+	 * @param name The file name. This name includes the relative path.
+	 */
+	protected void makeFile(String name) {
+		File f = new File (name);
 		try {
 			f.createNewFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("Failed to generate a file " + s);
+			System.out.println("Failed to generate a file " + name);
 		}
 	}
 	
+	/**
+	 * A helper function that format the indentation of the code.
+	 * @param code The code line.
+	 * @param indentation The tab count for the indentation.
+	 * @return Returns the string including the indentation.
+	 */
+	protected String indentLine(String code, int indentation) {
+		String line = code;
+		for (int a = 0; a < indentation; a++) {
+			line = "\t" + line;
+		}
+		line = line + "\r\n"; 
+		return line; 
+	}
 	
+	
+	/**
+	 * Copy a file in the destination path.
+	 * @param source The source file (just the file name).
+	 * @param dest The new file (just the file name).
+	 * @throws IOException
+	 */
 	protected void copyFile(File source, File dest) throws IOException {
 	    InputStream is = null;
 	    OutputStream os = null;
@@ -95,11 +152,4 @@ public abstract class writerBase {
 	        os.close();
 	    }
 	}
-	
-	// these methods are for the implementation
-	protected abstract String translateChart(HIOA h);
-	protected abstract String translateBlock(String type);
-	protected abstract String translateDataflow(Line l);
-	//public abstract void generateCode(HashSet<HIOA> HIOAs, HashSet<Block> blocks, HashSet<Line> lines) throws IOException;
-	
 }

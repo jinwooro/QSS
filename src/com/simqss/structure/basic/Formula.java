@@ -1,9 +1,6 @@
 package com.simqss.structure.basic;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.simqss.structure.enums.Symbol;
+import com.simqss.utils.Symbol;
 
 /**
  * This class describes a mathematical equation.

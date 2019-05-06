@@ -1,15 +1,19 @@
-package com.simqss.writer;
+package com.simqss.writer.simulinkblock;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 import org.conqat.lib.simulink.model.SimulinkPortBase;
 
-// This class provides templates for the simulink block implmentation in python
+// This class provides templates for the simulink block written in python code.
 public class BlockTemplate {
 	public static final String Sum = "def sum_block(a, b):\r\n"
 									+ "\treturn a+b\r\n\r\n" ;
 	public static final String Constant = "def constant_block(a):\r\n"
 									+ "\treturn a\r\n\r\n";
 	
+	/**
+	 * @param type Type of the Simulink Block.
+	 * @return Returns the code for this Simulink Block in Python as a String.
+	 */
 	public static String getTemplate(String type) {
 		switch (type) {
 			case "Sum":
