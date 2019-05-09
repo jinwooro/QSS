@@ -59,6 +59,6 @@ public class QSHIOA extends HIOA {
 	public String toString() {
 		return "QSHIOA [name=" + name + "]";
 	}
-	
+
 	
 }

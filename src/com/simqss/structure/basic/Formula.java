@@ -116,11 +116,12 @@ public class Formula {
 	
 	/**
 	 * A helper function that transforms a string equation into a formula.
-	 * @param equation The equation.
+	 * @param eq The equation.
 	 * @return Returns the resulting Formula object.
 	 */
-	public static Formula makeFormula(String equation) {
-		// TODO: detection of multiple relation symbol (for the error checking) is not implemented
+	public static Formula makeFormula(String eq) {
+		String equation = eq.replaceAll("\\s+",  "");
+		
 		Symbol.Relation relation = Formula.getRelation(equation);
 		if (relation == null) { return null; }
 		

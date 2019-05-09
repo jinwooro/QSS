@@ -295,7 +295,8 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 					System.out.println("Error: this equation contains non-existing variables: " + line);
 					System.exit(0);
 				}
-			
+				fx.setSubject(x);
+				
 				if ((currentMode == 1) || (currentMode == 3)){ // this mode includes "du"
 					if (x.getScope() == variableParam.Scope.LOCAL_CONTINUOUS_DERIVATIVE) {
 						// if the subject variable is a derivative, the equation is an ODE
@@ -360,6 +361,7 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 					
 					Matcher m = Pattern.compile("\\[(.*?)\\]").matcher(contents);
 					String guards[] = null;
+					// TODO: for now, the guard on each transition is assumed to be a single item
 					while(m.find()) {
 						guards = m.group(1).replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
 					}
@@ -375,12 +377,20 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 					}
 					for (String equation: resets) {
 						Formula fx = Formula.makeFormula(equation);
+						Variable x = qshioa.hasVariable(fx.getSubject().getName());
+						if (x == null) {
+							System.out.println("Error: this equation contains non-existing variables: " + equation);
+							System.exit(0);
+						}	
+						fx.setSubject(x);
 						tran.addReset(fx);
 					}
 					qshioa.addTransition(tran);
 				}
 			}
-		}	
+		}
+		
+		qshioa.setOutgoingTransitions();
 		return qshioa;
 	}	
 }

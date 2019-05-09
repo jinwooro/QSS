@@ -31,6 +31,20 @@ public class Transition {
 	}
 	
 	/**
+	 * @return Returns the source location.
+	 */
+	public Location getSrc() {
+		return src;
+	}
+	
+	/**
+	 * @return Returns the destination location.
+	 */
+	public Location getDst() {
+		return dst;
+	}
+	
+	/**
 	 * @return The resets.
 	 */
 	public HashSet<Formula> getResets(){

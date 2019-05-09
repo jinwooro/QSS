@@ -78,6 +78,20 @@ public class HIOA {
 	}
 	
 	/**
+	 * @return Returns the number of continuous variables.
+	 */
+	public int getContVarCount() {
+		return X_C.size();
+	}
+	
+	/**
+	 * @return Returns the number of discrete variables.
+	 */
+	public int getDiscVarCount() {
+		return X_D.size();
+	}
+	
+	/**
 	 * @return Returns the output variables.
 	 */
 	public HashSet<Variable> getOutputs(){
@@ -252,4 +266,16 @@ public class HIOA {
 		return null;
 	}
 	
+	/**
+	 *  If this function is triggered, the outgoing transitions of every location is detected and added to each location object.
+	 */
+	public void setOutgoingTransitions() {
+		for (Location l : this.locations) {
+			for (Transition t : this.transitions) {
+				if (l.getName().equals(t.getSrc().getName())) {
+					l.addOutgoingTransition(t);
+				}	
+			}
+		}
+	}
 }

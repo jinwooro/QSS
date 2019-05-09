@@ -1,4 +1,4 @@
-package com.simqss.writer.simulinkblock;
+package com.simqss.utils;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 import org.conqat.lib.simulink.model.SimulinkPortBase;

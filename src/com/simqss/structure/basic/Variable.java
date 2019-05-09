@@ -38,6 +38,20 @@ public class Variable {
 	}
 
 	/**
+	 * It returns the integral name of the subject variable if it is a derivative.
+	 * For example, 'x_dot' is a derivative of 'x'. Thus, this function returns 'x' instead of 'x_dot'.
+	 * Note: if the subject varialbe is not a derivative, this function returns the subject variable name as is.
+	 * @return The integral name
+	 */
+	public String getIntegralName() {
+		if (this.scope == variableParam.Scope.LOCAL_CONTINUOUS_DERIVATIVE) {
+			String integralName = name.replace("_dot", "");
+			return integralName;
+		}
+		return name;
+	}
+	
+	/**
 	 * @return The id.
 	 */
 	public int getID() {
