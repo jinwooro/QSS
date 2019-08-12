@@ -1,4 +1,6 @@
-package com.simqss.structure.system;
+package com.simqss.structure;
+
+import java.util.Collection;
 
 /**
  * A Line describes a connection between QSHIOA.
@@ -56,4 +58,6 @@ public class Line {
 		return "Line [srcBlockName=" + srcBlockName + ", dstBlockName=" + dstBlockName + ", SrcPort=" + srcVarName
 				+ ", DstPort=" + dstVarName + "]";
 	}
+
+
 }

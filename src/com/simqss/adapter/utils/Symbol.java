@@ -1,4 +1,4 @@
-package com.simqss.utils;
+package com.simqss.adapter.utils;
 
 /**
  * This class contains enums for the mathematical symbols.

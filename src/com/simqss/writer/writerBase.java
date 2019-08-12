@@ -1,6 +1,7 @@
 package com.simqss.writer;
 
 import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 
 
 /**
@@ -27,19 +29,20 @@ public abstract class writerBase {
 	 */
 	public writerBase (String mainName) throws IOException  {
 		this.mainName = mainName;
-		makeFolder(ROOT_PATH);
+		File root = new File(ROOT_PATH);
+		createFolder(root);
+		File lib = new File(root, "lib");
+		createFolder(lib);
 	}
 	
 	/**
 	 * Creates a new folder. If it already exist, then delete all the files in this folder.
 	 * @param name Name of the folder to be created.
 	 */
-	protected void makeFolder(String name) {
-		File directory = new File(name);
+	protected void createFolder(File directory) {
 		// check if "generated" folder remains from the previous program
 		if (!directory.exists()) {
 			// if does not exist, then create the folder
-			System.out.println("folder does not exist");
 			try {
 				directory.mkdir();
 			} catch (SecurityException se) {
@@ -104,7 +107,7 @@ public abstract class writerBase {
 	 * It creates a file.
 	 * @param name The file name. This name includes the relative path.
 	 */
-	protected void makeFile(String name) {
+	protected void createFile(String name) {
 		File f = new File (name);
 		try {
 			f.createNewFile();

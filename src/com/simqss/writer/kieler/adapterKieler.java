@@ -7,10 +7,10 @@ import java.util.Map.Entry;
 
 import org.conqat.lib.simulink.model.SimulinkBlock;
 
-import com.simqss.structure.automata.HIOA;
-import com.simqss.structure.basic.Location;
-import com.simqss.structure.basic.Transition;
-import com.simqss.structure.system.Line;
+import com.simqss.structure.HIOA;
+import com.simqss.structure.Line;
+import com.simqss.structure.Location;
+import com.simqss.structure.Transition;
 import com.simqss.writer.writerBase;
 
 public class adapterKieler extends writerBase {

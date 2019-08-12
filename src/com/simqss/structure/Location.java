@@ -1,5 +1,7 @@
-package com.simqss.structure.basic;
+package com.simqss.structure;
 import java.util.HashSet;
+import java.util.Set;
+import com.google.gson.Gson;
 
 /**
  * Structure of a single location.
@@ -15,7 +17,6 @@ public class Location {
 	
 	// Extra information to ease the implementation:
 	private HashSet<Formula> entries = new HashSet<Formula>();
-	private HashSet<Transition> outwardTransition = new HashSet<Transition>();
 	
 	/**
 	 * Constructor.
@@ -106,25 +107,11 @@ public class Location {
 		return entries;
 	}
 	
-	/**
-	 * Adds a transition exiting from this location. (This can ease the code generation).
-	 * @param t A transition object.
-	 */
-	public void addOutgoingTransition(Transition t) {
-		outwardTransition.add(t);
-	}
-
-	/**
-	 * @return The transitions exiting this location.
-	 */
-	public HashSet<Transition> getOutgoingTransitions(){
-		return outwardTransition;
-	}
-
 	@Override
 	public String toString() {
 		return "Location [name=" + name + ", invariants=" + invariants + ", ODEs=" + ODEs + ", outputUpdates="
 				+ outputUpdates + ", entries=" + entries + "]";
 	}
 
+	
 }

@@ -1,4 +1,4 @@
-package com.simqss.converter;
+package com.simqss.adapter;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,28 +22,24 @@ import org.conqat.lib.simulink.model.stateflow.StateflowNodeBase;
 import org.conqat.lib.simulink.model.stateflow.StateflowTransition;
 import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
 
-import com.simqss.structure.automata.HIOA;
-import com.simqss.structure.automata.QSHIOA;
-import com.simqss.structure.basic.Formula;
-import com.simqss.structure.basic.Location;
-import com.simqss.structure.basic.Transition;
-import com.simqss.structure.basic.Variable;
-import com.simqss.structure.system.Line;
-import com.simqss.structure.system.NetworkQSHIOA;
-import com.simqss.utils.variableParam;
+import com.simqss.adapter.utils.SimulinkKeywords;
+import com.simqss.structure.Formula;
+import com.simqss.structure.HIOA;
+import com.simqss.structure.Line;
+import com.simqss.structure.Location;
+import com.simqss.structure.NetworkHIOA;
+import com.simqss.structure.Transition;
 
 /**
- * This class converts a slx and mdl files into a network of QSHIOAs. This network of QSHIOAs is stored in an object instance called NetworkQSHIOA. 
+ * This class converts a slx and mdl files into a network of HIOAs. This network of HIOAs is stored in an object instance called NetworkHIOA. 
  * @author Jin Woo Ro
  *
  */
-public class SimulinkToQSHIOA extends SimulinkKeywords {
-	// Simulink model components (being extracted)
+public class AdapterHIOA extends SimulinkKeywords {
+	
 	private File file = null;
 	private SimulinkModel model = null;
-	private HashSet<StateflowChart> charts = new HashSet<StateflowChart>();
-	private HashSet<SimulinkBlock> blocks = new HashSet<SimulinkBlock>();
-	private NetworkQSHIOA sys = null;
+	private NetworkHIOA systemModel = null;
 	
 	/**
 	 * Constructor.
@@ -52,44 +48,53 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 	 * @throws IOException An exception.
 	 * @throws SimulinkModelBuildingException An exception.
 	 */
-	public SimulinkToQSHIOA(String inputFileName) throws ZipException, IOException, SimulinkModelBuildingException {
-		file = new File(inputFileName);
-		HashSet<String> namesStateflowCharts = new HashSet<String>(); // Set of chart names
-		// Distinguish between Simulink Stateflow Charts and Simulink Blocks
+	public AdapterHIOA(String inputFileName) throws ZipException, IOException, SimulinkModelBuildingException {
+		
+		// open the file and load the model
+		File file = new File(inputFileName);
 		try (SimulinkModelBuilder builder = new SimulinkModelBuilder(file, new SimpleLogger())) {
 			model = builder.buildModel();
-			if (model.getStateflowMachine() != null) {
-				for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
-		    		namesStateflowCharts.add(chart.getName());
-		    		charts.add(chart);
-		    	}
-			}
-			for (SimulinkBlock block : model.getSubBlocks()) {
-	    		if (namesStateflowCharts.contains(block.getName())){
-	    			continue;
-	    		} else {
-	    			blocks.add(block);
-	    		}
-	    	}
 	    } 
-		// TODO: extract the simulation time information and store it.
-		// System model object instantiation with the name as the file name.
-		sys = new NetworkQSHIOA(inputFileName);
+	
 		
-		// Convert every chart -> QSHIOA 
-		for (StateflowChart chart : charts) {
-			QSHIOA q = makeQSHIOA(chart);
-			sys.addQSHIOA(q);
+		// differentiate blocks and charts
+		HashSet<StateflowChart> charts = new HashSet<StateflowChart>();
+		HashSet<SimulinkBlock> blocks = new HashSet<SimulinkBlock>();
+		HashSet<String> namesStateflowCharts = new HashSet<String>();
+		if (model.getStateflowMachine() != null) {
+			for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
+				namesStateflowCharts.add(chart.getName());
+				charts.add(chart);
+			}
+		}
+		for (SimulinkBlock block : model.getSubBlocks()) {
+			if (namesStateflowCharts.contains(block.getName())){
+				continue;
+			} else {
+				blocks.add(block);
+			}
 		}
 		
-		// Convert each SimulinkLine -> a value assignment (namely just a line)
+		
+		// TODO: extract the simulation setup information and store it.
+		
+		
+		
+		// Instantiate a system model object (with the name being the file name)
+		NetworkHIOA sys = new NetworkHIOA(inputFileName);
+		// QSHIOA conversion 
+		for (StateflowChart chart : charts) {
+			HIOA q = extractHIOA(chart);
+			sys.addHIOA(q);
+		}
+		// Line conversion
 		for (StateflowChart chart : charts) {
 			SimulinkBlock cb =  chart.getStateflowBlock();
 			for (SimulinkLine sl : cb.getInLines()) {
 				if (sl.getSrcPort() == null) {
 					continue;
 				}
-				// TODO: we also ignore the connections from the simulink blocks
+				
 				String srcBlockName = sl.getSrcPort().getBlock().getName();
 				if (hasChart(srcBlockName) == false) {
 					continue;
@@ -99,28 +104,21 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 				sys.addLine(line);
 			}
 		}
-		// TODO: the Simulink block conversion is now disabled
-		/*
-		for (SimulinkBlock b : blocks) {
-			for (SimulinkLine line : b.getInLines()) {
-				if (line.getSrcPort() == null) {
-					continue;
-				}
-				connections.add(line);
-			}
-		}
-		*/
+		
+		// store it in this class scope
+		systemModel = sys;
+		
 	}
 	
 	/**
 	 * @return Returns the network of QSHIOAs.
 	 */
-	public NetworkQSHIOA getSystem() {
-		return sys;
+	public NetworkHIOA getSystem() {
+		return systemModel;
 	}
-	
+
 	/**
-	 * Converts the SimulinkLine into a simpler line for QSHIOA connections.
+	 * Converts the SimulinkLine into a simpler line structure for the QSHIOA connections.
 	 * @param sl A SimulinkLine instance.
 	 * @return A QSHIOA line.
 	 */
@@ -145,14 +143,18 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 	}
 	
 	/**
-	 * @param name Checks if there is a charted with the requested name.
+	 * @param name The name of the charted to be returned.
 	 * @return Returns true if the chart is found, otherwise, false.
 	 */
 	private boolean hasChart(String name) {
 		// return true if the requested name exists in the set of charts
-		for (StateflowChart chart : charts) {
-			if (chart.getName().equals(name)) {
-				return true;
+		if (model.getStateflowMachine() == null) {
+			return false;
+		} else {
+			for (StateflowChart chart : model.getStateflowMachine().getCharts()) {
+				if (chart.getName().equals(name)) {	
+					return true;
+				}
 			}
 		}
 		return false;
@@ -215,39 +217,37 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 	 * @param chart A chart instance.
 	 * @return Returns the converted QSHIOA
 	 */
-	private QSHIOA makeQSHIOA (StateflowChart chart) {
-		// Extract the name
-		QSHIOA qshioa = new QSHIOA(chart.getName());
+	private HIOA extractHIOA (StateflowChart chart) {
+		// HIOA instance name
+		HIOA hioa = new HIOA(chart.getName());
 		
 		// Extract the variables
-		for (StateflowData data : chart.getData()) {
-			String scope = data.getParameter("scope");
-			String variableName = data.getName();
+		for (StateflowData data : chart.getData()) {	
+			String variableName = data.getName();	
 			double initialValue = 0.0;
-			// three variable scopes in Simulink
+			if (data.getDeclaredParameterNames().contains(INITIAL_VALUE)) {
+				initialValue = Double.parseDouble(data.getParameter(INITIAL_VALUE));
+			}	
+			
+			// identify the scope of this variable
+			String scope = data.getParameter("scope");
 			switch (scope) {
 				case LOCAL_DATA:
-					if (data.getDeclaredParameterNames().contains(INITIAL_VALUE)) {
-						initialValue = Double.parseDouble(data.getParameter(INITIAL_VALUE));
-					}
 					if (data.getDeclaredParameterNames().contains(VARIABLE_TYPE)) {
 						if (data.getParameter(VARIABLE_TYPE).contentEquals(CONTINUOUS_DATA)) {
-							qshioa.addContinuousVariable(variableName, initialValue);
+							// Store this variable as a continuous variable
+							hioa.addContinuousVariable(variableName, initialValue);
 						}
 					} else {
-						// TODO: here we assume that all the discrete variables are double type
-						qshioa.addDiscreteVariable(variableName, initialValue, variableParam.Type.DOUBLE);
+						// store this variable as a discrete variable
+						hioa.addDiscreteVariable(variableName, initialValue);
 					}
 					break;
 				case OUTPUT_DATA:
-					if (data.getDeclaredParameterNames().contains(INITIAL_VALUE)) {
-						initialValue = Double.parseDouble(data.getParameter(INITIAL_VALUE));
-					}
-					// TODO: here shows how to fetch the port index
-					qshioa.addOutputVariable(variableName, initialValue);
+					hioa.addOutputVariable(variableName, initialValue);
 					break;
 				case INPUT_DATA:
-					qshioa.addInputVariable(variableName);
+					hioa.addInputVariable(variableName);
 					break;
 				default:
 					System.out.println("Error: unknown scope variable is detected.");
@@ -259,60 +259,46 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 		
 		// Extract the locations
 		for (StateflowNodeBase n : chart.getNodes()) {
-			int nodeId = Integer.parseInt(n.getId());
 			String nodeContents = n.getResolvedId().toString();
 			String[] lines = nodeContents.split("\\\\n|\\\\r|\\r|\\n");
-			// extract the node name
+			
+			// set name
 			String locationName = lines[0].split("/")[lines[0].split("/").length-1];
 			Location l = new Location(locationName);
+			
+			// set id
+			int nodeId = Integer.parseInt(n.getId());
 			l.setID(nodeId);
 			
-			// TODO: improve differentiating f and o
+			// TODO: need a better algorithm to extract the keywords
 			int currentMode = 0;
 			for (int i = 1; i < lines.length; i++) {
-				String line = lines[i].replace(";","").replaceAll("\\s","");
+				// remove ";" and " " characters
+				String line = lines[i].replace(";","").replaceAll("\\s","");	
+				// identify the type of this equation
 				if (line.contains(":")){
-					if (line.contains("du") == true && line.contains("en") == false) {
-						currentMode = 1; // du
-						continue;
-					} else if (line.contains("en") == true && line.contains("du") == false){
-						currentMode = 2; // en
-						continue;
-					} else if (line.contains("en") && line.contains("du")) {
-						currentMode = 3; // du, en
-						continue;
-					}
-				} 
-				
+					currentMode = getEquationType(line);
+					continue;
+				}
+				// create a formula
 				Formula fx = Formula.makeFormula(line);
-				// Check if the formula is invalid 
 				if (fx == null) {
 					System.out.println("Error: this equation is invalid: " + line);
 					System.exit(0);
 				}
-				Variable x = qshioa.hasVariable(fx.getSubject().getName());
-				if (x == null) {
-					System.out.println("Error: this equation contains non-existing variables: " + line);
-					System.exit(0);
-				}
-				fx.setSubject(x);
 				
-				if ((currentMode == 1) || (currentMode == 3)){ // this mode includes "du"
-					if (x.getScope() == variableParam.Scope.LOCAL_CONTINUOUS_DERIVATIVE) {
-						// if the subject variable is a derivative, the equation is an ODE
-						l.addODE(fx);
-					} else if ((x.getScope() == variableParam.Scope.OUTPUT_VARIABLE) 
-							|| (x.getScope() == variableParam.Scope.OUTPUT_SIGNAL)) {
-						l.addOutputUpdateAction(fx);
-					} else {
-						System.out.println("Error: the subject of any equation must be either a derivative or an output variable: " + line);
+				int varType = hioa.hasVariable(fx.getLHS());
+				
+				if ((currentMode == 1) || (currentMode == 3)){ // this mode is "du"
+					if (varType == 3){ l.addODE(fx); }
+					else if (varType == 5) { l.addOutputUpdateAction(fx); }
+					else {
+						System.out.println("Error: invalid equation: " + line);
 						System.exit(0);
 					}
 				} 
-				if ((currentMode == 2) || (currentMode == 3)){
-					if ((x.getScope() == variableParam.Scope.LOCAL_CONTINUOUS)
-							|| (x.getScope() == variableParam.Scope.OUTPUT_VARIABLE)
-							|| (x.getScope() == variableParam.Scope.OUTPUT_SIGNAL)) {
+				if ((currentMode == 2) || (currentMode == 3)){ // this mode is "en"
+					if ((varType != 3) && (varType != 4)) {
 						l.addEntryAction(fx);
 					} else {
 						System.out.println("Error: entry ations at this location is invalid: " + line);
@@ -320,7 +306,7 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 					}
 				}
 			}
-			qshioa.addLocation(l);
+			hioa.addLocation(l);
 		}
 		
 		// Extract the transitions
@@ -333,8 +319,8 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 				// A transition that represent the initialization
 				if (t.getSrc() == null) {
 					int initialLocationId = Integer.parseInt(t.getDst().getId());
-					Location loc = qshioa.getLocation(initialLocationId);
-					qshioa.setInitialLocation(loc);
+					Location loc = hioa.getLocation(initialLocationId);
+					hioa.setInitialLocation(loc);
 				
 					if (contents.contains("[")) {
 						System.out.println("Error: initialization should never be conditioned: " + contents);
@@ -348,24 +334,22 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 					if (resets != null) {
 						for (String equation: resets) {
 							Formula fx = Formula.makeFormula(equation);
-							qshioa.addInitialization(fx);
+							hioa.addInitialization(fx);
 						}
 					}
 				}
 				else {
 					int srcLocId = Integer.parseInt(t.getSrc().getId());
 					int dstLocId = Integer.parseInt(t.getDst().getId());
-					Location srcLocName = qshioa.getLocation(srcLocId);
-					Location dstLocName = qshioa.getLocation(dstLocId);
+					String srcLocName = hioa.getLocation(srcLocId).getName();
+					String dstLocName = hioa.getLocation(dstLocId).getName();
 					Transition tran = new Transition(srcLocName, dstLocName);
 					
 					Matcher m = Pattern.compile("\\[(.*?)\\]").matcher(contents);
 					String guards[] = null;
-					// TODO: for now, the guard on each transition is assumed to be a single item
 					while(m.find()) {
 						guards = m.group(1).replaceAll("\\\\n|\\\\r|\\r|\\n", "").split(";");
 					}
-
 					for (String equation: guards) {
 						Formula fx = Formula.makeFormula(equation);
 						tran.addGuard(fx);
@@ -377,20 +361,29 @@ public class SimulinkToQSHIOA extends SimulinkKeywords {
 					}
 					for (String equation: resets) {
 						Formula fx = Formula.makeFormula(equation);
-						Variable x = qshioa.hasVariable(fx.getSubject().getName());
-						if (x == null) {
-							System.out.println("Error: this equation contains non-existing variables: " + equation);
+						int varType = hioa.hasVariable(fx.getLHS()); 
+						if (varType == 0) {
+							System.out.println("Error: this equation contains a non-existing variable: " + equation);
 							System.exit(0);
 						}	
-						fx.setSubject(x);
 						tran.addReset(fx);
 					}
-					qshioa.addTransition(tran);
+					hioa.addTransition(tran);
 				}
 			}
 		}
 		
-		qshioa.setOutgoingTransitions();
-		return qshioa;
-	}	
+		return hioa;
+	}
+	
+	private int getEquationType(String equation) {
+		if (equation.contains("du") == true && equation.contains("en") == false) {
+			return 1; // du
+		} else if (equation.contains("en") == true && equation.contains("du") == false){
+			return 2; // en
+		} else if (equation.contains("en") && equation.contains("du")) {
+			return 3; // du, en
+		}
+		return 0;
+	}
 }

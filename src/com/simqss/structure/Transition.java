@@ -1,4 +1,4 @@
-package com.simqss.structure.basic;
+package com.simqss.structure;
 
 import java.util.HashSet;
 
@@ -8,7 +8,7 @@ import java.util.HashSet;
  *
  */
 public class Transition {
-	private Location src, dst;
+	private String src, dst;
 	private HashSet<Formula> guards = new HashSet<Formula>();
 	private HashSet<Formula> resets = new HashSet<Formula>();
 	
@@ -17,7 +17,7 @@ public class Transition {
 	 * @param src The source location.
 	 * @param dst The destination location.
 	 */
-	public Transition(Location src, Location dst){
+	public Transition(String src, String dst){
 		this.src = src;
 		this.dst = dst;
 	}
@@ -33,14 +33,14 @@ public class Transition {
 	/**
 	 * @return Returns the source location.
 	 */
-	public Location getSrc() {
+	public String getSrc() {
 		return src;
 	}
 	
 	/**
 	 * @return Returns the destination location.
 	 */
-	public Location getDst() {
+	public String getDst() {
 		return dst;
 	}
 	
@@ -69,8 +69,9 @@ public class Transition {
 
 	@Override
 	public String toString() {
-		return "Transition [src=" + src.getName() + ", dst=" + dst.getName() + ", guards=" + guards + ", resets=" + resets + "]";
+		return "Transition [src=" + src + ", dst=" + dst + ", guards=" + guards + ", resets=" + resets + "]";
 	}
+
 
 	
 }

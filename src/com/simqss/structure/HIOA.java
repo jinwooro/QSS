@@ -1,11 +1,6 @@
-package com.simqss.structure.automata;
+package com.simqss.structure;
 
 import java.util.HashSet;
-import com.simqss.structure.basic.Formula;
-import com.simqss.structure.basic.Location;
-import com.simqss.structure.basic.Transition;
-import com.simqss.structure.basic.Variable;
-import com.simqss.utils.variableParam;
 
 /**
  * This class defines the structure of a single Hybrid Input Output Automata (HIOA).
@@ -152,7 +147,6 @@ public class HIOA {
 	 */
 	public void addInputVariable(String name) {
 		Variable v = new Variable(name);
-		v.setScope(variableParam.Scope.INPUT_VARIABLE);
 		I.add(v);
 	}
 	
@@ -163,7 +157,6 @@ public class HIOA {
 	 */
 	public void addOutputVariable(String name, double initialValue) {
 		Variable v = new Variable(name);
-		v.setScope(variableParam.Scope.OUTPUT_VARIABLE);
 		v.setInitialValue(initialValue);
 		O.add(v);
 	}
@@ -175,16 +168,12 @@ public class HIOA {
 	 */
 	public void addContinuousVariable(String name, double initialValue) {
 		Variable v = new Variable (name);
-		v.setType(variableParam.Type.DOUBLE);
-		v.setScope(variableParam.Scope.LOCAL_CONTINUOUS);
 		v.setInitialValue(initialValue);
 		X_C.add(v);
 		
 		// Every continuous variable creates a derivative variable
 		String derivative = name + "_dot";
 		Variable v_dot = new Variable (derivative);
-		v_dot.setType(variableParam.Type.DOUBLE);
-		v_dot.setScope(variableParam.Scope.LOCAL_CONTINUOUS_DERIVATIVE);
 		X_DOT.add(v_dot);
 	}
 	
@@ -194,10 +183,8 @@ public class HIOA {
 	 * @param initialValue Initial value.
 	 * @param type Type of this variable.
 	 */
-	public void addDiscreteVariable(String name, double initialValue, variableParam.Type type) {
+	public void addDiscreteVariable(String name, double initialValue) {
 		Variable v = new Variable (name);
-		v.setType(type);
-		v.setScope(variableParam.Scope.LOCAL_DISCRETE);
 		v.setInitialValue(initialValue);
 		X_D.add(v);
 	}
@@ -251,31 +238,42 @@ public class HIOA {
 	 * @param name Name of the variable.
 	 * @return Returns the variable. Otherwise, returns null if the search fails.
 	 */
-	public Variable hasVariable(String name) {
-		HashSet<Variable> V = new HashSet<Variable>();
-		V.addAll(X_C);
-		V.addAll(X_D);
-		V.addAll(X_DOT);
-		V.addAll(I);
-		V.addAll(O);
-		for (Variable var : V) {
+	public int hasVariable(String name) {
+		for (Variable var : X_C) {
 			if (var.getName().equals(name)) {
-				return var;
+				return 1;
 			}
 		}
-		return null;
+		for (Variable var : X_D) {
+			if (var.getName().equals(name)) {
+				return 2;
+			}
+		}
+		for (Variable var : X_DOT) {
+			if (var.getName().equals(name)) {
+				return 3;
+			}
+		}
+		for (Variable var : I) {
+			if (var.getName().equals(name)) {
+				return 4;
+			}
+		}
+		for (Variable var : O) {
+			if (var.getName().equals(name)) {
+				return 5;
+			}
+		}
+		
+		// return zero means this variable does not exist
+		return 0;
 	}
+
+	@Override
+	public String toString() {
+		return "HIOA [name=" + name + "]";
+	}
+
+
 	
-	/**
-	 *  If this function is triggered, the outgoing transitions of every location is detected and added to each location object.
-	 */
-	public void setOutgoingTransitions() {
-		for (Location l : this.locations) {
-			for (Transition t : this.transitions) {
-				if (l.getName().equals(t.getSrc().getName())) {
-					l.addOutgoingTransition(t);
-				}	
-			}
-		}
-	}
 }
