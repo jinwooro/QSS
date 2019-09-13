@@ -9,11 +9,13 @@
 !*.tex
 !*.py
 !*.mdl
-!*.slx
+*.slx
 
 !*/
 
+archive/*
 generated/*
+results/*
 bin
 
 /bin/

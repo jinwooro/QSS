@@ -14,11 +14,12 @@ def readJson(file_name):
 def conversionSympyMath(MatlabExpr):
     # the first keyword to convert is 'power' to 'Pow'
     SymExpr = MatlabExpr.replace('power', 'Pow')
+    SymExpr = SymExpr.replace('//', '/') # some mistakes from the Simulink to json parser
     return SymExpr
 
 def writeJson(file_name, data):
     # modify the filename extension to .qshioa
-    new_name = file_name.split('.')[0] + ".qshioa"
+    new_name = file_name.split('.')[0] + "-qshioa.json"
     with open(new_name, 'w') as outfile:
         json.dump(data, outfile, indent=4, sort_keys=True)
 
@@ -75,6 +76,7 @@ if __name__ == "__main__":
                 derivatives = differentiate(equation, time_variants, qss_rank-1)
                 ## integral of the derivative
                 integral = f['LHS'].split("_dot")[0] + "(t)"
+                print(" Before : " + str(f['LHS']) + ", AFTER : " + str(integral) )
                 derivatives.insert(0, integral)
                 f['derivatives'] = derivatives # add to the json data
             
