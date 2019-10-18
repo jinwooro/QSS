@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.414"
+    ComputedModelVersion    "1.416"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -44,7 +44,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [3499.0, 156.0, 1280.0, 777.0]
+      Location		      [1492.0, 184.0, 1545.0, 1016.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -66,11 +66,11 @@ Model {
 	$ObjectID		5
 	$ClassName		"Simulink.EditorInfo"
 	IsActive		[1]
-	ViewObjType		"StateflowChart"
-	LoadSaveID		"1"
-	Extents			[1242.0, 601.0]
-	ZoomFactor		[1.25]
-	Offset			[142.2, 0.15000000000000568]
+	ViewObjType		"SimulinkTopLevel"
+	LoadSaveID		"0"
+	Extents			[1507.0, 840.0]
+	ZoomFactor		[1.5]
+	Offset			[379.095238095238, 118.5]
       }
       Object {
 	$PropName		"DockComponentsInfo"
@@ -90,7 +90,7 @@ Model {
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABqAP///wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAUAAAAClAAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
+      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAYJAAADgwAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAACE/////wAAAAAAAAAA/////wEAAAD2/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAF6/////wAAAAAAAAAA/"
       "////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAPg/////wAAAAAAAAAA/"
@@ -104,9 +104,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Sep 10 20:39:44 2019"
-  RTWModifiedTimeStamp	  490048765
-  ModelVersionFormat	  "1.%<AutoIncrement:414>"
+  LastModifiedDate	  "Mon Oct 14 13:11:44 2019"
+  RTWModifiedTimeStamp	  492959489
+  ModelVersionFormat	  "1.%<AutoIncrement:416>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -907,7 +907,7 @@ Model {
       Name		      "Configuration"
       ExtraOptions	      ""
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition    [ 220, 70, 1210, 730 ]
+      ConfigPrmDlgPosition    [ 1280, 70, 2270, 730 ]
     }
     PropName		    "ConfigurationSets"
   }
@@ -1098,8 +1098,8 @@ Model {
   }
   System {
     Name		    "elasticband"
-    Location		    [3499, 156, 4779, 933]
-    Open		    off
+    Location		    [1492, 184, 3037, 1200]
+    Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
     ExecutionDomainType	    "Deduce"
@@ -1113,9 +1113,9 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "175"
+    ZoomFactor		    "150"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "14"
+    SIDHighWatermark	    "15"
     Block {
       BlockType		      SubSystem
       Name		      "Follower"
@@ -1261,8 +1261,8 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"Leader"
-	Location		[3499, 156, 4779, 933]
-	Open			on
+	Location		[1920, 156, 3200, 933]
+	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
 	ExecutionDomainType	"Deduce"
@@ -1597,7 +1597,7 @@ Model {
       SrcPort		      1
       Points		      [0, -15; 31, 0]
       Branch {
-	ZOrder			80
+	ZOrder			83
 	Points			[0, 2; 1, 0; 0, 88; -266, 0; 0, -65]
 	DstBlock		"StretchBand"
 	DstPort			2
@@ -1635,9 +1635,6 @@ Stateflow {
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 3 0 0]
     viewObj		    2
-    visible		    1
-    subviewS {
-    }
     ssIdHighWaterMark	    22
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -2181,9 +2178,6 @@ Stateflow {
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 29 0 0]
     viewObj		    28
-    visible		    1
-    subviewS {
-    }
     ssIdHighWaterMark	    12
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS

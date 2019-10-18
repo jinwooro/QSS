@@ -19,7 +19,7 @@ def conversionSympyMath(MatlabExpr):
 
 def writeJson(file_name, data):
     # modify the filename extension to .qshioa
-    new_name = file_name.split('.')[0] + "-qshioa.json"
+    new_name = file_name.split('.')[0] + "-precomputed.json"
     with open(new_name, 'w') as outfile:
         json.dump(data, outfile, indent=4, sort_keys=True)
 
@@ -43,17 +43,14 @@ if __name__ == "__main__":
         print("Need arguments")
         exit()
     elif len(sys.argv) == 2:
-        print("By default, the qss rank is set to 2 (second derivative)")
+        print("By default, the qss rank is set to 1")
 
     # get the file name and the desired qss rank from the input arguments
     file_name = sys.argv[1]
-    # DEBUG: for now, qss_rank is set 2
-    #qss_rank = int(sys.argv[2])
-    qss_rank = 2
+    qss_rank = int(sys.argv[2])
 
-    # the rank must be >= 2
-    if qss_rank < 2:
-        print("the rank must be given higher than or equal to 2")
+    if qss_rank < 1:
+        print("the rank must be >= 1")
         exit()
 
     # read the json file and create a tree object
@@ -76,7 +73,7 @@ if __name__ == "__main__":
                 derivatives = differentiate(equation, time_variants, qss_rank-1)
                 ## integral of the derivative
                 integral = f['LHS'].split("_dot")[0] + "(t)"
-                print(" Before : " + str(f['LHS']) + ", AFTER : " + str(integral) )
+                #print(" Original symbol : " + str(f['LHS']) + ", converted to : " + str(integral) )
                 derivatives.insert(0, integral)
                 f['derivatives'] = derivatives # add to the json data
             

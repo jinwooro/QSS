@@ -1,8 +1,8 @@
 # Defines QSHIOA and Trnasition classes
-from pylib.Equation import Equation
-from pylib.Variable import Variable
-from pylib.Transition import Transition
-from pylib.LevelCrossingDetection import *
+from common.Equation import Equation
+from common.Variable import Variable
+from common.Transition import Transition
+from common.LevelCrossingDetection import *
 
 class QSHIOA:
 

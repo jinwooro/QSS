@@ -1,33 +1,30 @@
 import config
-from pylib.QSHIOA import QSHIOA
-from pylib.LevelCrossingDetection import *
+from mqss.QSHIOA import QSHIOA
+from mqss.LevelCrossingDetection import *
 import csv
 
 class Simulator:
-
-    def __init__(self, data):
-        self.rank = data['qss_rank']
+    def __init__(self, data, rank):
+        self.rank = rank
         self.system_name = data['systemName']
-
-        self.select_solver()
 
         # extract the QSHIOA instances and the inter-connection between the QSHIOAs
         self.QSHIOAs = { q['name'] : QSHIOA(q) for q in data['QSHIOAs']}
         self.Lines = data['Lines']
 
-    def select_solver(self):
-        self.solver = Modified_QSS
+    def initialization(self):
+        for q in self.QSHIOAs.values():
+            q.initialization()
+            q.evaluate_token_O()
+        self.csv_setup()
 
     def run(self):
         time = 0
 
         # initialization
-        for q in self.QSHIOAs.values():
-            q.initialization()
-            q.update_O()
+        self.initialization()
 
-        self.csv_setup()
-
+        # main loop
         while(time < config.SIMULATION_TIME):
 
             # current value exchange
@@ -46,10 +43,12 @@ class Simulator:
             for index in range(1, self.rank+1):
                 # Update X tokens, then update O tokens 
                 for q in self.QSHIOAs.values():
-                    q.update_X(index)
-                    q.update_O(index)
+                    q.evaluate_token_X(index)
+                    q.evaluate_token_O(index)
                 # exchange (derivative) tokens
                 self.token_exchange(index)
+
+            # 
 
             # before updating the variables, write to the output file
             self.csv_record_system_state(time)
@@ -80,16 +79,18 @@ class Simulator:
         for line in self.Lines:
             src_output_var = self.QSHIOAs[ line['srcBlockName'] ].O[ line['srcVarName'] ]
             dst_input_var = self.QSHIOAs[ line['dstBlockName'] ].I[ line['dstVarName'] ]
-            dst_input_var.token[i].value = src_output_var.token[i].value
+            dst_input_var.smooth_token[i][1] = src_output_var.smooth_token[i][1]
 
 
     def csv_setup(self):
+        # this is the 1st row, with column titles
         row = ["Time"]
         for name, q in self.QSHIOAs.items():
             row.append(str(name) + " location")
             name_list = q.get_list_of_names()
             row += name_list
     
+        # create the csv file
         file_name = self.system_name + '.csv'
         with open(file_name, 'w') as csvFile:
             writer = csv.writer(csvFile)
@@ -103,6 +104,7 @@ class Simulator:
             row += q.get_states(tokens = True)
         self.rows.append(row)
         
+        # every time we saved 50 rows of data, write to the file
         if len(self.rows) > 50:
             with open(self.system_name + '.csv', 'a') as csvFile:
                 writer = csv.writer(csvFile)

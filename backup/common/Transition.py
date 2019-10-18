@@ -1,6 +1,6 @@
 # Defines QSHIOA and Trnasition classes
 import sympy as S
-import config
+from python import config
 
 class Transition:
     def __init__(self, data):
