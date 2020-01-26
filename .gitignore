@@ -17,6 +17,7 @@
 !presentation/*.bib
 !presentation/parts/*
 !presentation/fig/*
+!presentation/fig/diagrams/*
 
 archive/*
 generated/*
