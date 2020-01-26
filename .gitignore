@@ -13,9 +13,10 @@
 
 !*/
 
-presentation/*
 !presentation/*.tex
 !presentation/*.bib
+!presentation/parts/*
+!presentation/fig/*
 
 archive/*
 generated/*

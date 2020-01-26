@@ -1,0 +1,103 @@
+\usepackage[scale=0.8,sfdefault,light]{roboto} 
+
+\usetheme{Madrid}
+\setbeamercovered{transparent}
+
+\definecolor{uoa-blue}{RGB}{3,80,133}
+\definecolor{uoa-light-blue}{RGB}{0,154,199}
+\definecolor{uoa-grey}{RGB}{230,232,231}
+
+\setbeamercolor{structure}{fg=uoa-blue}
+
+\setbeamertemplate{blocks}[default]
+\setbeamercolor{block title}{bg=uoa-blue,fg=white}
+\setbeamercolor{block body}{bg=uoa-grey,fg=black}
+
+\setbeamertemplate{title page}[default]
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+
+\setbeamertemplate{itemize items}[default]
+\setbeamertemplate{enumerate items}[default]
+
+\setbeamertemplate{section in toc}[default]
+\setbeamertemplate{subsection in toc}[default]
+
+%\usepackage{fontspec}
+%\defaultfontfeatures{Ligatures=TeX}
+%\setromanfont{Verdana}
+
+
+\setbeamercolor{normal text}{fg=black,bg=}
+\setbeamercolor{alerted text}{fg=black,bg=}
+\usebeamercolor{normal text}
+\setbeamercovered{%
+	again covered={\opaqueness<1->{15}}}
+
+\newenvironment{myitemize}
+{ \begin{itemize}
+		\setlength{\itemsep}{6pt}     }
+	{ \end{itemize}                  } 
+
+\newenvironment{mypiecewiseitemize}
+{ \begin{itemize}[<+>]
+		\setlength{\itemsep}{6pt}     }
+	{ \end{itemize}                  } 
+
+\newenvironment{mycloseitemize}
+{ \begin{itemize}
+		\setlength{\itemsep}{3pt}     }
+	{ \end{itemize}                  } 
+
+\newenvironment<>{varblock}[2][\textwidth]{%
+	\setlength{\textwidth}{#1}
+	\begin{actionenv}#3%
+		\def\insertblocktitle{#2}%
+		\par%
+		\usebeamertemplate{block begin}}
+	{\par%
+		\usebeamertemplate{block end}%
+	\end{actionenv}}
+	
+	%\AtBeginSection[]
+	%{
+	%	\begin{frame}<beamer>
+	%		\frametitle{Overview}
+	%		\tableofcontents[currentsection]
+	%	\end{frame}
+	%
+	
+	\newenvironment{variableblock}[3]{%
+		\setbeamercolor{block body}{#2}
+		\setbeamercolor{block title}{#3}
+		\begin{block}{#1}}{\end{block}}
+	
+	% Keys to support piece-wise uncovering of elements in TikZ pictures:
+	% \node[visible on=<2->](foo){Foo}
+	% \node[visible on=<{2,4}>](bar){Bar}   % put braces around comma expressions
+	%
+	% Internally works by setting opacity=0 when invisible, which has the 
+	% adavantage (compared to \node<2->(foo){Foo} that the node is always there, hence
+	% always consumes space plus that coordinate (foo) is always available.
+	%
+	% The actual command that implements the invisibility can be overriden
+	% by altering the style invisible. For instance \tikzsset{invisible/.style={opacity=0.2}}
+	% would dim the "invisible" parts. Alternatively, the color might be set to white, if the
+	% output driver does not support transparencies (e.g., PS) 
+	%
+	\tikzset{
+		invisible/.style={opacity=0},
+		visible on/.style={alt={#1{}{invisible}}},
+		alt/.code args={<#1>#2#3}{%
+			\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+		},
+	}
+	
+	\tikzset{onslide/.code args={<#1>#2}{%
+			\only<#1>{\pgfkeysalso{#2}}
+		}}
+		\tikzstyle{highlight}=[red!90, fill=red!5]
+		\tikzstyle{highlightsource}=[blue!90, fill=blue!5]
+		\tikzstyle{borderhighlight}=[red!90, text=black, fill=red!5]
+		\tikzstyle{texthighlight}=[text=red!90, fill=red!5]

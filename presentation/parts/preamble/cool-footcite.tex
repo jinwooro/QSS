@@ -1,0 +1,30 @@
+\setbeamertemplate{bibliography item}{\insertbiblabel} %% Remove book symbol from references and add number
+
+
+\let\oldcite=\cite             
+\renewcommand{\cite}[1]{\textcolor[rgb]{1,0.3,0}{\oldcite{#1}}}
+
+% See https://tex.stackexchange.com/a/396754/28146
+\makeatletter
+\newbibmacro*{hypercite}{%
+  \renewcommand{\@makefntext}[1]{\noindent\normalfont##1}%
+  \footnotetext{\scriptsize{%
+    \textcolor[rgb]{1,0.3,0}{
+    	\blxmkbibnote{foot}{%
+	    \printtext[labelnumberwidth]{%
+	      \printfield{prefixnumber}%
+	      \printfield{labelnumber}}%
+	}%
+	\addspace
+    \fullcite{\thefield{entrykey}}}}}}
+
+\DeclareCiteCommand{\hypercite}%
+  {\usebibmacro{cite:init}}
+  {\usebibmacro{hypercite}}
+  {}
+  {\usebibmacro{cite:dump}}
+
+% Redefine the \footfullcite command to use the reference number
+\renewcommand{\footfullcite}[1]{\cite{#1}\hypercite{#1}}
+
+\makeatother
