@@ -16,7 +16,7 @@ def calculate_value(expr, variables):
             expr = expr.subs(symbol, value)
     return expr
 
-# Returns True is the input number is a positive real number
+# Returns True if the input number is a positive real number
 def check_positive_real(number):
     real_part = number.as_real_imag()[0]
     imag_part = number.as_real_imag()[1]
@@ -43,16 +43,6 @@ def root_finding(expression, guess=0):
             pass
     return []
 
-def preprocess_guard (transition, variables):
-    guard = transition.guards[0][0] # ignore the compositional guards for now, just consider one guard
-    eq1 = eq2 = g0 = guard
-    # obtain eq1 and eq2, which are two equations obtained using different methods
-    for name, v in variables.items():
-        eq1 = eq1.subs(S.sympify(name), v.ex1) # substitute ex1
-        eq2 = eq2.subs(S.sympify(name), v.ex2) # substitute ex2
-        g0 = g0.subs(S.sympify(name), v.get_current_value()) # the current guard value
-    return guard, g0, eq1, eq2
-
 # Makes Taylor expansion for order 1 and 2
 # Input: X = a dictionary of cont. variables, O = a dictionary of output variables
 def taylor12_derive(X, O):
@@ -72,7 +62,6 @@ def taylor12_derive(X, O):
 # 2nd order RK, midpoint method
 def rk12_derive(loc, I, X, O):
     union = {**I, **X}
-
     for name, f in loc.get_f().items():
         # rk1 is Euler method
         c = X[name].get_token_values()
@@ -122,47 +111,139 @@ def mqss12_derive(loc, I, X, O):
         O[name].ex1 = h
         O[name].ex2 = h2
 
-def algorithm1(transition, I, X, iteration, vtol):
-    guard, g0, eq1, eq2 = preprocess_guard (transition, {**I, **X})
-    log = ["ZCD; g: %s, g0: %f, eq1: %s, eq2: %s" % (guard, g0, eq1, eq2)]
+def algorithm3(transition, I, X, vtol):
+
+    def get_remainder(expr, variables):
+        for v in variables.values():
+            # reversed order otherwise the substitution may not work correctly
+            for symbol, value in reversed(v.smooth_tokens):
+
+                expr = expr.subs(symbol, value)
+        return expr
+
+    variables = {**I, **X}
+    guard = transition.guards[0][0] # ignore the compositional guards for now
+
+    # calculate the taylor coefficients of the guard
+    taylor_coef = [ calculate_value(exp, variables) for exp in guard ]
+    order = len(taylor_coef) - 1 
+    for i in range(1, order + 1 ):
+        taylor_coef[i] = float(taylor_coef[i] * 1 / math.factorial(i))
+    taylor_coef.reverse() # this contains the Taylor coefficients
+    log = ["ZCD; g: %s, taylor coef: %s" % (guard[0], str(taylor_coef) )]
+
+    # To calculate Lagrange remainder,
+    # Get the f^(n+1) derivative expression (last element of the list)
+    remainder_expr = guard[-1]
+    remainder = get_remainder(remainder_expr, variables)
+    
+
+    if taylor_coef[0] == 0:
+        valid_time = 99 # an arbitrary big value
+    else:
+        LTE_coef = [ 0 ] * len(taylor_coef)
+        LTE_coef[ 0 ] = taylor_coef[ 0 ] # LTE is the last term
+        if taylor_coef[0] < 0:
+            LTE_coef[ order ] = vtol
+        if taylor_coef[0] > 0:
+            LTE_coef[ order ] = -vtol
+        # we know that the remainder root always exist
+        valid_time = min( [ i for i in np.roots(LTE_coef) if i > 0 ])
+        
+    # find if zero crossing occurs
+    zero_crossings = [ check_positive_real( S.sympify(sol) ) for sol in np.roots(taylor_coef) if check_positive_real( S.sympify(sol) ) > 0 ]
+    if len(zero_crossings) == 0:
+        log.append("no zero-crossings")
+        return valid_time, log
+
+    # check if the zero-crossing orrurs within the valid time
+    zcd = min(zero_crossings)
+    log.append("zcd: %f, valid-time: %f" % ( zcd, valid_time ) )
+    if zcd < valid_time:
+        return zcd, log
+    else:
+        return valid_time, log
+
+def algorithm2(transition, I, X, vtol):
+    variables = {**I, **X}
+    guard = transition.guards[0][0] # ignore the compositional guards for now
+
+    # calculate the taylor coefficients of the guard
+    taylor_coef = [ calculate_value(exp, variables) for exp in guard ]
+    order = len(taylor_coef) - 1 
+    for i in range(1, order + 1 ):
+        taylor_coef[i] = float(taylor_coef[i] * 1 / math.factorial(i))
+    taylor_coef.reverse() # this contains the Taylor coefficients
+    log = ["ZCD; g: %s, taylor coef: %s" % (guard[0], str(taylor_coef) )]
+
+    if taylor_coef[0] == 0:
+        valid_time = 99 # an arbitrary big value
+    else:
+        LTE_coef = [ 0 ] * len(taylor_coef)
+        LTE_coef[ 0 ] = taylor_coef[ 0 ] # LTE is the last term
+        if taylor_coef[0] < 0:
+            LTE_coef[ order ] = vtol
+        if taylor_coef[0] > 0:
+            LTE_coef[ order ] = -vtol
+        # we know that the remainder root always exist
+        valid_time = min( [ i for i in np.roots(LTE_coef) if i > 0 ])
+        
+    # find if zero crossing occurs
+    zero_crossings = [ check_positive_real( S.sympify(sol) ) for sol in np.roots(taylor_coef) if check_positive_real( S.sympify(sol) ) > 0 ]
+    if len(zero_crossings) == 0:
+        log.append("no zero-crossings")
+        return valid_time, log
+
+    # check if the zero-crossing orrurs within the valid time
+    zcd = min(zero_crossings)
+    log.append("zcd: %f, valid-time: %f" % ( zcd, valid_time ) )
+    if zcd < valid_time:
+        return zcd, log
+    else:
+        return valid_time, log
+
+def algorithm1(transition, I, X, iteration, ttol):
+
+    def reform_guards (transition, variables):
+        guard = transition.guards[0][0][0] # ignore the compositional guards for now, just consider one guard
+        eq1 = eq2 = g0 = guard
+        # obtain eq1 and eq2, which are two equations obtained using different methods
+        for name, v in variables.items():
+            eq1 = eq1.subs(v.get_symbol(), v.ex1) # substitute ex1
+            eq2 = eq2.subs(v.get_symbol(), v.ex2) # substitute ex2
+            g0 = g0.subs(v.get_symbol(), v.get_current_value()) # the current guard value
+        return guard, g0, eq1, eq2
+
+    guard, g0, eq1, eq2 = reform_guards (transition, {**I, **X})
+    log = ["ZCD; g: %s, g0: %s, eq1: %s, eq2: %s" % (guard, g0, eq1, eq2)]
 
     # check if either the expressions is constant (i.e., zero gradient)
     if eq1.is_constant() or eq2.is_constant():
-        return 0, False, log
-
-    # check if eq1 and eq2 are identical, then there is no error between qss1 and qss2 
-    if eq1 == eq2:
-        root = root_finding(eq1)
-        if len(root) != 0:
-            return min(root), True, log
-        root = root_finding(eq1 - 2 * g0)
-        if len(root) != 0:
-            return min(root), False, log
-        return 0, False, log
+        return 0, log
              
     for i in range(0, iteration):
         offset = g0 * (1 - 0.5 ** i)
         # check negative delta-q (decreasing value)
-        zcd1 = root_finding(eq1 - offset)
+        zcd1 = root_finding(eq1 - offset) # eq1 = offset -> eq1 - offset = 0
         zcd2 = root_finding(eq2 - offset)
         log.append("attempt: %d, (%s, %s)" % (i, str(zcd1), str(zcd2)))
         if len(zcd1) != 0 and len(zcd2) != 0:
-            if abs(min(zcd1) - min(zcd2)) <= vtol:
+            if abs(min(zcd1) - min(zcd2)) <= ttol:
                 if i == 0:
-                    return min(zcd2), True, log
+                    return min(zcd2), log
                 else:
-                    return min(zcd2), False, log
+                    return min(zcd2), log
         # check positive delta-q (increasing value) 
         zcd1 = root_finding(eq1 - (2 * g0 - offset))
         zcd2 = root_finding(eq2 - (2 * g0 - offset))
         log.append("attempt: %d, (%s, %s)" % (i, str(zcd1), str(zcd2)))
         if len(zcd1) != 0 and len(zcd2) != 0:
-            if abs(min(zcd1) - min(zcd2)) <= vtol:
+            if abs(min(zcd1) - min(zcd2)) <= ttol:
                 if i == 0:
-                    return min(zcd2), False, log
+                    return min(zcd2), log
                 else:
-                    return min(zcd2), False, log
+                    return min(zcd2), log
 
     # we could not find the delta with the given iteration depth
-    return 0, False, log 
+    return 0, log 
 

@@ -8,12 +8,8 @@ class Transition:
         self.destination = data['did'] # destination location id
         # a reset is a pair (LHS, RHS), representing an equation
         self.resets = [(r['LHS'], S.sympify(r['RHS'])) for r in data['resets']] 
-        # a guard is a pair (ZC, comparator), where ZC is a zero-crossing expression, and comparator is the inequality
+        # a guard is a pair (ZC, comparator), where ZC is the zero-crossing form, and comparator is the inequality
         self.guards = [(S.sympify(g['rearranged']), g['relation']) for g in data['guards']] 
-
-    def get_guards(self):
-        exprs = [ g[0] for g in guards ]
-        return exprs
 
     # Trigger this transition,
     # returns false if cannot be triggered
@@ -22,17 +18,21 @@ class Transition:
         union = {**I, **X}
         
         # detect if the guard condition is not satisfied
-        for g, relation in self.guards:
+        for (guard, relation) in self.guards:
+            g0 = guard[0] # the guard expression (non-derivative)
             # evaluate the guard
-            for name, variable in union.items():
-                g = g.subs(S.sympify(name), variable.get_current_value())
+            for variable in union.values():
+                g0 = g0.subs(variable.get_symbol(), variable.get_current_value())
             # filter the not satisfied situations
-            if (relation == "<=" or relation == "<") and (g > config.VTOL):
+            if (relation == "<=" or relation == "<") and (g0 > config.VTOL):
                 return False
-            elif (relation == ">=" or relation == ">") and (g < -config.VTOL):
+            elif (relation == ">=" or relation == ">") and (g0 < -config.VTOL):
                 return False
+            elif (relation == "=="):
+                if (g0 > config.VTOL) or (g0 < -config.VTOL):
+                    return False
 
-        # if the guards are satisifed, perform reset relation
+        # if the guards are satisifed, perform the reset assignment
         for r in self.resets:
             name = r[0] # LHS
             equation = r[1] # RHS

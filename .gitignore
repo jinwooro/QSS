@@ -16,6 +16,8 @@
 archive/*
 generated/*
 results/*
+resources/*
 bin
+PrecomputedLagrange.py
 
 /bin/

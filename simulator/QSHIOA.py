@@ -2,7 +2,9 @@
 from .Variable import Variable
 from .Location import Location
 from .Transition import Transition
-from .Util import *
+from .Calculation import *
+from PrecomputedLagrange import *
+import math
 import config
 
 class QSHIOA:
@@ -16,11 +18,11 @@ class QSHIOA:
         for t in data['transitions']:
             tid = t['sid']
             transition = Transition(t)
-            self.locations[tid].add_outgoing_transition(transition)
+            self.locations[tid].add_exit_transition(transition)
 
         # current location setup
-        loc_id = data['initialLocation']['id'] # initial location id
-        self.current_location = self.locations[loc_id]
+        self.loc_id = data['initialLocation']['id'] # initial location id
+        self.current_location = self.locations[self.loc_id]
 
         # variable objects
         self.I = { i['name'] : Variable(i) for i in data['I']}
@@ -40,92 +42,55 @@ class QSHIOA:
                 self.X[en['LHS']].set_current_value(fx['RHS'])
             elif en['LHS'] in self.O:
                 self.O[en['LHS']].set_current_value(fx['RHS'])
-        self.update_token_O()
 
-    def update_token_O (self, token_index = 0):
-        self.current_location.compute_O_token(self.X, self.O, token_index)
+        self.update_O(index = 0)
 
-    def update_token_X (self, token_index = 0):
-        self.current_location.compute_X_token(self.I, self.X, token_index)
+    def update_O (self, index = 0):
+        self.current_location.compute_O(self.X, self.O, index)
+
+    def update_X (self, index = 0):
+        self.current_location.compute_X(self.I, self.X, index)
 
     def inter_location_transition(self):
         flag, loc_id = self.current_location.take_transition(self.I, self.O, self.X)
-        if flag == True: # transition is triggered
+        if flag == True: # inter-location transition is triggered
             self.current_location = self.locations[loc_id]
-            # execute h in the new location
-            self.update_token_O()
-            self.reset_tokens()
-            print("QSHIOA:%s %s inter-location transition" % (self.instance_name, self.current_location.name))
-
-    def reset_tokens(self):
-        for var in {**self.I, **self.O, **self.X}.values():
-            var.reset_values()
+            self.loc_id = loc_id
+            self.update_O()
+            for var in {**self.I, **self.O, **self.X}.values():
+                var.reset_gradients()
+            print("QSHIOA:%s %s inter-location transition" % (self.instance_name, self.current_location.name)) 
 
     def intra_location_transition(self, time):
         for x in self.X.values():
-            x.evolve_based_on_time(time)
-
-    def derive_variable_expression(self):
-        if config.approx['approx'] == 'mqss12':
-            # you need to parse the current location, which includes 
-            # the derivative function f. Needed for x(t) = f(q(t), t)
-            mqss12_derive(self.current_location, self.I, self.X, self.O)
-        elif config.approx['approx'] == 'taylor12':
-            taylor12_derive(self.X, self.O)
-        elif config.approx['approx'] == 'rk12':
-            rk12_derive(self.current_location, self.I, self.X, self.O)
-
-    def get_egress_guards(self):
-        return self.transitions[self.loc]
+            derivatives = x.values
+            new_value = derivatives[0] # current value
+            for i in range(1, len(derivatives)):
+                new_value = new_value + derivatives[i] * (time ** i) / math.factorial(i)
+            x.set_current_value(new_value)
 
     # returns a collection of the variable names
     def get_variable_names(self):
         names = [ name for name in {**self.X, **self.I, **self.O} ]
         return names
 
-    def compute_delta(self):
-        zero_crossings = [] # normal zero-crossings, which satisfies modifid delta-q
-        hits = [] # hit is a special zero-crossing, which satisfies the guard condition itself
-        logs = [] # to record the log messages
+    def compute_delta(self, rank):
+        xtol = config.xtol
+        Var = {**self.I, **self.X} # union of I and X
+        name = self.instance_name
+        loc = self.loc_id
+
+        # (name, loc) is the key to find precomputed Lagrange error expressions
+        Lagrange_equations = lagrange_loc[(name, loc)] (Var)
+        validity_time = calculate_validity_time(Lagrange_equations, xtol, rank)
+
+        exit_guards = [ t.guards for t in self.current_location.Transitions]
+        zero_crossing_time = calculate_zero_crossing_time(exit_guards, Var)
         
-        if config.algo['name'] == 'algorithm1':
-            for t in self.current_location.Transitions:
-                ans, hit, log = algorithm1(t, self.I, self.X, config.algo['iteration'], config.algo['ttol']) 
-                # if this delta value satisfies the guard condition without modifying delta-q,
-                # save it to a special array, hits
-                if hit == True:
-                    hits.append(ans)
-                else:
-                    zero_crossings.append(ans) 
-                logs.append(log)
-        # elif ... other algorithm
-        
-        # filter out the delta values smaller than the sensitivity parameter
-        zero_crossings = [i for i in zero_crossings if i > config.DELTA_SENSITIVITY]
-        final_delta = hits + zero_crossings
-    
-        # if there is no delta found with the specified iteration depth, 
-        # we can do either:
-        # 1. terminate the simulation.
-        # 2. continue by forcing the time to move forward
-        if len(final_delta) == 0 and config.FORCE_FORWARD == False:
-            print ("Simulation aborted due to no delta is found at QSHIOA:" + self.instance_name + ", location: " + self.current_location.name)
-            print ("Try to relax the tolerance (ttol), or increase the iteration parameter")
-            print ("Alternatively, set 'force-forward' to true")
-            print ("Problem details are as follow:")
-            for log in logs:
-                for l in log:
-                    print (l)
-            return False, 0
-        elif len(final_delta) == 0 and config.FORCE_FORWARD == True:
-            if config.DEBUG:
-                for log in logs:
-                    for l in log:
-                        print (l)
-            return True, config.ESCAPE_STEP
-        # normally, we choose the minimum delta value
+        if validity_time < zero_crossing_time:
+            return validity_time
         else:
-            return True, min(final_delta)
+            return zero_crossing_time
 
     # returns a collection of the current value of variables
     def get_current_state(self, tokens=False):

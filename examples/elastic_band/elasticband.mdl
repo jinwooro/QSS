@@ -1,5 +1,5 @@
 Model {
-  Name			  "elasticband"
+  Name			  "elasticband_backup"
   Version		  9.2
   SavedCharacterEncoding  "ISO-8859-1"
   GraphicalInterface {
@@ -66,11 +66,11 @@ Model {
 	$ObjectID		5
 	$ClassName		"Simulink.EditorInfo"
 	IsActive		[1]
-	ViewObjType		"StateflowChart"
-	LoadSaveID		"4"
+	ViewObjType		"SimulinkTopLevel"
+	LoadSaveID		"0"
 	Extents			[1507.0, 840.0]
-	ZoomFactor		[1.7513134851138354]
-	Offset			[279.857, 161.57099999999997]
+	ZoomFactor		[1.5]
+	Offset			[379.095238095238, 118.5]
       }
       Object {
 	$PropName		"DockComponentsInfo"
@@ -104,8 +104,8 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Jan 27 03:31:50 2020"
-  RTWModifiedTimeStamp	  501996709
+  LastModifiedDate	  "Mon Jan 27 04:26:42 2020"
+  RTWModifiedTimeStamp	  501997582
   ModelVersionFormat	  "1.%<AutoIncrement:420>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -163,12 +163,12 @@ Model {
     $PropName		    "DataLoggingOverride"
     $ObjectID		    7
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
-    model_		    "elasticband"
+    model_		    "elasticband_backup"
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
       Dimension		      1
-      Cell		      "elasticband"
+      Cell		      "elasticband_backup"
       PropName		      "logAsSpecifiedByModels_"
     }
     Array {
@@ -219,7 +219,7 @@ Model {
 	  DisabledProps		  []
 	  Description		  ""
 	  StartTime		  "0.0"
-	  StopTime		  "60"
+	  StopTime		  "40"
 	  AbsTol		  "auto"
 	  AutoScaleAbsTol	  on
 	  FixedStep		  "auto"
@@ -233,7 +233,7 @@ Model {
 	  MaxStep		  "1e-2"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
-	  RelTol		  "1e-6"
+	  RelTol		  "1e-5"
 	  EnableMultiTasking	  off
 	  ConcurrentTasks	  off
 	  Solver		  "ode45"
@@ -907,7 +907,7 @@ Model {
       Name		      "Configuration"
       ExtraOptions	      ""
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition    [ 1280, 70, 2270, 730 ]
+      ConfigPrmDlgPosition    [ 220, 70, 1210, 730 ]
     }
     PropName		    "ConfigurationSets"
   }
@@ -1012,6 +1012,23 @@ Model {
       Interpolate	      on
     }
     Block {
+      BlockType		      Memory
+      InitialCondition	      "0"
+      InheritSampleTime	      off
+      LinearizeMemory	      off
+      LinearizeAsDelay	      off
+      StateMustResolveToSignalObject off
+      RTWStateStorageClass    "Auto"
+    }
+    Block {
+      BlockType		      Mux
+      Inputs		      "4"
+      DisplayOption	      "none"
+      UseBusObject	      off
+      BusObject		      "BusObject"
+      NonVirtualBus	      off
+    }
+    Block {
       BlockType		      Outport
       Port		      "1"
       OutMin		      "[]"
@@ -1040,6 +1057,10 @@ Model {
       SFunctionModules	      "''"
       PortCounts	      "[]"
       MultiThreadCoSim	      "auto"
+    }
+    Block {
+      BlockType		      Scope
+      DefaultConfigurationName "Simulink.scopes.TimeScopeBlockCfg"
     }
     Block {
       BlockType		      SubSystem
@@ -1085,9 +1106,9 @@ Model {
     }
   }
   System {
-    Name		    "elasticband"
+    Name		    "elasticband_backup"
     Location		    [1492, 64, 3037, 1080]
-    Open		    off
+    Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
     ExecutionDomainType	    "Deduce"
@@ -1119,7 +1140,7 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"Follower"
-	Location		[1492, 64, 3037, 1080]
+	Location		[3499, 156, 4779, 933]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1166,7 +1187,7 @@ Model {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
 	  SID			  "3::89"
-	  Tag			  "Stateflow S-Function elasticband 1"
+	  Tag			  "Stateflow S-Function elasticband_backup 1"
 	  Ports			  [2, 2]
 	  Position		  [180, 100, 230, 160]
 	  ZOrder		  69
@@ -1249,7 +1270,7 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"Leader"
-	Location		[1492, 64, 3037, 1080]
+	Location		[1920, 156, 3200, 933]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1286,7 +1307,7 @@ Model {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
 	  SID			  "1::89"
-	  Tag			  "Stateflow S-Function elasticband 3"
+	  Tag			  "Stateflow S-Function elasticband_backup 3"
 	  Ports			  [1, 2]
 	  Position		  [180, 100, 230, 160]
 	  ZOrder		  69
@@ -1348,6 +1369,53 @@ Model {
       }
     }
     Block {
+      BlockType		      Memory
+      Name		      "Memory"
+      SID		      "16"
+      Position		      [815, 395, 845, 425]
+      ZOrder		      8
+      BlockMirror	      on
+      NamePlacement	      "alternate"
+    }
+    Block {
+      BlockType		      Mux
+      Name		      "Mux"
+      SID		      "6"
+      Ports		      [2, 1]
+      Position		      [985, 236, 990, 274]
+      ZOrder		      7
+      ShowName		      off
+      Inputs		      "2"
+      DisplayOption	      "bar"
+    }
+    Block {
+      BlockType		      Scope
+      Name		      "Scope"
+      SID		      "2"
+      Ports		      [1]
+      Position		      [1025, 239, 1055, 271]
+      ZOrder		      3
+      ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
+      "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
+      "ources','WiredSimulink',true),extmgr.Configuration('Visuals','Time Domain',true,'SerializedDisplays',{struct('Mi"
+      "nYLimReal','-3.00685','MaxYLimReal','27.06168','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','27.06168','L"
+      "egendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686"
+      "274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.0666666666666667;0.0745098039215686 0.6235"
+      "29411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.831372549019608 0.0745098039215686;0.7176"
+      "47058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863],'Title','%<Signal"
+      "Label>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines',2,'LineNames',{{'Leader','Follower'"
+      "}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal','-3.00685','MaxYLimReal','2"
+      "7.06168','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','27.06168','LegendVisibility','off','XGrid',true,'Y"
+      "Grid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.68627"
+      "4509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;1 1 0.0666"
+      "666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.831372549019608 0.0745098039215686;0.0588"
+      "235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configuration('Tools','Plot Navigation',true,'"
+      "OnceAtStop',false,'PreviousZoomMode','ZoomX'),extmgr.Configuration('Tools','Measurements',true,'Version','2018b'"
+      ")),'Version','2018b','Position',[1804 -168 898 704])"
+      NumInputPorts	      "1"
+      Floating		      off
+    }
+    Block {
       BlockType		      SubSystem
       Name		      "StretchBand"
       SID		      "4"
@@ -1363,7 +1431,7 @@ Model {
       System {
 	Name			"StretchBand"
 	Location		[1492, 64, 3037, 1080]
-	Open			on
+	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
 	ExecutionDomainType	"Deduce"
@@ -1409,7 +1477,7 @@ Model {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
 	  SID			  "4::89"
-	  Tag			  "Stateflow S-Function elasticband 2"
+	  Tag			  "Stateflow S-Function elasticband_backup 2"
 	  Ports			  [2, 3]
 	  Position		  [180, 100, 230, 180]
 	  ZOrder		  69
@@ -1507,9 +1575,18 @@ Model {
       Points		      [21, 0]
       Branch {
 	ZOrder			7
-	Points			[145, 0; 0, 75]
-	DstBlock		"Follower"
-	DstPort			1
+	Points			[145, 0]
+	Branch {
+	  ZOrder		  14
+	  Points		  [0, 75]
+	  DstBlock		  "Follower"
+	  DstPort		  1
+	}
+	Branch {
+	  ZOrder		  13
+	  DstBlock		  "Mux"
+	  DstPort		  1
+	}
       }
       Branch {
 	ZOrder			3
@@ -1517,6 +1594,13 @@ Model {
 	DstBlock		"StretchBand"
 	DstPort			1
       }
+    }
+    Line {
+      ZOrder		      11
+      SrcBlock		      "Mux"
+      SrcPort		      1
+      DstBlock		      "Scope"
+      DstPort		      1
     }
     Line {
       ZOrder		      28
@@ -1529,7 +1613,25 @@ Model {
       ZOrder		      5
       SrcBlock		      "Follower"
       SrcPort		      1
-      Points		      [0, -15; 31, 0; 0, 2; 1, 0; 0, 88; -266, 0; 0, -65]
+      Points		      [0, -15; 31, 0]
+      Branch {
+	ZOrder			83
+	Points			[0, 2; 1, 0; 0, 88]
+	DstBlock		"Memory"
+	DstPort			1
+      }
+      Branch {
+	ZOrder			38
+	Points			[0, -55]
+	DstBlock		"Mux"
+	DstPort			2
+      }
+    }
+    Line {
+      ZOrder		      85
+      SrcBlock		      "Memory"
+      SrcPort		      1
+      Points		      [-124, 0; 0, -65]
       DstBlock		      "StretchBand"
       DstPort		      2
     }
@@ -1543,7 +1645,7 @@ Model {
 Stateflow {
   machine {
     id			    1
-    name		    "elasticband"
+    name		    "elasticband_backup"
     created		    "02-Sep-2019 11:45:05"
     isLibrary		    0
     sfVersion		    80000014
@@ -1554,11 +1656,12 @@ Stateflow {
     machine		    1
     name		    "Follower"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [14.905 875.402 222.107 701.747]
+    viewLimits		    [14.905 724.087 222.107 565.278]
     zoomFactor		    0.571
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 3 0 0]
     viewObj		    2
+    visible		    1
     ssIdHighWaterMark	    22
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -1567,6 +1670,8 @@ Stateflow {
     saturateOnIntegerOverflow 1
     userSpecifiedStateTransitionExecutionOrder 1
     disableImplicitCasting  1
+    plantModelingInfo {
+    }
     actionLanguage	    2
     firstData		    6
     firstTransition	    10
@@ -1851,6 +1956,8 @@ Stateflow {
     treeNode		    [0 17 0 0]
     viewObj		    16
     visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    11
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -1859,6 +1966,8 @@ Stateflow {
     saturateOnIntegerOverflow 1
     userSpecifiedStateTransitionExecutionOrder 1
     disableImplicitCasting  1
+    plantModelingInfo {
+    }
     actionLanguage	    2
     firstData		    19
     firstTransition	    24
@@ -1874,6 +1983,8 @@ Stateflow {
     ssIdNumber		    1
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
+    eml {
+    }
   }
   state {
     id			    18
@@ -1886,6 +1997,8 @@ Stateflow {
     ssIdNumber		    4
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
+    eml {
+    }
   }
   data {
     id			    19
@@ -2098,11 +2211,12 @@ Stateflow {
     machine		    1
     name		    "Leader"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [142.2 1347.8 0.15 672.15]
+    viewLimits		    [142.2 1135.8 0.15 480.95]
     zoomFactor		    0.8
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 29 0 0]
     viewObj		    28
+    visible		    1
     ssIdHighWaterMark	    12
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -2111,6 +2225,8 @@ Stateflow {
     saturateOnIntegerOverflow 1
     userSpecifiedStateTransitionExecutionOrder 1
     disableImplicitCasting  1
+    plantModelingInfo {
+    }
     actionLanguage	    2
     firstData		    32
     firstTransition	    35

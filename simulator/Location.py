@@ -1,33 +1,35 @@
 import sympy as S
-from .Util import *
+from .Calculation import substitution
 
 class Location:
 
     def __init__(self, json_data):
         # location name
         self.name = json_data['name'] 
-        # ODEs, key = x_name, value = array of sympy derivative format
+
+        # key = x_name, value = sympy derivative array
         self.ODEs = { f['LHS'] : S.sympify(f['derivatives']) for f in json_data['ODEs'] }
-        # updates, key = x_name, value = array of sympy derivative format
+        
+        # key = x_name, value = sympy derivative array
         self.Updates = { h['LHS'] : S.sympify(h['derivatives']) for h in json_data['outputUpdates'] }
         self.Transitions = []
 
-    def add_outgoing_transition(self, tran):
+    def add_exit_transition(self, tran):
         self.Transitions.append(tran)
 
-    def compute_O_token(self, X, O, token_index):
-        for o, H in self.Updates.items():
-            h = H[token_index] # select the correct expression based on the token index 
-            new_value = calculate_value(h, X)
-            O[o].set_token_value(new_value, token_index)
+    def compute_O(self, X, O, index):
+        for name, equations in self.Updates.items():
+            h = equations[index] 
+            new_value = substitution(h, X)
+            O[name].set_value(new_value, index)
 
-    def compute_X_token(self, I, X, token_index):
+    def compute_X(self, I, X, index):
         union = {**I, **X}
-        for x_dot, F in self.ODEs.items():
-            f = F[token_index]
-            new_value = calculate_value(f, union)
+        for x_dot, equations in self.ODEs.items():
+            f = equations[index]
+            new_value = substitution(f, union)
             name = x_dot.split("_dot")[0]
-            X[name].set_token_value(new_value, token_index)
+            X[name].set_value(new_value, index)
 
     def take_transition(self, I, O, X):
         # for each transition, 
@@ -52,7 +54,7 @@ class Location:
     def get_name(self):
         return self.name
 
-    def get_transitions(self):
+    def get_exit_transitions(self):
         return self.Transitions
 
 
