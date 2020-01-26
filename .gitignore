@@ -13,6 +13,10 @@
 
 !*/
 
+presentation/*
+!presentation/*.tex
+!presentation/*.bib
+
 archive/*
 generated/*
 results/*

@@ -1,0 +1,95 @@
+%HOW TO USE THIS DOCUMENT
+%This template was created by Hammond Pearce
+%  hammond.pearce@auckland.ac.nz
+%by extending an existing template from Nathan Allen
+%
+%Load your bib file with the \addbibresource command 
+%  (see immediately below these comments)
+%Then,
+% - A \footfullcite will put the citation at the 
+%    bottom of the page
+% - A \cite will not
+% - Either way, citations are split up over reference slides
+%     automagically at the end of the document
+%     (it will create as many slides as necessary rather than 
+%     having tiny fonts)
+%You can use the existing introduction and results sections
+%  as templates for content
+%The existing slides also demonstrate different page layouts
+%  e.g. one big picture, multiple columns, tables, etc
+%
+%Helpfully, this template creates section slides
+%   The first slide that it creates has all sections visible
+%   This is intended for the outline when presenting
+%   Subsequent section break slides highlight the 
+%      section title only
+
+%Don't change: defines beamer class
+\documentclass[compress,t,xcolor=table,dvipsnames]{beamer}
+
+%Don't change: defines how to include the bibliography
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+\usepackage[style=ieee,backend=bibtex,citetracker=true,doi=false,isbn=false]{biblatex}
+\addbibresource{references.bib} 
+
+%Don't change: these input the document preambles.
+%You can change the preambles if you like (e.g. define
+% additional macros, include more packages, etc)
+\input{parts/preamble/cool-footcite}
+\input{parts/preamble/preamble.tex}
+\input{parts/preamble/nathan-beamer.tex}
+\input{parts/preamble/macros.tex}
+	
+% Don't change: this defines the environment for on-page footnote citations
+\renewcommand\thefootnote{\textcolor{graphThird}{\arabic{footnote}}}
+
+% Put your title here
+\title[]{ Fast Hybrid System Simulation with Guaranteed Zero-crossing Detection }
+
+% Put your author list here
+\author[]{
+	\large \textbf{Jin Woo Ro}
+}
+
+% Put your date here
+\date[]{
+	06/11/2019
+}
+
+% Put your institution and logo here
+\institute[University of Auckland]
+{
+	\includegraphics[scale=0.3]{fig/UOA-HC-RGB.png}
+}
+
+\begin{document}
+
+%Don't change, this builds the outline slide
+\frame{\titlepage}
+
+% Problem and Objective slide:
+
+
+%Include your introduction slides
+\input{parts/introduction}
+\input{parts/examples}
+\input{parts/methodology}
+%\input{parts/supplementary}
+\input{parts/results}
+
+%Include your other sections
+%\input{parts/results}
+
+%\section{Whatever}
+%\input{parts/whatever}
+
+%Don't change: this automagically creates the reference slides
+\begin{frame}[t,allowframebreaks]{References} %% Aligned top
+	\printbibliography
+\end{frame}
+
+\appendix
+
+%Include any appendix slides beyond here
+
+\end{document}
