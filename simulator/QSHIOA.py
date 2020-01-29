@@ -75,17 +75,20 @@ class QSHIOA:
         return names
 
     def compute_delta(self, rank):
-        xtol = config.xtol
+        LTE = config.LTE
         Var = {**self.I, **self.X} # union of I and X
         name = self.instance_name
         loc = self.loc_id
 
         # (name, loc) is the key to find precomputed Lagrange error expressions
         Lagrange_equations = lagrange_loc[(name, loc)] (Var)
-        validity_time = calculate_validity_time(Lagrange_equations, xtol, rank)
+        validity_time = calculate_validity_time(Lagrange_equations, LTE, rank)
 
         exit_guards = [ t.guards for t in self.current_location.Transitions]
         zero_crossing_time = calculate_zero_crossing_time(exit_guards, Var)
+
+        if zero_crossing_time == None: 
+            return validity_time
         
         if validity_time < zero_crossing_time:
             return validity_time

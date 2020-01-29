@@ -86,7 +86,6 @@ if __name__ == "__main__":
     # Copy all HIOA for the conversion process
     QSHIOAs = tree_object.pop('HIOAs')
 
-    id_gen = 0
     for h in QSHIOAs:
         locations = h['locations']
 
@@ -172,10 +171,12 @@ if __name__ == "__main__":
 
     # Merge Lagrange_loc and Lagrange_guard
     # note that they were separated for easy debugging (so, can be optmized later if needed)
-    all_keys = [a for a in Lagrange_loc.keys()] + [b for b in Lagrange_guard.keys()]
-    Lagranges = {}
-    for key in all_keys:
-        Lagranges[key] = Lagrange_loc[key] + Lagrange_guard[key]
+    for key, value in Lagrange_guard.items():
+        if key in Lagrange_loc:
+            Lagrange_loc[key] = Lagrange_loc[key] + value
+        else:
+            Lagrange_loc[key] = value
+    Lagranges = Lagrange_loc
 
     # --- Now, create a python file --- 
     pfile = open('PrecomputedLagrange.py', 'w')

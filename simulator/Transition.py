@@ -43,7 +43,7 @@ class Transition:
                     O[name].set_current_value(equation)
             else:
                 for key, var in X.items():
-                    equation = equation.subs(key, var.current_value())
+                    equation = equation.subs(key, var.get_current_value())
                 if name in X:
                     X[name].set_current_value(equation)
                 if name in O:

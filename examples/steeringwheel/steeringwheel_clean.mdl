@@ -1,12 +1,12 @@
 Model {
-  Name			  "steeringwheel"
+  Name			  "steeringwheel_clean"
   Version		  9.2
   SavedCharacterEncoding  "ISO-8859-1"
   GraphicalInterface {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.99"
+    ComputedModelVersion    "1.100"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -104,9 +104,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Jan 27 22:46:27 2020"
-  RTWModifiedTimeStamp	  502065986
-  ModelVersionFormat	  "1.%<AutoIncrement:99>"
+  LastModifiedDate	  "Mon Jan 27 22:48:16 2020"
+  RTWModifiedTimeStamp	  502066095
+  ModelVersionFormat	  "1.%<AutoIncrement:100>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  on
   LibraryLinkDisplay	  "disabled"
@@ -163,12 +163,12 @@ Model {
     $PropName		    "DataLoggingOverride"
     $ObjectID		    7
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
-    model_		    "steeringwheel"
+    model_		    "steeringwheel_clean"
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
       Dimension		      1
-      Cell		      "steeringwheel"
+      Cell		      "steeringwheel_clean"
       PropName		      "logAsSpecifiedByModels_"
     }
     Array {
@@ -1009,15 +1009,6 @@ Model {
       Interpolate	      on
     }
     Block {
-      BlockType		      Memory
-      InitialCondition	      "0"
-      InheritSampleTime	      off
-      LinearizeMemory	      off
-      LinearizeAsDelay	      off
-      StateMustResolveToSignalObject off
-      RTWStateStorageClass    "Auto"
-    }
-    Block {
       BlockType		      Outport
       Port		      "1"
       OutMin		      "[]"
@@ -1046,10 +1037,6 @@ Model {
       SFunctionModules	      "''"
       PortCounts	      "[]"
       MultiThreadCoSim	      "auto"
-    }
-    Block {
-      BlockType		      Scope
-      DefaultConfigurationName "Simulink.scopes.TimeScopeBlockCfg"
     }
     Block {
       BlockType		      SubSystem
@@ -1093,20 +1080,9 @@ Model {
     Block {
       BlockType		      Terminator
     }
-    Block {
-      BlockType		      ToWorkspace
-      VariableName	      "simulink_output"
-      MaxDataPoints	      "1000"
-      Decimation	      "1"
-      SaveFormat	      "Array"
-      Save2DSignal	      "Inherit from input (this choice will be removed - see release notes)"
-      FixptAsFi		      off
-      NumInputs		      "1"
-      SampleTime	      "0"
-    }
   }
   System {
-    Name		    "steeringwheel"
+    Name		    "steeringwheel_clean"
     Location		    [1388, 182, 2668, 959]
     Open		    on
     PortBlocksUseCompactNotation off
@@ -1178,7 +1154,7 @@ Model {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
 	  SID			  "26::89"
-	  Tag			  "Stateflow S-Function steeringwheel 1"
+	  Tag			  "Stateflow S-Function steeringwheel_clean 1"
 	  Ports			  [1, 2]
 	  Position		  [180, 100, 230, 160]
 	  ZOrder		  69
@@ -1240,40 +1216,6 @@ Model {
       }
     }
     Block {
-      BlockType		      Memory
-      Name		      "Memory"
-      SID		      "27"
-      Position		      [-205, 30, -175, 60]
-      ZOrder		      18
-    }
-    Block {
-      BlockType		      Scope
-      Name		      "Scope2"
-      SID		      "6"
-      Ports		      [1]
-      Position		      [25, 14, 55, 46]
-      ZOrder		      7
-      ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
-      "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
-      "ources','WiredSimulink',true,'DataLoggingVariableName','ScopeData2'),extmgr.Configuration('Visuals','Time Domain"
-      "',true,'SerializedDisplays',{struct('MinYLimReal','-1.23872','MaxYLimReal','1.24849','YLabelReal','','MinYLimMag"
-      "','0.00000','MaxYLimMag','1.24849','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'Axes"
-      "Color',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.06666"
-      "66666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.8313"
-      "72549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686"
-      " 0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines"
-      "',1,'LineNames',{{'SteeringPlant/x_out'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('M"
-      "inYLimReal','-1.23872','MaxYLimReal','1.24849','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','1.24849','Le"
-      "gendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.6862"
-      "74509803922 0.686274509803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764"
-      "705882353 0.16078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.8313"
-      "72549019608 0.0745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configura"
-      "tion('Tools','Plot Navigation',true),extmgr.Configuration('Tools','Measurements',true,'Version','2018b')),'Versi"
-      "on','2018b')"
-      NumInputPorts	      "1"
-      Floating		      off
-    }
-    Block {
       BlockType		      SubSystem
       Name		      "SteeringPlant"
       SID		      "5"
@@ -1326,7 +1268,7 @@ Model {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
 	  SID			  "5::89"
-	  Tag			  "Stateflow S-Function steeringwheel 2"
+	  Tag			  "Stateflow S-Function steeringwheel_clean 2"
 	  Ports			  [1, 3]
 	  Position		  [180, 100, 230, 180]
 	  ZOrder		  69
@@ -1409,37 +1351,6 @@ Model {
 	}
       }
     }
-    Block {
-      BlockType		      ToWorkspace
-      Name		      "To Workspace"
-      SID		      "24"
-      Ports		      [1]
-      Position		      [10, 65, 70, 95]
-      ZOrder		      15
-      VariableName	      "result"
-      MaxDataPoints	      "inf"
-      SaveFormat	      "Timeseries"
-      Save2DSignal	      "3-D array (concatenate along third dimension)"
-      FixptAsFi		      on
-      SampleTime	      "-1"
-    }
-    Line {
-      ZOrder		      6
-      SrcBlock		      "SteeringPlant"
-      SrcPort		      1
-      Points		      [47, 0]
-      Branch {
-	ZOrder			36
-	Points			[0, 50]
-	DstBlock		"To Workspace"
-	DstPort			1
-      }
-      Branch {
-	ZOrder			27
-	DstBlock		"Scope2"
-	DstPort			1
-      }
-    }
     Line {
       ZOrder		      32
       SrcBlock		      "SteeringPlant"
@@ -1449,15 +1360,8 @@ Model {
       DstPort		      1
     }
     Line {
-      ZOrder		      34
+      ZOrder		      41
       SrcBlock		      "Driver"
-      SrcPort		      1
-      DstBlock		      "Memory"
-      DstPort		      1
-    }
-    Line {
-      ZOrder		      35
-      SrcBlock		      "Memory"
       SrcPort		      1
       DstBlock		      "SteeringPlant"
       DstPort		      1
@@ -1472,7 +1376,7 @@ Model {
 Stateflow {
   machine {
     id			    1
-    name		    "steeringwheel"
+    name		    "steeringwheel_clean"
     created		    "23-May-2019 11:08:43"
     isLibrary		    0
     sfVersion		    80000014
@@ -1488,7 +1392,6 @@ Stateflow {
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 3 0 0]
     viewObj		    2
-    visible		    1
     ssIdHighWaterMark	    10
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -1512,8 +1415,6 @@ Stateflow {
     ssIdNumber		    1
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
-    eml {
-    }
   }
   state {
     id			    4
@@ -1526,8 +1427,6 @@ Stateflow {
     ssIdNumber		    3
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
-    eml {
-    }
   }
   data {
     id			    5
@@ -1669,7 +1568,6 @@ Stateflow {
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 12 0 0]
     viewObj		    11
-    visible		    1
     ssIdHighWaterMark	    11
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -1678,8 +1576,6 @@ Stateflow {
     saturateOnIntegerOverflow 1
     userSpecifiedStateTransitionExecutionOrder 1
     disableImplicitCasting  1
-    plantModelingInfo {
-    }
     actionLanguage	    2
     firstData		    14
     firstTransition	    18
@@ -1695,8 +1591,6 @@ Stateflow {
     ssIdNumber		    1
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
-    eml {
-    }
   }
   state {
     id			    13
@@ -1709,8 +1603,6 @@ Stateflow {
     ssIdNumber		    3
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
-    eml {
-    }
   }
   data {
     id			    14

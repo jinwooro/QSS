@@ -72,7 +72,7 @@ class Simulator:
                 q.intra_location_transition(time_step)
                 q.update_O()
 
-            print("Step Count:%d, Simulation Time:%f, Step size:%f, single execution time:%f" % (count, time, time_step, (calculation_end - calculation_start)))
+            print("Step Count:%d, Simulation Time:%f, Step size:%f, ET:%f" % (count, time, time_step, (calculation_end - calculation_start)))
             time += time_step
             count += 1
 

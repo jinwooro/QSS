@@ -8,6 +8,15 @@ from simulator.Simulator import Simulator
 # usage : python3 conversion.py "example.mdl"
 if __name__ == "__main__":
 
+    if len(sys.argv) == 1:
+        print("Correct command is: python3 main.py 'Simulink_file_path' 'derivative-order'")
+        exit()
+    elif len(sys.argv) == 3:
+        order = sys.argv[2]
+    else:
+        print("The derivative order is set to the default value 2")
+        order = 2 #default 
+
     # specify simulink mdl file
     simulink_file_path = sys.argv[1]
     filename = os.path.basename(simulink_file_path).split(".")[0] # file name extraction
@@ -17,7 +26,7 @@ if __name__ == "__main__":
     os.system(cmd)
 
     # RUN SCRIPT 2: precompute derivative expressions
-    cmd = "python3 runnable/PrecomputeDiff.py generated/" + filename + ".json " + str(config.approx['derivative-order'])
+    cmd = "python3 runnable/PrecomputeDiff.py generated/" + filename + ".json " + str(order)
     os.system(cmd)
 
     # open the input file generated from RUN SCRIPT 2

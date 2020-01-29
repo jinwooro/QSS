@@ -26,7 +26,7 @@ class Variable:
         return float(self.values[index])
 
     def set_value(self, new_value, index):
-        self.values[index] = float(new_value)
+        self.values[index] = S.N(S.sympify(new_value))
 
     def get_symbol_value_pairs(self):
         return [ (self.symbols[i], self.values[i]) for i in range(0, len(self.values)) ]
@@ -40,7 +40,7 @@ class Variable:
         return self.values[0]
 
     def set_current_value(self, value):
-        self.values[0] = float(value)
+        self.values[0] = S.N(S.sympify(value))
 
     def __repr__(self):
         return self.name + " = " + str(self.values)

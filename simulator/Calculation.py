@@ -24,9 +24,9 @@ def filter_positive_real_roots(roots):
             final.append(real_part)
     return final
 
-# This function returns the minimum time of the Lagrange error being
+# This function returns the minimum time of the Lagrange error until it becomes
 # larger than the requirement 
-def calculate_validity_time (Lagranges, xtol, rank):
+def calculate_validity_time (Lagranges, LTE, rank):
     time = 1 # max time
     for eq in Lagranges: 
         res = minimize_scalar(eq, bounds = [0, time], method='bounded')
@@ -36,8 +36,8 @@ def calculate_validity_time (Lagranges, xtol, rank):
             e = abs(res.fun)
             # check if the expected error meets the requirement
             expected_error = e * time ** (rank + 1) / math.factorial(rank + 1)
-            if expected_error >= xtol: # when it fails, we compute the time
-                time = (xtol * math.factorial(rank + 1) / e) ** (1 / (rank + 1))
+            if expected_error >= LTE: # when it fails, we compute the time
+                time = (LTE * math.factorial(rank + 1) / e) ** (1 / (rank + 1))
     return time
 
 def calculate_zero_crossing_time(guard_set, Var):
