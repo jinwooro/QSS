@@ -1,4 +1,5 @@
-package com.simqss.adapter.utils;
+package adapter;
+
 
 public class Configuration {
 	private double SIMULATION_TIME = 0.0;

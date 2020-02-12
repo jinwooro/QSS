@@ -1,4 +1,5 @@
-package com.simqss.structure;
+package structure;
+
 
 import java.util.Collection;
 

@@ -1,4 +1,5 @@
-package com.simqss.adapter;
+package adapter;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +11,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.simqss.structure.NetworkHIOA;
+
+import structure.NetworkHIOA;
 
 import java.io.FileWriter;
 

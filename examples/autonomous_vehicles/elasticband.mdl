@@ -1,12 +1,12 @@
 Model {
-  Name			  "elasticband_backup"
+  Name			  "elasticband"
   Version		  9.2
   SavedCharacterEncoding  "ISO-8859-1"
   GraphicalInterface {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.420"
+    ComputedModelVersion    "1.421"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -44,7 +44,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [1492.0, 64.0, 1545.0, 1016.0]
+      Location		      [0.0, 23.0, 1280.0, 777.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -68,7 +68,7 @@ Model {
 	IsActive		[1]
 	ViewObjType		"SimulinkTopLevel"
 	LoadSaveID		"0"
-	Extents			[1507.0, 840.0]
+	Extents			[1242.0, 601.0]
 	ZoomFactor		[1.5]
 	Offset			[379.095238095238, 118.5]
       }
@@ -90,7 +90,7 @@ Model {
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABrAP///wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAYJAAADgwAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
+      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAUAAAAClAAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAACE/////wAAAAAAAAAA/////wEAAAD2/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAF6/////wAAAAAAAAAA/"
       "////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAPg/////wAAAAAAAAAA/"
@@ -104,9 +104,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Jan 27 04:26:42 2020"
-  RTWModifiedTimeStamp	  501997582
-  ModelVersionFormat	  "1.%<AutoIncrement:420>"
+  LastModifiedDate	  "Sat Feb 01 09:20:15 2020"
+  RTWModifiedTimeStamp	  502448977
+  ModelVersionFormat	  "1.%<AutoIncrement:421>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -163,12 +163,12 @@ Model {
     $PropName		    "DataLoggingOverride"
     $ObjectID		    7
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
-    model_		    "elasticband_backup"
+    model_		    "elasticband"
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
       Dimension		      1
-      Cell		      "elasticband_backup"
+      Cell		      "elasticband"
       PropName		      "logAsSpecifiedByModels_"
     }
     Array {
@@ -1106,8 +1106,8 @@ Model {
     }
   }
   System {
-    Name		    "elasticband_backup"
-    Location		    [1492, 64, 3037, 1080]
+    Name		    "elasticband"
+    Location		    [0, 23, 1280, 800]
     Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
@@ -1140,7 +1140,7 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"Follower"
-	Location		[3499, 156, 4779, 933]
+	Location		[0, 23, 1280, 800]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1187,7 +1187,7 @@ Model {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
 	  SID			  "3::89"
-	  Tag			  "Stateflow S-Function elasticband_backup 1"
+	  Tag			  "Stateflow S-Function elasticband 1"
 	  Ports			  [2, 2]
 	  Position		  [180, 100, 230, 160]
 	  ZOrder		  69
@@ -1270,7 +1270,7 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"Leader"
-	Location		[1920, 156, 3200, 933]
+	Location		[0, 23, 1280, 800]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1307,7 +1307,7 @@ Model {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
 	  SID			  "1::89"
-	  Tag			  "Stateflow S-Function elasticband_backup 3"
+	  Tag			  "Stateflow S-Function elasticband 3"
 	  Ports			  [1, 2]
 	  Position		  [180, 100, 230, 160]
 	  ZOrder		  69
@@ -1430,7 +1430,7 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"StretchBand"
-	Location		[1492, 64, 3037, 1080]
+	Location		[0, 23, 1280, 800]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1477,7 +1477,7 @@ Model {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
 	  SID			  "4::89"
-	  Tag			  "Stateflow S-Function elasticband_backup 2"
+	  Tag			  "Stateflow S-Function elasticband 2"
 	  Ports			  [2, 3]
 	  Position		  [180, 100, 230, 180]
 	  ZOrder		  69
@@ -1645,7 +1645,7 @@ Model {
 Stateflow {
   machine {
     id			    1
-    name		    "elasticband_backup"
+    name		    "elasticband"
     created		    "02-Sep-2019 11:45:05"
     isLibrary		    0
     sfVersion		    80000014
@@ -1662,6 +1662,8 @@ Stateflow {
     treeNode		    [0 3 0 0]
     viewObj		    2
     visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    22
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -1670,8 +1672,6 @@ Stateflow {
     saturateOnIntegerOverflow 1
     userSpecifiedStateTransitionExecutionOrder 1
     disableImplicitCasting  1
-    plantModelingInfo {
-    }
     actionLanguage	    2
     firstData		    6
     firstTransition	    10
@@ -1950,7 +1950,7 @@ Stateflow {
     machine		    1
     name		    "StretchBand"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [279.857 1140.354 161.571 641.211]
+    viewLimits		    [279.857 989.039 161.571 504.742]
     zoomFactor		    0.571
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 17 0 0]
@@ -1966,8 +1966,6 @@ Stateflow {
     saturateOnIntegerOverflow 1
     userSpecifiedStateTransitionExecutionOrder 1
     disableImplicitCasting  1
-    plantModelingInfo {
-    }
     actionLanguage	    2
     firstData		    19
     firstTransition	    24
@@ -1983,8 +1981,6 @@ Stateflow {
     ssIdNumber		    1
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
-    eml {
-    }
   }
   state {
     id			    18
@@ -1997,8 +1993,6 @@ Stateflow {
     ssIdNumber		    4
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
-    eml {
-    }
   }
   data {
     id			    19
@@ -2153,7 +2147,7 @@ Stateflow {
   transition {
     id			    25
     labelString		    "[d <= 8]"
-    labelPosition	    [622.728 297 42.656 14]
+    labelPosition	    [626.725 298.713 42.656 14]
     fontSize		    12
     src {
       id		      17
@@ -2178,7 +2172,7 @@ Stateflow {
   transition {
     id			    26
     labelString		    "[d > 10]"
-    labelPosition	    [629.64 342 42.328 14]
+    labelPosition	    [625.072 338.574 42.328 14]
     fontSize		    12
     src {
       id		      18
@@ -2217,6 +2211,8 @@ Stateflow {
     treeNode		    [0 29 0 0]
     viewObj		    28
     visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    12
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -2225,8 +2221,6 @@ Stateflow {
     saturateOnIntegerOverflow 1
     userSpecifiedStateTransitionExecutionOrder 1
     disableImplicitCasting  1
-    plantModelingInfo {
-    }
     actionLanguage	    2
     firstData		    32
     firstTransition	    35

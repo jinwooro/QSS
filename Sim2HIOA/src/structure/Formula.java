@@ -1,6 +1,5 @@
-package com.simqss.structure;
+package structure;
 
-import com.simqss.adapter.utils.Symbol;
 
 /**
  * This class describes a generic mathematical expression

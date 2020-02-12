@@ -1,4 +1,5 @@
-package com.simqss.adapter;
+package adapter;
+
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,13 +23,12 @@ import org.conqat.lib.simulink.model.stateflow.StateflowNodeBase;
 import org.conqat.lib.simulink.model.stateflow.StateflowTransition;
 import org.conqat.lib.simulink.util.SimulinkBlockRenderer;
 
-import com.simqss.adapter.utils.SimulinkKeywords;
-import com.simqss.structure.Formula;
-import com.simqss.structure.HIOA;
-import com.simqss.structure.Line;
-import com.simqss.structure.Location;
-import com.simqss.structure.NetworkHIOA;
-import com.simqss.structure.Transition;
+import structure.Formula;
+import structure.HIOA;
+import structure.Line;
+import structure.Location;
+import structure.NetworkHIOA;
+import structure.Transition;
 
 /**
  * This class converts a slx and mdl files into a network of HIOAs. This network of HIOAs is stored in an object instance called NetworkHIOA. 

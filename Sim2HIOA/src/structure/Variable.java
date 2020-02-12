@@ -1,4 +1,5 @@
-package com.simqss.structure;
+package structure;
+
 
 /**
  * This class describes the structure of a variable.

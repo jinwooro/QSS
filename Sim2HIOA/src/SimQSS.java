@@ -1,12 +1,12 @@
-package com.simqss.main;
+
 import java.io.IOException;
 import java.util.zip.ZipException;
 
 import org.conqat.lib.simulink.builder.SimulinkModelBuildingException;
 
-import com.simqss.adapter.AdapterHIOA;
-import com.simqss.structure.NetworkHIOA;
-import com.simqss.adapter.AdapterJson;
+import adapter.AdapterHIOA;
+import adapter.AdapterJson;
+import structure.NetworkHIOA;
 
 /**
  * This is the main program

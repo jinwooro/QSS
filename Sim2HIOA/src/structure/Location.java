@@ -1,4 +1,5 @@
-package com.simqss.structure;
+package structure;
+
 import java.util.HashSet;
 import java.util.Set;
 import com.google.gson.Gson;

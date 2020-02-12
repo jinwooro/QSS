@@ -26,4 +26,14 @@ resources/*
 bin
 PrecomputedLagrange.py
 
+Sim2HIOA/*
+Sim2HIOA/automake.sh
+Sim2HIOA/readme.txt
+Sim2HIOA/manifest.txt
+Sim2HIOA/build/*
+!Sim2HIOA/src/*
+!Sim2HIOA/src/adapter/*
+!Sim2HIOA/src/structure/*
+
+
 /bin/

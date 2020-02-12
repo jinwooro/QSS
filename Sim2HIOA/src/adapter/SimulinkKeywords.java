@@ -1,4 +1,5 @@
-package com.simqss.adapter.utils;
+package adapter;
+
 
 /**
  * Contains the keywords used in the Simulink model. Add more parameter values to be used during the conversion.
