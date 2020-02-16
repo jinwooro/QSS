@@ -1,9 +1,0 @@
-LTE = 0.0001
-MAX_TIME = 10
-MAX_STEP = 1
-VTOL = 0.001
-
-
-
-
-

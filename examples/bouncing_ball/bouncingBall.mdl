@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.103"
+    ComputedModelVersion    "1.110"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -44,7 +44,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [1280.0, 23.0, 1920.0, 1057.0]
+      Location		      [1285.0, 90.0, 1280.0, 777.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -68,9 +68,9 @@ Model {
 	IsActive		[1]
 	ViewObjType		"StateflowChart"
 	LoadSaveID		"26"
-	Extents			[1882.0, 881.0]
-	ZoomFactor		[3.0030030030030028]
-	Offset			[16.63900000000001, 50.299999999999983]
+	Extents			[1242.0, 601.0]
+	ZoomFactor		[1.75]
+	Offset			[-42.049142857142272, 5.7464285714282823]
       }
       Object {
 	$PropName		"DockComponentsInfo"
@@ -90,7 +90,7 @@ Model {
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABrAP///wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAeAAAADrAAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
+      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAUAAAAClAAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAACE/////wAAAAAAAAAA/////wEAAAD2/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAF6/////wAAAAAAAAAA/"
       "////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAPg/////wAAAAAAAAAA/"
@@ -104,9 +104,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Jan 29 23:19:45 2020"
-  RTWModifiedTimeStamp	  502240784
-  ModelVersionFormat	  "1.%<AutoIncrement:103>"
+  LastModifiedDate	  "Sun Feb 16 23:31:18 2020"
+  RTWModifiedTimeStamp	  503792423
+  ModelVersionFormat	  "1.%<AutoIncrement:110>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  on
   LibraryLinkDisplay	  "disabled"
@@ -219,7 +219,7 @@ Model {
 	  DisabledProps		  []
 	  Description		  ""
 	  StartTime		  "0.0"
-	  StopTime		  "10"
+	  StopTime		  "15"
 	  AbsTol		  "auto"
 	  AutoScaleAbsTol	  on
 	  FixedStep		  "auto"
@@ -230,7 +230,7 @@ Model {
 	  MaxConsecutiveZCs	  "1000"
 	  ExtrapolationOrder	  4
 	  NumberNewtonIterations  1
-	  MaxStep		  "1e-3"
+	  MaxStep		  "1e-4"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
 	  RelTol		  "1e-6"
@@ -1068,10 +1068,21 @@ Model {
     Block {
       BlockType		      Terminator
     }
+    Block {
+      BlockType		      ToWorkspace
+      VariableName	      "simulink_output"
+      MaxDataPoints	      "1000"
+      Decimation	      "1"
+      SaveFormat	      "Array"
+      Save2DSignal	      "Inherit from input (this choice will be removed - see release notes)"
+      FixptAsFi		      off
+      NumInputs		      "1"
+      SampleTime	      "0"
+    }
   }
   System {
     Name		    "bouncingBall"
-    Location		    [1280, 23, 3200, 1080]
+    Location		    [1285, 90, 2565, 867]
     Open		    off
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
@@ -1088,7 +1099,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "125"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "27"
+    SIDHighWatermark	    "28"
     Block {
       BlockType		      SubSystem
       Name		      "Ball"
@@ -1104,7 +1115,7 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"Ball"
-	Location		[1280, 23, 3200, 1080]
+	Location		[1285, 90, 2565, 867]
 	Open			on
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1234,29 +1245,53 @@ Model {
       ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
       "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
       "ources','WiredSimulink',true,'DataLoggingVariableName','ScopeData2'),extmgr.Configuration('Visuals','Time Domain"
-      "',true,'SerializedDisplays',{struct('MinYLimReal','-0.00404','MaxYLimReal','0.0104','YLabelReal','','MinYLimMag'"
-      ",'0.00000','MaxYLimMag','0.0104','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesCo"
-      "lor',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.0666666"
-      "666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.831372"
-      "549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 0"
-      ".650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines',"
-      "1,'LineNames',{{'Ball/x_out'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal'"
-      ",'-0.00404','MaxYLimReal','0.0104','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','0.0104','LegendVisibilit"
-      "y','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0"
-      ".686274509803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.1"
-      "6078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.831372549019608 0"
-      ".0745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configuration('Tools',"
-      "'Plot Navigation',true,'OnceAtStop',false),extmgr.Configuration('Tools','Measurements',true,'Version','2018b')),"
-      "'Version','2018b','Position',[1666 209 560 420])"
+      "',true,'SerializedDisplays',{struct('MinYLimReal','-1.0392','MaxYLimReal','1.35369','YLabelReal','','MinYLimMag'"
+      ",'0.00000','MaxYLimMag','1.35369','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesC"
+      "olor',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.066666"
+      "6666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.83137"
+      "2549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 "
+      "0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines'"
+      ",1,'LineNames',{{'Ball/x_out'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal"
+      "','-1.0392','MaxYLimReal','1.35369','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','1.35369','LegendVisibil"
+      "ity','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922"
+      " 0.686274509803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0"
+      ".16078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.831372549019608"
+      " 0.0745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configuration('Tools"
+      "','Plot Navigation',true,'OnceAtStop',false,'PreviousAutoscale','XY'),extmgr.Configuration('Tools','Measurements"
+      "',true,'Version','2018b')),'Version','2018b','Position',[1719 -62 1442 599],'VisibleAtModelOpen','on')"
       NumInputPorts	      "1"
       Floating		      off
+    }
+    Block {
+      BlockType		      ToWorkspace
+      Name		      "To Workspace"
+      SID		      "28"
+      Ports		      [1]
+      Position		      [-15, -65, 45, -35]
+      ZOrder		      18
+      VariableName	      "simout"
+      MaxDataPoints	      "inf"
+      SaveFormat	      "Timeseries"
+      Save2DSignal	      "3-D array (concatenate along third dimension)"
+      FixptAsFi		      on
+      SampleTime	      "-1"
     }
     Line {
       ZOrder		      41
       SrcBlock		      "Ball"
       SrcPort		      1
-      DstBlock		      "Scope2"
-      DstPort		      1
+      Points		      [32, 0]
+      Branch {
+	ZOrder			43
+	Points			[0, -55]
+	DstBlock		"To Workspace"
+	DstPort			1
+      }
+      Branch {
+	ZOrder			42
+	DstBlock		"Scope2"
+	DstPort			1
+      }
     }
   }
 }
@@ -1279,8 +1314,8 @@ Stateflow {
     machine		    1
     name		    "Ball"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [16.639 643.345 50.3 343.673]
-    zoomFactor		    0.333
+    viewLimits		    [-42.049 667.665 5.746 349.175]
+    zoomFactor		    0.571
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 3 0 0]
     viewObj		    2
@@ -1443,7 +1478,7 @@ Stateflow {
   }
   transition {
     id			    9
-    labelString		    "[ x <= 0 ] \n{\nx = 0.001;\nv = -0.8 * v;\n}"
+    labelString		    "[ x <= 0 ] \n{\nv = -0.8 * v;\nx = 0.001\n}"
     labelPosition	    [388.193 164.319 62.953 62]
     fontSize		    12
     src {

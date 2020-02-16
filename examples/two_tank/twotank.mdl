@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.14"
+    ComputedModelVersion    "1.27"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -44,7 +44,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [3200.0, 23.0, 1920.0, 1177.0]
+      Location		      [1367.0, 126.0, 963.0, 796.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -68,9 +68,9 @@ Model {
 	IsActive		[1]
 	ViewObjType		"SimulinkTopLevel"
 	LoadSaveID		"0"
-	Extents			[1882.0, 1001.0]
+	Extents			[925.0, 620.0]
 	ZoomFactor		[1.0]
-	Offset			[0.0, 0.0]
+	Offset			[247.0, 0.0]
       }
       Object {
 	$PropName		"DockComponentsInfo"
@@ -88,13 +88,13 @@ Model {
       }
       WindowState	      "AAAA/wAAAAD9AAAAAgAAAAAAAAC9AAAB+PwCAAAAA/sAAAAWAEQAbwBjAGsAVwBpAGQAZwBlAHQAMwEAAAAxAAAB+AAAA"
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
-      "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABqAP///wAAAAEAAAAAAAAAAPwCA"
+      "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABrAP///wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAeAAAAEJAAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
+      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAPDAAACpwAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAACE/////wAAAAAAAAAA/////wEAAAD2/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAF6/////wAAAAAAAAAA/"
-      "////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAPg/////wAAAAAAAAAA/"
-      "////wEAAAQP/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA"
+      "////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAANl/////wAAAAAAAAAA/"
+      "////wEAAAOU/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA"
     }
   }
   HideAutomaticNames	  on
@@ -104,9 +104,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Nov 13 11:17:42 2019"
-  RTWModifiedTimeStamp	  495544385
-  ModelVersionFormat	  "1.%<AutoIncrement:14>"
+  LastModifiedDate	  "Sun Feb 16 23:45:12 2020"
+  RTWModifiedTimeStamp	  503797508
+  ModelVersionFormat	  "1.%<AutoIncrement:27>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -219,7 +219,7 @@ Model {
 	  DisabledProps		  []
 	  Description		  ""
 	  StartTime		  "0.0"
-	  StopTime		  "50"
+	  StopTime		  "30"
 	  AbsTol		  "auto"
 	  AutoScaleAbsTol	  on
 	  FixedStep		  "auto"
@@ -230,7 +230,7 @@ Model {
 	  MaxConsecutiveZCs	  "1000"
 	  ExtrapolationOrder	  4
 	  NumberNewtonIterations  1
-	  MaxStep		  "1e-3"
+	  MaxStep		  "auto"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
 	  RelTol		  "1e-3"
@@ -907,7 +907,7 @@ Model {
       Name		      "Configuration"
       ExtraOptions	      ""
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition    [ 71, 71, 1061, 731 ]
+      ConfigPrmDlgPosition    [ 71, 70, 1061, 730 ]
     }
     PropName		    "ConfigurationSets"
   }
@@ -1076,10 +1076,21 @@ Model {
     Block {
       BlockType		      Terminator
     }
+    Block {
+      BlockType		      ToWorkspace
+      VariableName	      "simulink_output"
+      MaxDataPoints	      "1000"
+      Decimation	      "1"
+      SaveFormat	      "Array"
+      Save2DSignal	      "Inherit from input (this choice will be removed - see release notes)"
+      FixptAsFi		      off
+      NumInputs		      "1"
+      SampleTime	      "0"
+    }
   }
   System {
     Name		    "twotank"
-    Location		    [3200, 23, 5120, 1200]
+    Location		    [1367, 126, 2330, 922]
     Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
@@ -1096,7 +1107,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "3"
+    SIDHighWatermark	    "4"
     Block {
       BlockType		      Mux
       Name		      "Mux"
@@ -1118,22 +1129,36 @@ Model {
       ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
       "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
       "ources','WiredSimulink',true),extmgr.Configuration('Visuals','Time Domain',true,'SerializedDisplays',{struct('Mi"
-      "nYLimReal','5.00000','MaxYLimReal','55.00000','YLabelReal','','MinYLimMag','5.00000','MaxYLimMag','55.00000','Le"
-      "gendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.6862"
-      "74509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.0666666666666667;0.0745098039215686 0.62352"
-      "9411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.831372549019608 0.0745098039215686;0.71764"
-      "7058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863],'Title','%<SignalL"
-      "abel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines',2,'LineNames',{{'TwoTank/x1_out','Tw"
-      "oTank/x2_out'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal','5.00000','Max"
-      "YLimReal','55.00000','YLabelReal','','MinYLimMag','5.00000','MaxYLimMag','55.00000','LegendVisibility','off','XG"
-      "rid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0.68627450980"
-      "3922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.1607843137254"
-      "9;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.831372549019608 0.07450980392"
-      "15686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configuration('Tools','Plot Naviga"
-      "tion',true),extmgr.Configuration('Tools','Measurements',true,'Version','2018b')),'Version','2018b','Position',[2"
-      "488 104 560 420])"
+      "nYLimReal','11.54271','MaxYLimReal','32.05081','YLabelReal','','MinYLimMag','11.54271','MaxYLimMag','32.05081','"
+      "LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.68"
+      "6274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.0666666666666667;0.0745098039215686 0.623"
+      "529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.831372549019608 0.0745098039215686;0.717"
+      "647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863],'Title','%<Signa"
+      "lLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines',2,'LineNames',{{'TwoTank/x1_out','"
+      "TwoTank/x2_out'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal','11.54271','"
+      "MaxYLimReal','32.05081','YLabelReal','','MinYLimMag','11.54271','MaxYLimMag','32.05081','LegendVisibility','off'"
+      ",'XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0.6862745"
+      "09803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.160784313"
+      "72549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.831372549019608 0.0745098"
+      "039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configuration('Tools','Plot Na"
+      "vigation',true),extmgr.Configuration('Tools','Measurements',true,'Version','2018b')),'Version','2018b','Position"
+      "',[2488 104 560 420])"
       NumInputPorts	      "1"
       Floating		      off
+    }
+    Block {
+      BlockType		      ToWorkspace
+      Name		      "To Workspace"
+      SID		      "4"
+      Ports		      [1]
+      Position		      [810, 260, 870, 290]
+      ZOrder		      5
+      VariableName	      "simout"
+      MaxDataPoints	      "inf"
+      SaveFormat	      "Timeseries"
+      Save2DSignal	      "3-D array (concatenate along third dimension)"
+      FixptAsFi		      on
+      SampleTime	      "-1"
     }
     Block {
       BlockType		      SubSystem
@@ -1150,7 +1175,7 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"TwoTank"
-	Location		[3200, 23, 5120, 1200]
+	Location		[1367, 126, 2330, 922]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1281,8 +1306,18 @@ Model {
       ZOrder		      5
       SrcBlock		      "TwoTank"
       SrcPort		      1
-      DstBlock		      "Mux"
-      DstPort		      1
+      Points		      [23, 0]
+      Branch {
+	ZOrder			8
+	Points			[0, -80]
+	DstBlock		"To Workspace"
+	DstPort			1
+      }
+      Branch {
+	ZOrder			7
+	DstBlock		"Mux"
+	DstPort			1
+      }
     }
     Line {
       ZOrder		      6
@@ -1312,8 +1347,8 @@ Stateflow {
     machine		    1
     name		    "TwoTank"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [264.067 1016.867 72.517 472.917]
-    zoomFactor		    0.4
+    viewLimits		    [-17.933 975.667 -77.883 402.917]
+    zoomFactor		    0.8
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 3 0 0]
     viewObj		    2
@@ -1464,7 +1499,7 @@ Stateflow {
   }
   transition {
     id			    9
-    labelString		    "{\nx1 = 50;\nx2 = 10;\n}"
+    labelString		    "{\nx1 = 30;\nx2 = 20;\n}"
     labelPosition	    [349.667 180.945 45 50]
     fontSize		    12
     src {
@@ -1488,7 +1523,7 @@ Stateflow {
   }
   transition {
     id			    10
-    labelString		    "[x2 <= 15]"
+    labelString		    "[x2 <= 14]"
     labelPosition	    [599.972 257.5 55.328 14]
     fontSize		    12
     src {

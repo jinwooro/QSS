@@ -13,18 +13,7 @@
 
 !*/
 
-!presentation/*.tex
-!presentation/*.bib
-!presentation/parts/*
-!presentation/fig/*
-!presentation/fig/diagrams/*
-
-archive/*
 generated/*
-results/*
-resources/*
-bin
-PrecomputedLagrange.py
 
 Sim2HIOA/*
 Sim2HIOA/automake.sh
@@ -35,5 +24,8 @@ Sim2HIOA/build/*
 !Sim2HIOA/src/adapter/*
 !Sim2HIOA/src/structure/*
 
+!default_setup.json
+examples/*
+!examples/**/*.mdl
 
 /bin/
