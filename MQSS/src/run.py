@@ -70,12 +70,17 @@ class Simulator:
             # compute the next time step
             delta = []
             for q in self.QSHIOAs.values():
-                qshioa_delta = q.compute_delta(self.iter, self.ttol, self.default_step)
-                delta.append(qshioa_delta)
+                delta = delta + q.compute_delta(self.iter, self.ttol)
             
-            time_step = min(delta)
+            if not delta:
+                time_stpe = self.default_step
+            else:
+                time_step = min(delta)
+
             if time == 0:
                 time_step = 0.001 # initial step size ... 
+            elif time_step > 0.1:
+                time_step = 0.1
 
             # if the next time step exceeds the maximum simulation time,
             # we adjust the time step to stop exactly at the maximum simulation time

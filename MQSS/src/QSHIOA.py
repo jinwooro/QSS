@@ -78,7 +78,7 @@ class QSHIOA:
         names = [ name for name in {**self.X, **self.I, **self.O} ]
         return names
 
-    def compute_delta(self, iter, ttol, default_step):
+    def compute_delta(self, iter, ttol):
         deltas = [] # a collection of delta values
         logs = [] # to record the log messages
         
@@ -89,10 +89,7 @@ class QSHIOA:
 
         # filter out zero values
         deltas = [ dt for dt in deltas if dt > 0 ]
-        if not deltas:
-            return default_step # if we found nothing for delta, use the default step size
-        else:
-            return min(deltas)
+        return deltas
 
     # returns a collection of the current value of variables
     def get_current_state(self, tokens=False):

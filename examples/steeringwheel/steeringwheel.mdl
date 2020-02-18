@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.99"
+    ComputedModelVersion    "1.103"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -66,11 +66,11 @@ Model {
 	$ObjectID		5
 	$ClassName		"Simulink.EditorInfo"
 	IsActive		[1]
-	ViewObjType		"SimulinkTopLevel"
-	LoadSaveID		"0"
+	ViewObjType		"StateflowChart"
+	LoadSaveID		"26"
 	Extents			[1242.0, 601.0]
-	ZoomFactor		[1.25]
-	Offset			[-662.30468750000011, -205.89999999999998]
+	ZoomFactor		[1.5]
+	Offset			[-273.26066666666668, -137.23333333333335]
       }
       Object {
 	$PropName		"DockComponentsInfo"
@@ -104,9 +104,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Jan 27 22:46:27 2020"
-  RTWModifiedTimeStamp	  502065986
-  ModelVersionFormat	  "1.%<AutoIncrement:99>"
+  LastModifiedDate	  "Mon Feb 17 08:10:34 2020"
+  RTWModifiedTimeStamp	  503827828
+  ModelVersionFormat	  "1.%<AutoIncrement:103>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  on
   LibraryLinkDisplay	  "disabled"
@@ -233,7 +233,7 @@ Model {
 	  MaxStep		  "1e-3"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
-	  RelTol		  "1e-6"
+	  RelTol		  "1e-5"
 	  EnableMultiTasking	  off
 	  ConcurrentTasks	  off
 	  Solver		  "ode45"
@@ -241,7 +241,7 @@ Model {
 	  SolverJacobianMethodControl "auto"
 	  ShapePreserveControl	  "DisableAll"
 	  ZeroCrossControl	  "UseLocalSettings"
-	  ZeroCrossAlgorithm	  "Nonadaptive"
+	  ZeroCrossAlgorithm	  "Adaptive"
 	  AlgebraicLoopSolver	  "TrustRegion"
 	  SolverInfoToggleStatus  on
 	  IsAutoAppliedInSIP	  off
@@ -1108,7 +1108,7 @@ Model {
   System {
     Name		    "steeringwheel"
     Location		    [1388, 182, 2668, 959]
-    Open		    on
+    Open		    off
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
     ExecutionDomainType	    "Deduce"
@@ -1140,8 +1140,8 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"Driver"
-	Location		[3200, 23, 5120, 1200]
-	Open			off
+	Location		[1388, 182, 2668, 959]
+	Open			on
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
 	ExecutionDomainType	"Deduce"
@@ -1256,20 +1256,20 @@ Model {
       ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
       "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
       "ources','WiredSimulink',true,'DataLoggingVariableName','ScopeData2'),extmgr.Configuration('Visuals','Time Domain"
-      "',true,'SerializedDisplays',{struct('MinYLimReal','-1.23872','MaxYLimReal','1.24849','YLabelReal','','MinYLimMag"
-      "','0.00000','MaxYLimMag','1.24849','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'Axes"
+      "',true,'SerializedDisplays',{struct('MinYLimReal','-1.23881','MaxYLimReal','1.24876','YLabelReal','','MinYLimMag"
+      "','0.00000','MaxYLimMag','1.24876','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'Axes"
       "Color',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.06666"
       "66666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.8313"
       "72549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686"
       " 0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines"
       "',1,'LineNames',{{'SteeringPlant/x_out'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('M"
-      "inYLimReal','-1.23872','MaxYLimReal','1.24849','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','1.24849','Le"
+      "inYLimReal','-1.23881','MaxYLimReal','1.24876','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','1.24876','Le"
       "gendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.6862"
       "74509803922 0.686274509803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764"
       "705882353 0.16078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.8313"
       "72549019608 0.0745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configura"
-      "tion('Tools','Plot Navigation',true),extmgr.Configuration('Tools','Measurements',true,'Version','2018b')),'Versi"
-      "on','2018b')"
+      "tion('Tools','Plot Navigation',true,'OnceAtStop',false,'PreviousAutoscale','XY'),extmgr.Configuration('Tools','M"
+      "easurements',true,'Version','2018b')),'Version','2018b','VisibleAtModelOpen','on')"
       NumInputPorts	      "1"
       Floating		      off
     }
@@ -1288,7 +1288,7 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"SteeringPlant"
-	Location		[3200, 23, 5120, 1200]
+	Location		[1388, 182, 2668, 959]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1483,12 +1483,14 @@ Stateflow {
     machine		    1
     name		    "Driver"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [-190.094 750.906 -88.9 411.6]
-    zoomFactor		    0.5
+    viewLimits		    [-273.261 554.739 -137.233 263.433]
+    zoomFactor		    0.667
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 3 0 0]
     viewObj		    2
     visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    10
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -1503,7 +1505,7 @@ Stateflow {
   }
   state {
     id			    3
-    labelString		    "ConstLeftTurn\ndu:\ndr_out = 0.1;\n"
+    labelString		    "ConstLeftTurn\ndu:\ndr_out = -4;\n"
     position		    [210.4 153.3 116.8 81.8]
     fontSize		    12
     chart		    2
@@ -1517,7 +1519,7 @@ Stateflow {
   }
   state {
     id			    4
-    labelString		    "ConstRightTurn\ndu:\ndr_out = -4;"
+    labelString		    "ConstRightTurn\ndu:\ndr_out = 0.1;"
     position		    [429.4 154.2 100.6 79.6]
     fontSize		    12
     chart		    2
@@ -1582,18 +1584,18 @@ Stateflow {
   transition {
     id			    7
     labelString		    ""
-    labelPosition	    [244.119 131.3 2 14]
+    labelPosition	    [490.073 139.2 2 14]
     fontSize		    12
     src {
-      intersection	      [0 0 1 0 237.0693 123.3 0 0]
+      intersection	      [0 0 1 0 490.0727 124.2 0 0]
     }
     dst {
-      id		      3
-      intersection	      [1 0 -1 0.2283 237.0693 153.3 0 0]
+      id		      4
+      intersection	      [1 0 -1 0.6031 490.0727 154.2 0 0]
     }
-    midPoint		    [237.0693 138.3]
+    midPoint		    [490.0727 139.2]
     chart		    2
-    dataLimits		    [234.669 239.469 123.3 153.3]
+    dataLimits		    [487.673 492.473 124.2 154.2]
     subviewer		    2
     drawStyle		    SMART
     slide {
@@ -1664,12 +1666,14 @@ Stateflow {
     machine		    1
     name		    "SteeringPlant"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [169.7 922.5 91 491.4]
+    viewLimits		    [169.7 666.5 91 331.4]
     zoomFactor		    0.4
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 12 0 0]
     viewObj		    11
     visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    11
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS

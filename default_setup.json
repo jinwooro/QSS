@@ -5,9 +5,9 @@
     "max-step": 1
   },
   "MQSS": {
-    "iteration": 10,
+    "iteration": 30,
     "vtol": 0.00001,
     "ttol": 0.001,
-    "default-step": 0.001
+    "default-step": 0.01
   } 
 }

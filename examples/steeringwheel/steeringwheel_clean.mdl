@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.100"
+    ComputedModelVersion    "1.103"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -44,7 +44,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [1388.0, 182.0, 1280.0, 777.0]
+      Location		      [1582.0, 118.0, 1280.0, 777.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -66,11 +66,11 @@ Model {
 	$ObjectID		5
 	$ClassName		"Simulink.EditorInfo"
 	IsActive		[1]
-	ViewObjType		"SimulinkTopLevel"
-	LoadSaveID		"0"
+	ViewObjType		"StateflowChart"
+	LoadSaveID		"26"
 	Extents			[1242.0, 601.0]
-	ZoomFactor		[1.25]
-	Offset			[-662.30468750000011, -205.89999999999998]
+	ZoomFactor		[1.75]
+	Offset			[-204.76235849625715, -118.39999999999998]
       }
       Object {
 	$PropName		"DockComponentsInfo"
@@ -104,9 +104,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Jan 27 22:48:16 2020"
-  RTWModifiedTimeStamp	  502066095
-  ModelVersionFormat	  "1.%<AutoIncrement:100>"
+  LastModifiedDate	  "Mon Feb 17 08:17:12 2020"
+  RTWModifiedTimeStamp	  503828230
+  ModelVersionFormat	  "1.%<AutoIncrement:103>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  on
   LibraryLinkDisplay	  "disabled"
@@ -1083,8 +1083,8 @@ Model {
   }
   System {
     Name		    "steeringwheel_clean"
-    Location		    [1388, 182, 2668, 959]
-    Open		    on
+    Location		    [1582, 118, 2862, 895]
+    Open		    off
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
     ExecutionDomainType	    "Deduce"
@@ -1116,8 +1116,8 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"Driver"
-	Location		[3200, 23, 5120, 1200]
-	Open			off
+	Location		[1582, 118, 2862, 895]
+	Open			on
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
 	ExecutionDomainType	"Deduce"
@@ -1230,7 +1230,7 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"SteeringPlant"
-	Location		[3200, 23, 5120, 1200]
+	Location		[1388, 182, 2668, 959]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1387,11 +1387,14 @@ Stateflow {
     machine		    1
     name		    "Driver"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [-190.094 750.906 -88.9 411.6]
-    zoomFactor		    0.5
+    viewLimits		    [-204.762 504.952 -118.4 225.029]
+    zoomFactor		    0.571
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 3 0 0]
     viewObj		    2
+    visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    10
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -1481,18 +1484,18 @@ Stateflow {
   transition {
     id			    7
     labelString		    ""
-    labelPosition	    [244.119 131.3 2 14]
+    labelPosition	    [472.952 139.2 2 14]
     fontSize		    12
     src {
-      intersection	      [0 0 1 0 237.0693 123.3 0 0]
+      intersection	      [0 0 1 0 472.9519 124.2 0 0]
     }
     dst {
-      id		      3
-      intersection	      [1 0 -1 0.2283 237.0693 153.3 0 0]
+      id		      4
+      intersection	      [1 0 -1 0.4329 472.9519 154.2 0 0]
     }
-    midPoint		    [237.0693 138.3]
+    midPoint		    [472.9519 139.2]
     chart		    2
-    dataLimits		    [234.669 239.469 123.3 153.3]
+    dataLimits		    [470.552 475.352 124.2 154.2]
     subviewer		    2
     drawStyle		    SMART
     slide {
@@ -1563,11 +1566,14 @@ Stateflow {
     machine		    1
     name		    "SteeringPlant"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [169.7 922.5 91 491.4]
+    viewLimits		    [169.7 666.5 91 331.4]
     zoomFactor		    0.4
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 12 0 0]
     viewObj		    11
+    visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    11
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS

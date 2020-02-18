@@ -91,17 +91,35 @@ public class AdapterHIOA extends SimulinkKeywords {
 		for (StateflowChart chart : charts) {
 			SimulinkBlock cb =  chart.getStateflowBlock();
 			for (SimulinkLine sl : cb.getInLines()) {
+				// filter out disconnected lines
 				if (sl.getSrcPort() == null) {
 					continue;
 				}
-				
+
+				// if the source block is a stateflow chart
 				String srcBlockName = sl.getSrcPort().getBlock().getName();
-				if (hasChart(srcBlockName) == false) {
+				if (hasChart(srcBlockName) == true) {
+					Line line = makeLine(sl); 
+					sys.addLine(line);	
 					continue;
 				}
-				
-				Line line = makeLine(sl); 
-				sys.addLine(line);
+
+				// if the source block is a memory block and the further connected block is a stateflow block,
+				String srcType = sl.getSrcPort().getBlock().getType();
+			  int count = sl.getSrcPort().getBlock().getInLines().size();
+				if (srcType.equals("Memory") && count != 0) {
+					 SimulinkLine nextLine = sl.getSrcPort().getBlock().getInLines().get(0);
+				   String SrcBlockName = nextLine.getSrcPort().getBlock().getName();
+					 String SrcPortName = nextLine.getSrcPort().obtainLabelData().getText();
+					 String DstBlockName = sl.getDstPort().getBlock().getName();
+					 String DstPortName = sl.getDstPort().obtainLabelData().getText();
+					 
+					 if (hasChart(SrcBlockName) == true){
+						 Line line = new Line(SrcBlockName, SrcPortName, DstBlockName, DstPortName);
+						 sys.addLine(line);
+					 }
+
+				}
 			}
 		}
 		
