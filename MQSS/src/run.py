@@ -11,30 +11,44 @@ class Simulator:
     def __init__(self, data, setup):
         # name of the system for the output file writing
         self.system_name = data['systemName']
+
         # initialize QSHIOAs
         self.QSHIOAs = { q['name'] : QSHIOA(q) for q in data['QSHIOAs']}
         self.Lines = data['Lines']
         
+        # simulation config
         self.max_time = setup['max-time']
         self.default_step = setup['default-step']
         self.vtol = setup['vtol']
         self.ttol = setup['ttol']
         self.iter = setup['iteration']
 
+        # a row with variable names to be written in the output file
+        row = ["Time"]
+        for name, q in self.QSHIOAs.items():
+            row.append(str(name) + " location")
+            row += q.get_variable_names()
+    
+        # create the output csv file
+        file_name = self.system_name + '.csv'
+        with open(file_name, 'w') as csvFile:
+            writer = csv.writer(csvFile)
+            # write the row
+            writer.writerow(row)
+        csvFile.close()
+        self.rows = []
+
     def run(self):
         # simulation preparation
         time = 0
         count = 1
-        self.csv_setup()
 
-        each_execution_time = 0.0
-        full_execution_time = 0.0
-
-        beginning = T.time()
         # main loop
         while(True):
             # Load the input variable values by exchanging the tokens
             self.token_exchange()
+            # output the current time and state
+            self.csv_record_system_state(time)
 
             # inter-location transition execution
             inter_transition_triggered = False
@@ -56,10 +70,7 @@ class Simulator:
 
             # using the token values, derive variable expressions and exchange the expression.
             self.expression_exchange()
-
-            # write to the file
-            self.csv_record_system_state(time, each_execution_time)
-
+            
             # terminate the simulation when the maximum time is reached
             if time == self.max_time:
                 print("Time: %s" % str(time))
@@ -92,16 +103,10 @@ class Simulator:
                 q.intra_location_transition(time_step)
                 q.update_token_O()
 
-            end = T.time() # to measure simulation step execution time
-            each_execution_time = end - start
-
-            print("%d, Time: %f, Step: %f, ET: %f" % (count, time, time_step, each_execution_time))
+            print("%d, Time: %f, Step: %f" % (count, time, time_step))
             time += time_step
             count += 1
 
-        finish = T.time()
-        full_execution_time = finish - beginning
-        print("Simulation Completed (Execution Time %f sec)" % full_execution_time)
 
     def expression_exchange(self):
         for q in self.QSHIOAs.values():
@@ -120,13 +125,12 @@ class Simulator:
             new_value = src_output_var.get_token_value(index)
             dst_input_var.set_token_value(new_value, index)
 
-    def csv_record_system_state(self, time, ET):
-        row = [time, ET]
+    def csv_record_system_state(self, time):
+        row = [time]
         for q in self.QSHIOAs.values():
             row += q.get_current_state()
-        self.rows.append(row) # save multiple rows
-        # don't open the file for every line,
-        # but when we have 50 lines to write
+        self.rows.append(row)
+
         if len(self.rows) > 50:
             with open(self.system_name + '.csv', 'a') as csvFile:
                 writer = csv.writer(csvFile)
@@ -134,21 +138,6 @@ class Simulator:
                     writer.writerow(r)
             csvFile.close()
             self.rows.clear()
-
-    def csv_setup(self):
-        # this is the 1st row, with column titles
-        row = ["Time", "ExecutionTime"]
-        for name, q in self.QSHIOAs.items():
-            row.append(str(name) + " location")
-            row += q.get_variable_names()
-    
-        # create the csv file
-        file_name = self.system_name + '.csv'
-        with open(file_name, 'w') as csvFile:
-            writer = csv.writer(csvFile)
-            writer.writerow(row)
-        csvFile.close()
-        self.rows = []
 
     # callback function for the end of simulation
     def finish(self):
@@ -170,5 +159,10 @@ if __name__ == "__main__":
         infile = json.load(inputFile)
 
     mySim = Simulator(infile, setup)
+    
+    start_time = T.time()
     mySim.run()
+    execution_time = T.time() - start_time
+    print("Simulation Completed (Execution Time %f sec)" % execution_time)
+
     mySim.finish()
