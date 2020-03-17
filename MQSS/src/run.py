@@ -12,32 +12,33 @@ class Simulator:
         # name of the system for the output file writing
         self.system_name = data['systemName']
 
-        # initialize QSHIOAs
-        self.QSHIOAs = { q['name'] : QSHIOA(q) for q in data['QSHIOAs']}
-        self.Lines = data['Lines']
-        
-        # simulation config
+        # simulation configuration parameters
         self.max_time = setup['max-time']
         self.default_step = setup['default-step']
         self.vtol = setup['vtol']
         self.ttol = setup['ttol']
         self.iter = setup['iteration']
+        self.MQSSorder = setup['order'] # MQSS order
 
-        # a row with variable names to be written in the output file
-        row = ["Time"]
-        for name, q in self.QSHIOAs.items():
-            row.append(str(name) + " location")
-            row += q.get_variable_names()
-    
-        # create the output csv file
-        file_name = self.system_name + '.csv'
+        # instantiate objects : QSHIOAs and lines
+        self.QSHIOAs = { q['name'] : QSHIOA(q) for q in data['QSHIOAs']}
+        self.Lines = data['Lines']
+
+        # initial I/O exchange
+        self.IO_exchange()
+        
+        # output file initialization
         with open(file_name, 'w') as csvFile:
             writer = csv.writer(csvFile)
-            # write the row
-            writer.writerow(row)
+            top_row = ["Time"] # title row
+            for name, q in self.QSHIOAs.items():
+                top_row.append(str(name) + " location")
+                top_row += q.get_variable_names()
+            file_name = self.system_name + '.csv'
+            writer.writerow(top_row)
         csvFile.close()
-        self.rows = []
-
+        self.rows = [] # each row = system state at an instance
+        
     def run(self):
         # simulation preparation
         time = 0
@@ -107,16 +108,9 @@ class Simulator:
             time += time_step
             count += 1
 
-
-    def expression_exchange(self):
-        for q in self.QSHIOAs.values():
-            q.derive_variable_expression()
-            
+    def IO_exchange(self):
         for line in self.Lines:
-            src_output_var = self.QSHIOAs[ line['srcBlockName'] ].O[ line['srcVarName'] ]
-            dst_input_var = self.QSHIOAs[ line['dstBlockName'] ].I[ line['dstVarName'] ]
-            dst_input_var.ex1 = src_output_var.ex1
-            dst_input_var.ex2 = src_output_var.ex2
+            self.QSHIOAs[ line['dstBlockName'] ].I[ line['dstVarName'] ] = self.QSHIOAs[ line['srcBlockName'] ].O[ line['srcVarName'] ]
 
     def token_exchange(self, index=0):
         for line in self.Lines:

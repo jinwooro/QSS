@@ -17,13 +17,14 @@ class QSHIOA:
             self.locations[tid].add_outgoing_transition(transition)
 
         # current location setup
-        loc_id = data['initialLocation']['id'] # initial location id
+        loc_id = data['initialLocation'] # initial location id
         self.current_location = self.locations[loc_id]
 
         # variable objects
-        self.I = { i['name'] : Variable(i) for i in data['I']}
-        self.O = { o['name'] : Variable(o) for o in data['O']}
-        self.X = { x['name'] : Variable(x) for x in data['X_C']}
+        self.I = { i['name'] : i['initialValue'] for i in data['I']}
+        self.O = { o['name'] : o['initialValue'] for o in data['O']}
+        self.X = { x['name'] : x['initialValue'] for x in data['X_C']}
+        self.X_der = { x['name'] : 0 for x in data['X_C'] } 
 
         # Simulink has multiple options for initialization
         # 1. reset on the first transition
@@ -39,12 +40,6 @@ class QSHIOA:
             elif en['LHS'] in self.O:
                 self.O[en['LHS']].set_current_value(fx['RHS'])
         self.update_token_O()
-
-    def update_token_O (self, token_index = 0):
-        self.current_location.compute_O_token(self.X, self.O, token_index)
-
-    def update_token_X (self, token_index = 0):
-        self.current_location.compute_X_token(self.I, self.X, token_index)
 
     def inter_location_transition(self, vtol):
         flag, loc_id = self.current_location.take_transition(self.I, self.O, self.X, vtol)

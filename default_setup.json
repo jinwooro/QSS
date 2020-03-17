@@ -5,6 +5,7 @@
     "max-step": 1
   },
   "MQSS": {
+    "order": 2,
     "iteration": 30,
     "vtol": 0.00001,
     "ttol": 0.001,

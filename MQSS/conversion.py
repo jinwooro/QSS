@@ -8,29 +8,14 @@ import json
 # convert some Matlab function notation into sympy notation
 def conversionSympyMath(MatlabExpr):
     # the first keyword to convert is 'power' to 'Pow'
-    SymExpr = MatlabExpr.replace('power', 'Pow')
-    SymExpr = SymExpr.replace('//', '/') # some mistakes from the Simulink to json parser
-    return SymExpr
-
-def differentiate(equation, time_variants, rank):
-    ode = S.sympify(equation)
-    # replace the variable names in the equation with respective symbols 
-    for x in time_variants:
-        ode = ode.subs(x, S.sympify(x + '(t)'))
-
-    derivatives = [ode]
-    for i in range(0, rank):
-        der = derivatives[i].diff()
-        derivatives.append(der)
-
-    # cast every element as a string
-    derivatives = [str(ft) for ft in derivatives]
-    return derivatives
+    StringExpr = str(MatlabExpr)
+    StringExpr = StringExpr.replace('power', 'Pow')
+    StringExpr = StringExpr.replace('//', '/') # some mistakes from the Simulink to json parser
+    return StringExpr
 
 if __name__ == "__main__":
-    # get the file name and the desired rank from the input arguments
+    # get the file name
     file_name = sys.argv[1]
-    rank = 2 # mqss has rank always 2
 
     # read the json file and create a tree object
     with open(file_name) as json_file:
@@ -39,56 +24,85 @@ if __name__ == "__main__":
     # Copy all HIOA for the conversion process
     QSHIOAs = tree_object.pop('HIOAs')
 
-    id_gen = 0
     for h in QSHIOAs:
-        locations = h['locations']
-        # obtain derivatives (symoblic) for QSS interpretation
+        # X_D can be simply X_C with zero derivative
         h['X_C'] = h['X_C'] + h.pop('X_D')
-        for l in locations:
-            # differentiate the ODEs
+        h.pop('X_DOT') # we don't need this information
+        
+        # to store variable names
+        name_space = []
+        for v in (h['I'] + h['O'] + h['X_C']):
+            name_space.append(v['name'])
+            v['name'] = v['name'] + '(t)'
+        
+        for x in h['X_C']:
+            var = S.sympify(x['name'])
+            der = [str(var.diff())]
+            x['derivatives'] = der
+
+        # refine ODEs
+        for l in h['locations']:
             for f in l['ODEs']:
-                equation = conversionSympyMath(f['RHS'])
+                equation = S.sympify(conversionSympyMath(f['RHS']) )
+                subject_name = S.sympify(f['LHS'].split("_dot")[0] + "(t)")
+                f['LHS'] = str(subject_name.diff())
                 ## collect all the variable names for differentiation
-                time_variants = [var['name'] for var in (h['X_C'] + h['I'])]
-                derivatives = differentiate(equation, time_variants, rank-1)
-                ## subject variable representing the derivative
-                subject = f['LHS'].split("_dot")[0] + "(t)"
-                #print(" Original symbol : " + str(f['LHS']) + ", converted to : " + str(subject) )
-                derivatives.insert(0, subject)
-                f['derivatives'] = derivatives # add to the json data
-            
+                for name in name_space:
+                    equation = equation.subs(name, S.sympify(name + '(t)'))
+                f['RHS'] = str(equation)
+
+        # refine output updates
             # outputUpdate funcdtions are also differentiated
             for f in l['outputUpdates']:
-                equation = conversionSympyMath(f['RHS'])
-                ## collect all the variable names 
-                time_variants = [var['name'] for var in h['X_C']]
-                ders = differentiate(equation, time_variants, rank)
-                f['derivatives'] = ders
+                equation = S.sympify(conversionSympyMath(f['RHS']) )
+                f['LHS'] = f['LHS'] + "(t)"
+                for name in name_space:
+                    equation = equation.subs(name, S.sympify(name + '(t)'))
+                f['RHS'] = str(equation)
 
-        # input/output/internal smooth tokens name tags
-        for var in (h['I'] + h['O'] + h['X_C']):
-            var['smoothTokens'] = differentiate(var['name'], [var['name']], rank)
-
-        # for each transition, declare attach the id numbers of the locations
         for t in h['transitions']:
-            for l in locations:
+            # set the source and destination node id
+            for l in h['locations']:
                 if t['src'] == l['name'] : t['sid'] = l['id']
                 if t['dst'] == l['name'] : t['did'] = l['id'] 
-            # also, rearrange the guard expression, such that
-            # the right-hand side is zero
+
+            # refine guards
             for g in t['guards']:
-                ## collect all the variable names for differentiation
-                time_variants = [var['name'] for var in (h['X_C'] + h['I'])]
                 lexpr = S.sympify(conversionSympyMath(g.pop('LHS')))
                 rexpr = S.sympify(conversionSympyMath(g.pop('RHS')))
-                combined = lexpr - rexpr
-                derivatives = differentiate(combined, time_variants, rank)
-                g['rearranged'] = derivatives
+                equation = lexpr - rexpr
+                for name in name_space:
+                    equation = equation.subs(name, S.sympify(name + '(t)'))
+                g['LHS'] = str(equation)
+                g['RHS'] = 0
 
+            # refine resets
+            for r in t['resets']:
+                r['LHS'] = r['LHS'] + '(t)'
+                equation = S.sympify(conversionSympyMath(r.pop('RHS') ))
+                for name in name_space:
+                    equation = equation.subs(name, S.sympify(name + '(t)'))
+                r['RHS'] = str(equation)
+            
+        # initialization
+        h['initialLocation'] = h['initialLocation']['id']
+        initialization = h['initialization']
+        for init in initialization:
+            init['LHS'] = init['LHS'] + '(t)'
+            equation = S.sympify(conversionSympyMath(init.pop('RHS') ))
+            for name in name_space:
+                equation = equation.subs(name, S.sympify(name + '(t)'))
+            init['RHS'] = str(equation)
+
+    Lines = tree_object['Lines']
+    for line in Lines:
+        line['srcVarName'] = line['srcVarName'] + '(t)'
+        line['dstVarName'] = line['dstVarName'] + '(t)'
+        
     # write json file of this network of QSHIOAs
     tree_object['QSHIOAs'] = QSHIOAs
     # modify the filename extension to .qshioa
-    with open(file_name, 'w') as outfile:
+    with open("1" + file_name, 'w') as outfile:
         json.dump(tree_object, outfile, indent=4)
 
 

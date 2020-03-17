@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # extract and recognize the command
     command = {}
     # target command structure: 
-    #       python3 run.py <MQSS/HOHA> <sim_time> [OPTIONS] <mdl_file> 
+    #       python3 simulation.py <MQSS/HOHA> <sim_time> [OPTIONS] <mdl_file> 
     #       [OPTIONS] = ... (TODO)
     if len(sys.argv) < 4:
         print("argument error message")
