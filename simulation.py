@@ -4,17 +4,25 @@ import sys
 import os
 import pprint
 #import tkinter
+from sys import platform
+
 
 def execute_HOHA(command):
     #conversion_command = ["java -jar Sim2HIOA/bin/Sim2HIOA.jar", command["input-file"]]
     #os.system(' '.join([str(s) for s in conversion_command]))
     os.system("python3 HOHA/conversion.py generated/" + command["intermediate-file"] + " " + str(command["order"])) # run the conversion script 
-    os.system("cp HOHA/src/* generated/") # copy the src files in the MQSS folder
+    if platform == "win32":
+        os.system("copy HOHA/src/* generated/") # copy the src files in the MQSS folder
+    else:
+        os.system("cp HOHA/src/* generated/") # copy the src files in the MQSS folder
 
     # run the HOHA simulation
     current_path = os.getcwd()
     os.chdir(current_path + '/generated') # navigate to this folder
-    os.system("clear")
+    if platform == "win32":
+        os.system("Clear")
+    else:
+        os.system("clear")
     os.system("python3 run.py")
     os.chdir(current_path) # get back to the original path
     print("HOHA execution")
@@ -22,12 +30,18 @@ def execute_HOHA(command):
 def execute_MQSS(command):
     # convert the symbols in the system into sympy symbols
     os.system("python3 MQSS/conversion.py generated/" + command["intermediate-file"]) # run the conversion script 
-    os.system("cp MQSS/src/* generated/") # copy the src files in the MQSS folder
+    if platform == "win32":
+        os.system("copy MQSS/src/* generated/") # copy the src files in the MQSS folder
+    else:
+        os.system("cp MQSS/src/* generated/") # copy the src files in the MQSS folder
 
     # run the simulation
     current_path = os.getcwd() # absolute current path
     os.chdir(current_path + '/generated') # navigate to this folder
-    os.system("clear")
+    if platform == "win32":
+        os.system("Clear")
+    else:
+        os.system("clear")
     os.system("python3 run.py")
     os.chdir(current_path) # get back
 
@@ -90,7 +104,10 @@ if __name__ == "__main__":
 
 
     # start generating codes
-    os.system("rm -rf generated/") # delete the previously generated folder
+    if platform == "win32":
+        os.system("del -rf generated/") # delete the previously generated folder
+    else:
+        os.system("rm -rf generated/") # delete the previously generated folder
     
     print ("\r\nTrying to convert " + input_file_path + " file into a network of HIOA ... ")
     # check if Sim2HIOA program is built
