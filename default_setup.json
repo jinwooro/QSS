@@ -1,14 +1,14 @@
 {
   "HOHA": {
-    "order": 2,
+    "order": 6,
     "vtol": 0.00001,
     "max-step": 1
   },
   "MQSS": {
     "order": 2,
-    "iteration": 30,
+    "iteration": 10,
     "vtol": 0.00001,
     "ttol": 0.001,
-    "default-step": 0.01
+    "default-step": 0.1
   } 
 }

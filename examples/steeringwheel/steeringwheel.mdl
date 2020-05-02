@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.103"
+    ComputedModelVersion    "1.112"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -66,11 +66,11 @@ Model {
 	$ObjectID		5
 	$ClassName		"Simulink.EditorInfo"
 	IsActive		[1]
-	ViewObjType		"StateflowChart"
-	LoadSaveID		"26"
+	ViewObjType		"SimulinkTopLevel"
+	LoadSaveID		"0"
 	Extents			[1242.0, 601.0]
-	ZoomFactor		[1.5]
-	Offset			[-273.26066666666668, -137.23333333333335]
+	ZoomFactor		[1.25]
+	Offset			[-611.3, -184.5]
       }
       Object {
 	$PropName		"DockComponentsInfo"
@@ -104,9 +104,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Feb 17 08:10:34 2020"
-  RTWModifiedTimeStamp	  503827828
-  ModelVersionFormat	  "1.%<AutoIncrement:103>"
+  LastModifiedDate	  "Wed Apr 29 16:30:41 2020"
+  RTWModifiedTimeStamp	  510078641
+  ModelVersionFormat	  "1.%<AutoIncrement:112>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  on
   LibraryLinkDisplay	  "disabled"
@@ -230,7 +230,7 @@ Model {
 	  MaxConsecutiveZCs	  "1000"
 	  ExtrapolationOrder	  4
 	  NumberNewtonIterations  1
-	  MaxStep		  "1e-3"
+	  MaxStep		  "1e-5"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
 	  RelTol		  "1e-5"
@@ -1108,7 +1108,7 @@ Model {
   System {
     Name		    "steeringwheel"
     Location		    [1388, 182, 2668, 959]
-    Open		    off
+    Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
     ExecutionDomainType	    "Deduce"
@@ -1124,7 +1124,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "125"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "27"
+    SIDHighWatermark	    "32"
     Block {
       BlockType		      SubSystem
       Name		      "Driver"
@@ -1141,7 +1141,7 @@ Model {
       System {
 	Name			"Driver"
 	Location		[1388, 182, 2668, 959]
-	Open			on
+	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
 	ExecutionDomainType	"Deduce"
@@ -1269,7 +1269,7 @@ Model {
       "705882353 0.16078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.8313"
       "72549019608 0.0745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configura"
       "tion('Tools','Plot Navigation',true,'OnceAtStop',false,'PreviousAutoscale','XY'),extmgr.Configuration('Tools','M"
-      "easurements',true,'Version','2018b')),'Version','2018b','VisibleAtModelOpen','on')"
+      "easurements',true,'Version','2018b')),'Version','2018b','Position',[1854 119 560 420])"
       NumInputPorts	      "1"
       Floating		      off
     }
@@ -1666,8 +1666,8 @@ Stateflow {
     machine		    1
     name		    "SteeringPlant"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [169.7 666.5 91 331.4]
-    zoomFactor		    0.4
+    viewLimits		    [117.9 738.9 69.6 370.1]
+    zoomFactor		    0.5
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 12 0 0]
     viewObj		    11

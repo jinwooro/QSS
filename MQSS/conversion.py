@@ -4,6 +4,9 @@ import sys
 import sympy as S
 from sympy import Pow
 import json
+import pprint
+
+pp = pprint.PrettyPrinter(indent = 4)
 
 # convert some Matlab function notation into sympy notation
 def conversionSympyMath(MatlabExpr):
@@ -13,9 +16,13 @@ def conversionSympyMath(MatlabExpr):
     StringExpr = StringExpr.replace('//', '/') # some mistakes from the Simulink to json parser
     return StringExpr
 
+def makeFunctionOfTime(eq):
+    pass
+
 if __name__ == "__main__":
     # get the file name
     file_name = sys.argv[1]
+    order = int(sys.argv[2])
 
     # read the json file and create a tree object
     with open(file_name) as json_file:
@@ -29,35 +36,73 @@ if __name__ == "__main__":
         h['X_C'] = h['X_C'] + h.pop('X_D')
         h.pop('X_DOT') # we don't need this information
         
-        # to store variable names
-        name_space = []
+        # to store all variable names
+        all_variables = []
         for v in (h['I'] + h['O'] + h['X_C']):
-            name_space.append(v['name'])
-            v['name'] = v['name'] + '(t)'
+            name = v['name']
+            sym = v['name'] + '(t)'
+            all_variables.append( (S.sympify(name), S.sympify(sym) ) )
+            v['name'] = sym # the new name has the form x(t)
         
         for x in h['X_C']:
             var = S.sympify(x['name'])
             der = [str(var.diff())]
             x['derivatives'] = der
 
-        # refine ODEs
+        # refine ODEs and generate QSS solution equations
         for l in h['locations']:
             for f in l['ODEs']:
                 equation = S.sympify(conversionSympyMath(f['RHS']) )
-                subject_name = S.sympify(f['LHS'].split("_dot")[0] + "(t)")
+                alias = f['LHS'].split("_dot")[0]
+                subject_name = S.sympify(alias + "(t)")
+                f['subject'] = str(subject_name)
                 f['LHS'] = str(subject_name.diff())
-                ## collect all the variable names for differentiation
-                for name in name_space:
-                    equation = equation.subs(name, S.sympify(name + '(t)'))
+                equation = equation.subs(all_variables)
                 f['RHS'] = str(equation)
+
+            t = S.sympify('t')
+
+            qss_set = []
+            # create qss1 interpretation for the variables that changes (have ODEs)
+            qss1_interpretation = []
+            for f in l['ODEs']:
+                alias = f['subject'].split("(")[0] 
+                # basically, in QSS1, the qss interpretation is simply the hysteresis, i.e., x(t) = x(0) = x
+                pair = ( S.sympify(f['subject']) , S.sympify(alias) )
+                qss1_interpretation.append(pair)
+            qss_set.append(qss1_interpretation)
+
+            ode_dict = { S.sympify(f['subject']) : S.sympify(f['RHS']) for f in l['ODEs']}
+
+            # QSS order is always >= 2
+            for i in range(1, order+1):
+                current_interpretation = qss_set[i-1] # the next order QSS interpretation is simply the solution of the previous order QSS.
+                next_interpretation = []
+                
+                for f in l['ODEs']:
+                    ode = S.sympify(f['RHS'])      # for a given ODE,
+                    new_ode = ode.subs(current_interpretation)  # substitute the QSS interpretations
+                    solution = S.sympify(f['subject'].split("(")[0]) + new_ode * t  # then, apply Euler's method using the QSS substituted ODE
+                    pair = ( S.sympify(f['subject']), solution )
+                    next_interpretation.append(pair)
+                
+                qss_set.append(next_interpretation)
+
+            lowQss = { str(tup[0]) : S.sympify(tup[1]).subs(all_variables) for tup in qss_set[order-2] }
+            highQss = { str(tup[0]) : S.sympify(tup[1]).subs(all_variables) for tup in qss_set[order-1] }
+
+            for f in l['ODEs']:
+                subject = f['subject']
+                f['lowQSS'] = str(lowQss[subject])
+                f['highQSS'] = str(highQss[subject])
+                del f['relation']
 
         # refine output updates
             # outputUpdate funcdtions are also differentiated
             for f in l['outputUpdates']:
                 equation = S.sympify(conversionSympyMath(f['RHS']) )
                 f['LHS'] = f['LHS'] + "(t)"
-                for name in name_space:
-                    equation = equation.subs(name, S.sympify(name + '(t)'))
+                equation = equation.subs(all_variables)
                 f['RHS'] = str(equation)
 
         for t in h['transitions']:
@@ -71,8 +116,7 @@ if __name__ == "__main__":
                 lexpr = S.sympify(conversionSympyMath(g.pop('LHS')))
                 rexpr = S.sympify(conversionSympyMath(g.pop('RHS')))
                 equation = lexpr - rexpr
-                for name in name_space:
-                    equation = equation.subs(name, S.sympify(name + '(t)'))
+                equation = equation.subs(all_variables)
                 g['LHS'] = str(equation)
                 g['RHS'] = 0
 
@@ -80,8 +124,7 @@ if __name__ == "__main__":
             for r in t['resets']:
                 r['LHS'] = r['LHS'] + '(t)'
                 equation = S.sympify(conversionSympyMath(r.pop('RHS') ))
-                for name in name_space:
-                    equation = equation.subs(name, S.sympify(name + '(t)'))
+                equation = equation.subs(all_variables)
                 r['RHS'] = str(equation)
             
         # initialization
@@ -90,8 +133,7 @@ if __name__ == "__main__":
         for init in initialization:
             init['LHS'] = init['LHS'] + '(t)'
             equation = S.sympify(conversionSympyMath(init.pop('RHS') ))
-            for name in name_space:
-                equation = equation.subs(name, S.sympify(name + '(t)'))
+            equation = equation.subs(all_variables)
             init['RHS'] = str(equation)
 
     Lines = tree_object['Lines']
@@ -102,7 +144,8 @@ if __name__ == "__main__":
     # write json file of this network of QSHIOAs
     tree_object['QSHIOAs'] = QSHIOAs
     # modify the filename extension to .qshioa
-    with open("1" + file_name, 'w') as outfile:
+    names = file_name.split(".")
+    with open(names[0] + "." + names[1], 'w') as outfile:
         json.dump(tree_object, outfile, indent=4)
 
 
