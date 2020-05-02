@@ -26,11 +26,13 @@ python3 simulation.py HOHA 10 example.mdl
 
 ## Bouncing Ball Example
 
-Find the boncing ball example in the example folder. Navigate to the folder called 'example/bouncing_ball/' and open 'bouncingBall.mdl' model by double-click. This will open Matlab Simulink, and you will be able to see a Stateflow chart in the model as shown below:
+Find the boncing ball example in the example folder. Navigate to *example/bouncing_ball/* and double-click the `bouncingBall.mdl` file. If Matlab is correctly installed, this will open Simulink. Alternatively, the file can be opened in Simulink manually. There is a Stateflow chart in the model as shown below:
 
-Figure here.
+![bouncingBall](images/bouncing_ball.png)
 
-Now, the HOHA simulation of this stateflow model can start by typing the following command
+The variable `x` is the vertical position of the ball, and `v` is the velocity. The initial values are `x=10` and `v=0`.  `v_out` and `x_out` are the output variables, and they have the same value as `v` and `x`, respectively. When `x <= 0` on the transition is satisfied, the velocity is instantaneously changed to `v = -0.8 v`, and the position is `x= 0.001` (to avoid `x=0` re-triggering the transition endlessly). After the simulation, we can see the behaviour of the bouncing ball.
+
+
 
 python3 simulation.py HOHA 10 example/bouncing_ball/bouncingBall.mdl
 
