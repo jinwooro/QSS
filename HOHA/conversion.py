@@ -48,6 +48,8 @@ def reformODEs(ODEs, order):
             # replace the higher order derivatives
             new_ode = target_ode.subs(reformed_odes)
             reformed_odes.append( (subject, new_ode) )
+
+    reformed_odes.reverse()
     return reformed_odes
 
 def getLambdaLagrange(equation, symbols, order):

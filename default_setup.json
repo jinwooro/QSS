@@ -1,6 +1,6 @@
 {
   "HOHA": {
-    "order": 6,
+    "order": 2,
     "vtol": 0.00001,
     "max-step": 1
   },
