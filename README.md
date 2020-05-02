@@ -12,14 +12,17 @@ This implementation not only comes with the execution of HOHA, but also the synt
 Running the simulation can be done by entering the following command format:
 
 ```
-python3 simulation.py \[solver\] \[Time\] \[File\]
+python3 simulation.py [solver] [Time] [File]
 ```
 
 * solver : two solvers are available, `HOHA` or `MQSS`.
-* Time : simulation end time
+* Time : simulation end time (in seconds)
 * File : path to the model file
 
-
+FOr example, the following start the simulation of `example.mdl` model using `HOHA` for 10 seconds 
+```
+python3 simulation.py HOHA 10 example.mdl
+```
 
 ## Bouncing Ball Example
 
