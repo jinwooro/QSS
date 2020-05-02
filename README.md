@@ -133,6 +133,19 @@ To change the simulation configuration, manually modify the file called *setup.j
 
 # Modified Quantized State System (MQSS)
 
-We also implemented Modified Quantized State System (MQSS)~\cite{} as an alternative simulation solver. 
+We also implemented Modified Quantized State System (MQSS)~\cite{} as an alternative simulation solver. This solver is based on a special data structure called *Quantize State Hybrid Input Output Automata* (QSHIOA). MQSS can be run using the all-in-one command. For example, 
+```
+python3 simulation.py MQSS 10 example.mdl
+
+```
+
+MQSS has more parameters. See *default_setup.json* file.
+
+## HIOA to QSHIOA conversion
+
+Similar to [HIOA to HOHA conversion](#hioa-to-hoha-conversion), conversion to QSHIOA is done using the *conversion.py* file in the *MQSS* folder. 
+```
+python3 MQSS/conversion.py [HIOA_file] [order]
+```
 
 
