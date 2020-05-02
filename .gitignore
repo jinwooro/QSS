@@ -23,7 +23,7 @@ Sim2HIOA/build/*
 !Sim2HIOA/src/*
 !Sim2HIOA/src/adapter/*
 !Sim2HIOA/src/structure/*
-
+!images/*
 !default_setup.json
 examples/*
 !examples/**/*.mdl
