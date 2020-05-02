@@ -1,19 +1,42 @@
-Stateflow chart in Simulink is a modelling language for hybrid systems. It captures continuous and discete system behaviours using Ordinary Differential Equations and control mode state transition, respectively. Details of Stateflow can be found [here](https://www.mathworks.com/help/stateflow/ref/chart.html). 
+# Introduction
 
-The execution/simulation of Stateflow charts uses the ODE solvers and zero-crossing algorithm in Simulink. By default, RK45 solver with variable step size is used for numerical integration, and adaptive 'bracket' algorithm (see [here](https://folk.ntnu.no/skoge/prost/proceedings/ifac2008/data/papers/3498.pdf)) is used for zero-crossing detection. However, there exist several cases where the Stateflow simulation will produce incorrect result. In particular, even number of zero-crossings and the system state going into complex plane cannot be handled [[Ro, et al., 2019]](https://dl.acm.org/doi/pdf/10.1145/3359986.3361198).
+In the simulation of hybrid systems, the continuous state evolution is captured via solving ODEs and the discrete state transitions are detected via zero-crossing events. Conventionally, hybrid systems are modelled using Hybrid Automata (HA), and many existing simulation tools, such as Stateflow/Simulink, OpenModelica, and Ptolemy II, allow the simulation of HA. However, 
+they sometimes produce incorrect simulation results due to missing zero-crossing events~\cite{MQSS paper}. This is because their zero-crossing detection algorithms are based on overshooting the guard condition (i.e., detecting the sign change), and it is problematic in some cases~\cite{}.
 
-The **goal** of this project is to simulate the Stateflow model correctly.
+Higher Order Hybrid Automata (HOHA) is an extension of HA, designed to incorporate higher order ODEs to captrue the continuous dynamics more precisely. Furthermore, the execution of HOHA based on a special step size calculation algorithm that can deal with discontiuities. In particular, the guard conditions are converted into an equivalent Taylor polynomials using the higher order derivatives, and solved for the time of next zero-crossing event. The found time value is then considered for deciding the simulation step size. 
+
+This implementation not only comes with the execution of HOHA, but also the syntactic conversion of the Stateflow/Simulink model (`.mdl`) into HOHA (`.json`). No special software installation is required other than Matlab/Simulink (for modelling in Stateflow) and Python3 (for simulation). 
+
+# How to run the HOHA simulation
+
+Running the simulation can be done by entering the following command format:
+
+```
+python3 simulation.py [solver] [Time] [File]
+```
+
+* solver : two solvers are available, `HOHA` or `MQSS`.
+* Time : simulation end time (in seconds)
+* File : path to the model file
+
+FOr example, the following start the simulation of `example.mdl` model using `HOHA` for 10 seconds 
+```
+python3 simulation.py HOHA 10 example.mdl
+```
+
+## Bouncing Ball Example
+
+Find the boncing ball example in the example folder. Navigate to the folder called 'example/bouncing_ball/' and open 'bouncingBall.mdl' model by double-click. This will open Matlab Simulink, and you will be able to see a Stateflow chart in the model as shown below:
+
+Figure here.
+
+Now, the HOHA simulation of this stateflow model can start by typing the following command
+
+python3 simulation.py HOHA 10 example/bouncing_ball/bouncingBall.mdl
 
 
-Step 1: Convering Simulink/Stateflow file into HIOA
 
-    java -jar Simulink2HIOA resource/collision.mdl
 
-Step 2: Converting the generated HIOA json file into QSHIOA
+ Also, it has an ability to use Modified Quantized State System (MQSS)~\cite{} as the simulation solver. 
 
-    python3 HIOA4QSS.py <hioa> <num>
-
-Step 3: Running the QSS simulation based on the .QSHIOA file
-
-    python3 qss.py <qshioa>
 
