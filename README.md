@@ -91,11 +91,11 @@ python3 simulation.py HOHA 15 -n 4 -x 0.1 example/bouncing_ball/bouncingBall.mdl
 
 # More Commands
 
-The all-in-one command is acually a sequence of three other commands. 
+The [all-in-one command](#all-in-one) is actually a sequence of three other commands. 
 
-- Stateflow &rarr; HIOA
-- HIOA &rarr; HOHA
-- HOHA simulation
+- Conversion: Stateflow &rarr; HIOA
+- Conversion: HIOA &rarr; HOHA
+- Run: HOHA simulation
 
 ## Stateflow to HIOA conversion
 
@@ -125,7 +125,11 @@ will geneate the fourth order HOHA model in the generated folder.
 
 ## Running the HOHA simulation
 
-Notice that, once the user run the [all-in-one command](#all-in-one).
+Notice that, once the user run the [all-in-one command](#all-in-one), there is a file generated called *run.py* in the *generated* folder. One can simply run the simulation without going through all the syntactic conversion again. 
+```
+python3 run.py
+```
+To change the simulation configuration, manually modify the file called *setup.json* in the *generated* folder. 
 
 # Modified Quantized State System (MQSS)
 
