@@ -38,7 +38,6 @@ def differentiate(equation, variables, order):
 def reformODEs(ODEs, order):
     # stores each ode as a pair, e.g., ( \dot{x}, f(x) )
     reformed_odes = [] 
-
     for i in range(1, order+1):
         for data in ODEs:
             subject = S.sympify(data['subject'])
@@ -46,7 +45,7 @@ def reformODEs(ODEs, order):
                 subject = subject.diff()
             target_ode = S.sympify(data['derivatives'][i])
             # replace the higher order derivatives
-            new_ode = target_ode.subs(reformed_odes)
+            new_ode = target_ode.subs(reformed_odes).doit()
             reformed_odes.append( (subject, new_ode) )
 
     reformed_odes.reverse()
