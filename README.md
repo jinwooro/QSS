@@ -5,17 +5,21 @@ they sometimes produce incorrect simulation results due to missing zero-crossing
 
 Higher Order Hybrid Automata (HOHA) is an extension of HA, designed to incorporate higher order ODEs to captrue the continuous dynamics more precisely. Furthermore, the execution of HOHA based on a special step size calculation algorithm that can deal with discontiuities. In particular, the guard conditions are converted into an equivalent Taylor polynomials using the higher order derivatives, and solved for the time of next zero-crossing event. The found time value is then considered for deciding the simulation step size. 
 
-This implementation not only comes with the execution of HOHA, but also the syntactic conversion of the Stateflow/Simulink model (.mdl file) into HOHA (.json). No special software installation is required other than Matlab/Simulink (for modelling in Stateflow) and Python3 (for simulation). 
+This implementation not only comes with the execution of HOHA, but also the syntactic conversion of the Stateflow/Simulink model (`.mdl`) into HOHA (`.json`). No special software installation is required other than Matlab/Simulink (for modelling in Stateflow) and Python3 (for simulation). 
 
 # How to run the HOHA simulation
 
 Running the simulation can be done by entering the following command format:
 
+```
 python3 simulation.py \[solver\] \[Time\] \[File\]
+```
 
-* solver : two solvers are available, HOHA or MQSS.
+* solver : two solvers are available, `HOHA` or `MQSS`.
 * Time : simulation end time
 * File : path to the model file
+
+
 
 ## Bouncing Ball Example
 
