@@ -25,9 +25,9 @@ For example, the following command starts the simulation of *example.mdl* model 
 python3 simulation.py HOHA 10 example.mdl
 ```
 
-Note: the [configuration options](#simulation-configuration) will be described after presenting the bouncing ball example.
+Note: we will describe [configuration options](#simulation-configuration) after presenting the bouncing ball example.
 
-Instead of using the all-in-one command, Section [more commands](#more-commands) presents how to separately execute the syntactic conversion and the simulation. This can be useful when the user need to run the same simulation again, where repreated syntactic conversion is not required.
+Instead of using the all-in-one command, Section [more commands](#more-commands) presents how to separately execute the syntactic conversion and the simulation. This can be useful when doing the same simulation again, where repreated syntactic conversion is not required. Note that the simulation configuration can be changed without the syntactic conversion.
 
 ## Bouncing Ball Example
 
