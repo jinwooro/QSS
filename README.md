@@ -20,7 +20,7 @@ python3 simulation.py <solver> <Time> [config] <FilePath>
 * FilePath : path to the model file
 * config : simulation configuration (optional)
 
-FOr example, the following start the simulation of `example.mdl` model using `HOHA` for 10 seconds 
+For example, the following command starts the simulation of *example.mdl* model using *HOHA* for 10 seconds 
 ```
 python3 simulation.py HOHA 10 example.mdl
 ```
