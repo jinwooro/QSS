@@ -119,11 +119,11 @@ There is a python script file called `conversion.py` in the *HOHA* folder.
 ```
 python3 HOHA/conversion.py [destination] [HIOA_file] [order]
 ```
-The \[destination\] is the folder that will contain the generated file, \[HIOA_file\] is the path of the HIOA model (`.json`), and *order* is the order of HOHA.
+The \[destination\] is the folder that will contain the generated file, \[HIOA_file\] is the path of the HIOA model (`.json`), and \[order\] is the order of HOHA.
 
 For example, 
 ```
-python3 HOHA/conversion.py generated/ bouncing_ball.json 4
+python3 HOHA/conversion.py generated/ generated/HIOA_model_name.json 4
 ```
 will geneate the fourth order HOHA model in the generated folder.
 
@@ -133,7 +133,7 @@ Notice that, once the user run the [all-in-one command](#all-in-one), there is a
 ```
 python3 run.py
 ```
-To change the simulation configuration, manually modify the file called *setup.json* in the *generated* folder. 
+To change the simulation configuration, modify the file called *setup.json* in the *generated* folder using a text editor. 
 
 # Modified Quantized State System (MQSS)
 
