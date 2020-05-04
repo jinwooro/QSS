@@ -99,23 +99,27 @@ The [all-in-one command](#all-in-one) is actually a sequence of three other comm
 
 ## Stateflow to HIOA conversion
 
-This conversion is done using a `.jar` file. The all-in-one command automatically compiles the java files. Check the file *Sim2HIOA/bin/Sim2HIOA.jar*. If this file does not exist, then open the terminal and execute the command in */Sim2HIOA* location.
+This conversion is done using a `.jar` file. The all-in-one command automatically compiles the java source files in this repository. If the all-in-one command is used at least once, the file *Sim2HIOA/bin/Sim2HIOA.jar* should be already generated. If not, then open the terminal at the path *Sim2HIOA*, and execute the command:
 ```
 ./automake.sh
 ```
-Then, the following command converts a stateflow model into HIOA.
+Notice that this generates the `.jar` file in *Sim2HIOA/bin/* folder.
+Next, the generated jar file can convert a stateflow model into HIOA.
+Go to the root path of this repository and execute the following command:
 ```
-java -jar Sim2HIOA/bin/Sim2HIOA.jar [file_path.mdl]
+java -jar Sim2HIOA/bin/Sim2HIOA.jar example/bouncing_ball/bouncingBall.mdl
 ```
-It generates a folder called *generated*, and put a `.json` file that contains the HIOA model.
+This will convert the bouncing ball model in Stateflow to HIOA. 
+Notice that. it also generates a folder called *generated*.
+In this folder, the `.json` file contains the HIOA model.
 
 ## HIOA to HOHA conversion
 
-There is a python script file called `conversion.py` under the *HOHA* folder. 
+There is a python script file called `conversion.py` in the *HOHA* folder. 
 ```
 python3 HOHA/conversion.py [destination] [HIOA_file] [order]
 ```
-The *destination* is the folder that will contain the generated file, *HIOA_file* is the path of the HIOA model (`.json`), and *order* is the order of HOHA.
+The \[destination\] is the folder that will contain the generated file, \[HIOA_file\] is the path of the HIOA model (`.json`), and *order* is the order of HOHA.
 
 For example, 
 ```
