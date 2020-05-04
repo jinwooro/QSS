@@ -9,7 +9,7 @@ In this implementation, we provide not only the execution of HOHA, but also the 
 
 # <a name="all-in-one"></a> How to run the HOHA simulation (all-in-one command)
 
-Running the HOHA simulation needs some preparation processes. For instance, the syntactic translation from stateflow  &rarr; Hybrid Input Output Automata (HIOA) &rarr; HOHA needs to be done. For convenience, these can be done in one single all-in-one command.
+Running the HOHA simulation requires some preparation processes. For instance, the syntactic translation from stateflow  &rarr; Hybrid Input Output Automata (HIOA) &rarr; HOHA needs to be done. For convenience, these can be done in one single all-in-one command.
 
 ```
 python3 simulation.py <solver> <Time> [config] <FilePath>
