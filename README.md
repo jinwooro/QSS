@@ -1,15 +1,15 @@
 # Introduction
 
-In the simulation of hybrid systems, the continuous state evolution is captured via solving ODEs and the discrete state transitions are detected via zero-crossing events. Conventionally, hybrid systems are modelled using Hybrid Automata (HA), and many existing simulation tools, such as Stateflow/Simulink, OpenModelica, and Ptolemy II, allow the simulation of HA. However, 
-they sometimes produce incorrect simulation results due to missing zero-crossing events~\cite{MQSS paper}. This is because their zero-crossing detection algorithms are based on overshooting the guard condition (i.e., detecting the sign change), and it is problematic in some cases~\cite{}.
+In the simulation of hybrid systems, the continuous state evolution is captured via solving ODEs and the discrete state transitions via zero-crossing events. Conventionally, hybrid systems are modelled using Hybrid Automata (HA), and many existing simulation tools, such as Stateflow/Simulink, OpenModelica, and Ptolemy II, allow the simulation of HA. However, 
+they sometimes produce incorrect simulation results due to the missing zero-crossing detection problem. This is because their zero-crossing detection algorithms are based on overshooting the guard condition (i.e., detecting the sign change), which cannot deal with the even number of zero-crossing problem (mostly in steep functions) and the transcendental functions that can lead to complex numbers.
 
-Higher Order Hybrid Automata (HOHA) is an extension of HA, designed to incorporate higher order ODEs to captrue the continuous dynamics more precisely. Furthermore, the execution of HOHA based on a special step size calculation algorithm that can deal with discontiuities. In particular, the guard conditions are converted into an equivalent Taylor polynomials using the higher order derivatives, and solved for the time of next zero-crossing event. The found time value is then considered for deciding the simulation step size. 
+Higher Order Hybrid Automata (HOHA) is an extension of HA, designed to incorporate higher order ODEs to captrue the continuous dynamics more precisely. Furthermore, the execution of HOHA based on a special step size calculation algorithm that can deal with the discontiuities based on transendental guard conditions. In particular, the guard conditions are converted into an equivalent Taylor polynomials using the higher order derivatives, then solved for the time which the next zero-crossing happens. The found time value is considered during deciding the simulation step size. 
 
-This implementation not only comes with the execution of HOHA, but also the syntactic conversion of the Stateflow/Simulink model (`.mdl`) into HOHA (`.json`). For modelling in Stateflow chart, Matlab/Simulink installation is required. This implementation uses Python3 and Java. 
+In this implementation, we provide not only the execution of HOHA, but also the syntactic conversion of the Stateflow/Simulink model (`.mdl`) into HOHA (`.json`). For modelling in Stateflow chart, Matlab/Simulink installation is required. This implementation uses Python3 and Java for simulation and syntactic conversion, respectively.
 
 # <a name="all-in-one"></a> How to run the HOHA simulation (all-in-one command)
 
-Runing the HOHA simulation actually goes through multiple preprocess. For instance, the syntactic translation from stateflow  &rarr; Hybrid Input Output Automata (HIOA) &rarr; HOHA. These can be done in one single all-in-one command.
+Running the HOHA simulation requires some preparation processes. For instance, the syntactic translation from stateflow  &rarr; Hybrid Input Output Automata (HIOA) &rarr; HOHA needs to be done. For convenience, these can be done in one single all-in-one command.
 
 ```
 python3 simulation.py <solver> <Time> [config] <FilePath>
@@ -20,14 +20,14 @@ python3 simulation.py <solver> <Time> [config] <FilePath>
 * FilePath : path to the model file
 * config : simulation configuration (optional)
 
-FOr example, the following start the simulation of `example.mdl` model using `HOHA` for 10 seconds 
+For example, the following command starts the simulation of *example.mdl* model using *HOHA* for 10 seconds 
 ```
 python3 simulation.py HOHA 10 example.mdl
 ```
 
-Note: the [configuration options](#simulation-configuration) will be described after presenting the bouncing ball example.
+Note: we will describe [configuration options](#simulation-configuration) after presenting the bouncing ball example.
 
-Instead of using the all-in-one command, Section [more commands](#more-commands) presents how to separately execute the preprocess and the simulation. (when to run the same simulation again, syntactic conversion is not needed).
+Instead of using the all-in-one command, Section [more commands](#more-commands) presents how to separately execute the syntactic conversion and the simulation. This can be useful when doing the same simulation again, where repreated syntactic conversion is not required. Note that the simulation configuration can be changed without the syntactic conversion.
 
 ## Bouncing Ball Example
 
@@ -35,11 +35,11 @@ Find the boncing ball example in the example folder. Navigate to *example/bounci
 
 <img src="images/bouncing_ball.png" width=400>
 
-The variable `x` is the vertical position of the ball, and `v` is the velocity. The initial values are `x=10` and `v=0`.  `v_out` and `x_out` are the output variables, and they have the same value as `v` and `x`, respectively. When `x <= 0` on the transition is satisfied, the velocity is instantaneously changed to `v = -0.8 v`, and the position is `x= 0.001` (to avoid `x=0` re-triggering the transition endlessly). The simulation result of bouncing ball is:
+The variable `x` is the vertical position (m) of the ball, and `v` is the velocity (m/s). The initial values are `x=10` and `v=0`.  `v_out` and `x_out` are the output variables, and they have the same value as `v` and `x`, respectively. When `x <= 0` on the transition is satisfied, the velocity is instantaneously changed to `v = -0.8 v`, and the position is `x= 0.001` (to avoid retriggering the transition endlessly at `x=0`). The simulation result of the bouncing ball model is:
 
 <img src="images/bouncing_ball_result.png" width=700>
 
-Next, we run the HOHA simulation for the bouncing ball example. On the terminal, run the following command:
+Next, we run the HOHA simulation for the same example. On the terminal, run the following command:
 ```
 python3 simulation.py HOHA 15 example/bouncing_ball/bouncingBall.mdl
 ```
@@ -99,27 +99,31 @@ The [all-in-one command](#all-in-one) is actually a sequence of three other comm
 
 ## Stateflow to HIOA conversion
 
-This conversion is done using a `.jar` file. The all-in-one command automatically compiles the java files. Check the file *Sim2HIOA/bin/Sim2HIOA.jar*. If this file does not exist, then open the terminal and execute the command in */Sim2HIOA* location.
+This conversion is done using a `.jar` file. The all-in-one command automatically compiles the java source files in this repository. If the all-in-one command is used at least once, the file *Sim2HIOA/bin/Sim2HIOA.jar* should be already generated. If not, then open the terminal at the path *Sim2HIOA*, and execute the command:
 ```
 ./automake.sh
 ```
-Then, the following command converts a stateflow model into HIOA.
+Notice that this generates the `.jar` file in *Sim2HIOA/bin/* folder.
+Next, the generated jar file can convert a stateflow model into HIOA.
+Go to the root path of this repository and execute the following command:
 ```
-java -jar Sim2HIOA/bin/Sim2HIOA.jar [file_path.mdl]
+java -jar Sim2HIOA/bin/Sim2HIOA.jar example/bouncing_ball/bouncingBall.mdl
 ```
-It generates a folder called *generated*, and put a `.json` file that contains the HIOA model.
+This will convert the bouncing ball model in Stateflow to HIOA. 
+Notice that. it also generates a folder called *generated*.
+In this folder, the `.json` file contains the HIOA model.
 
 ## HIOA to HOHA conversion
 
-There is a python script file called `conversion.py` under the *HOHA* folder. 
+There is a python script file called `conversion.py` in the *HOHA* folder. 
 ```
 python3 HOHA/conversion.py [destination] [HIOA_file] [order]
 ```
-The *destination* is the folder that will contain the generated file, *HIOA_file* is the path of the HIOA model (`.json`), and *order* is the order of HOHA.
+The \[destination\] is the folder that will contain the generated file, \[HIOA_file\] is the path of the HIOA model (`.json`), and \[order\] is the order of HOHA.
 
 For example, 
 ```
-python3 HOHA/conversion.py generated/ bouncing_ball.json 4
+python3 HOHA/conversion.py generated/ generated/HIOA_model_name.json 4
 ```
 will geneate the fourth order HOHA model in the generated folder.
 
@@ -129,10 +133,23 @@ Notice that, once the user run the [all-in-one command](#all-in-one), there is a
 ```
 python3 run.py
 ```
-To change the simulation configuration, manually modify the file called *setup.json* in the *generated* folder. 
+To change the simulation configuration, modify the file called *setup.json* in the *generated* folder using a text editor. 
 
 # Modified Quantized State System (MQSS)
 
-We also implemented Modified Quantized State System (MQSS)~\cite{} as an alternative simulation solver. 
+We also implemented Modified Quantized State System (MQSS)~\cite{} as an alternative simulation solver. This solver is based on a special data structure called *Quantize State Hybrid Input Output Automata* (QSHIOA). MQSS can be run using the all-in-one command. For example, 
+```
+python3 simulation.py MQSS 10 example.mdl
+
+```
+
+MQSS has more parameters. See *default_setup.json* file.
+
+## HIOA to QSHIOA conversion
+
+Similar to [HIOA to HOHA conversion](#hioa-to-hoha-conversion), conversion to QSHIOA is done using the *conversion.py* file in the *MQSS* folder. 
+```
+python3 MQSS/conversion.py [HIOA_file] [order]
+```
 
 
