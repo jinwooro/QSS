@@ -27,5 +27,4 @@ Sim2HIOA/build/*
 !default_setup.json
 examples/*
 !examples/**/*.mdl
-
 /bin/
