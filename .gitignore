@@ -25,6 +25,6 @@ Sim2HIOA/build/*
 !Sim2HIOA/src/structure/*
 !images/*.png
 !default_setup.json
-examples/*
 !examples/**/*.mdl
+!examples/heat_watertank/*.mdl
 /bin/
