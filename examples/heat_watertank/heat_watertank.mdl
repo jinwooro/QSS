@@ -1,12 +1,12 @@
 Model {
-  Name			  "steeringwheel"
+  Name			  "test1"
   Version		  9.2
   SavedCharacterEncoding  "ISO-8859-1"
   GraphicalInterface {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.113"
+    ComputedModelVersion    "1.9"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -44,7 +44,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [0.0, 23.0, 1280.0, 777.0]
+      Location		      [118.0, 49.0, 982.0, 713.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -66,11 +66,11 @@ Model {
 	$ObjectID		5
 	$ClassName		"Simulink.EditorInfo"
 	IsActive		[1]
-	ViewObjType		"SimulinkTopLevel"
-	LoadSaveID		"0"
-	Extents			[1242.0, 601.0]
-	ZoomFactor		[1.25]
-	Offset			[-611.3, -184.5]
+	ViewObjType		"StateflowChart"
+	LoadSaveID		"1"
+	Extents			[944.0, 537.0]
+	ZoomFactor		[1.0]
+	Offset			[0.0, 0.0]
       }
       Object {
 	$PropName		"DockComponentsInfo"
@@ -90,25 +90,25 @@ Model {
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABrAP///wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAUAAAAClAAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
+      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAPWAAACVAAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/"
       "////wEAAACE/////wAAAAAAAAAA/////wEAAAD2/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAF6/////wAAAAAAAAAA/"
-      "////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAPg/////wAAAAAAAAAA/"
-      "////wEAAAQP/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA"
+      "////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAN4/////wAAAAAAAAAA/"
+      "////wEAAAOn/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA"
     }
   }
   HideAutomaticNames	  on
-  Created		  "Thu May 23 11:08:17 2019"
+  Created		  "Thu May 07 15:51:38 2020"
   Creator		  "jinwooro"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jinwooro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu May 07 15:37:04 2020"
-  RTWModifiedTimeStamp	  510766623
-  ModelVersionFormat	  "1.%<AutoIncrement:113>"
+  LastModifiedDate	  "Thu May 07 16:22:43 2020"
+  RTWModifiedTimeStamp	  510769314
+  ModelVersionFormat	  "1.%<AutoIncrement:9>"
   SampleTimeColors	  off
-  SampleTimeAnnotations	  on
+  SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
   WideLines		  off
   ShowLineDimensions	  off
@@ -163,12 +163,12 @@ Model {
     $PropName		    "DataLoggingOverride"
     $ObjectID		    7
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
-    model_		    "steeringwheel"
+    model_		    "test1"
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
       Dimension		      1
-      Cell		      "steeringwheel"
+      Cell		      "test1"
       PropName		      "logAsSpecifiedByModels_"
     }
     Array {
@@ -219,7 +219,7 @@ Model {
 	  DisabledProps		  []
 	  Description		  ""
 	  StartTime		  "0.0"
-	  StopTime		  "15"
+	  StopTime		  "10.0"
 	  AbsTol		  "auto"
 	  AutoScaleAbsTol	  on
 	  FixedStep		  "auto"
@@ -230,10 +230,10 @@ Model {
 	  MaxConsecutiveZCs	  "1000"
 	  ExtrapolationOrder	  4
 	  NumberNewtonIterations  1
-	  MaxStep		  "1e-2"
+	  MaxStep		  "1e-3"
 	  MinStep		  "auto"
 	  MaxConsecutiveMinStep	  "1"
-	  RelTol		  "1e-5"
+	  RelTol		  "1e-6"
 	  EnableMultiTasking	  off
 	  ConcurrentTasks	  off
 	  Solver		  "ode45"
@@ -241,7 +241,7 @@ Model {
 	  SolverJacobianMethodControl "auto"
 	  ShapePreserveControl	  "DisableAll"
 	  ZeroCrossControl	  "UseLocalSettings"
-	  ZeroCrossAlgorithm	  "Adaptive"
+	  ZeroCrossAlgorithm	  "Nonadaptive"
 	  AlgebraicLoopSolver	  "TrustRegion"
 	  SolverInfoToggleStatus  on
 	  IsAutoAppliedInSIP	  off
@@ -907,7 +907,7 @@ Model {
       Name		      "Configuration"
       ExtraOptions	      ""
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition    [ 71, 70, 1061, 730 ]
+      ConfigPrmDlgPosition    [ 71, 71, 1061, 731 ]
     }
     PropName		    "ConfigurationSets"
   }
@@ -990,6 +990,9 @@ Model {
       BusSelectionMode	      off
     }
     Block {
+      BlockType		      Ground
+    }
+    Block {
       BlockType		      Inport
       Port		      "1"
       OutputFunctionCall      off
@@ -1007,15 +1010,6 @@ Model {
       LatchByDelayingOutsideSignal off
       LatchInputForFeedbackSignals off
       Interpolate	      on
-    }
-    Block {
-      BlockType		      Memory
-      InitialCondition	      "0"
-      InheritSampleTime	      off
-      LinearizeMemory	      off
-      LinearizeAsDelay	      off
-      StateMustResolveToSignalObject off
-      RTWStateStorageClass    "Auto"
     }
     Block {
       BlockType		      Outport
@@ -1093,22 +1087,11 @@ Model {
     Block {
       BlockType		      Terminator
     }
-    Block {
-      BlockType		      ToWorkspace
-      VariableName	      "simulink_output"
-      MaxDataPoints	      "1000"
-      Decimation	      "1"
-      SaveFormat	      "Array"
-      Save2DSignal	      "Inherit from input (this choice will be removed - see release notes)"
-      FixptAsFi		      off
-      NumInputs		      "1"
-      SampleTime	      "0"
-    }
   }
   System {
-    Name		    "steeringwheel"
-    Location		    [0, 23, 1280, 800]
-    Open		    on
+    Name		    "test1"
+    Location		    [118, 49, 1100, 762]
+    Open		    off
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
     ExecutionDomainType	    "Deduce"
@@ -1122,16 +1105,16 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "125"
+    ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "32"
+    SIDHighWatermark	    "4"
     Block {
       BlockType		      SubSystem
-      Name		      "Driver"
-      SID		      "26"
-      Ports		      [1, 1]
-      Position		      [-285, 17, -225, 73]
-      ZOrder		      17
+      Name		      "Controller"
+      SID		      "3"
+      Ports		      [0, 1]
+      Position		      [105, 96, 205, 204]
+      ZOrder		      4
       ErrorFcn		      "Stateflow.Translate.translate"
       PermitHierarchicalResolution "ExplicitOnly"
       TreatAsAtomicUnit	      on
@@ -1139,8 +1122,8 @@ Model {
       SFBlockType	      "Chart"
       ContentPreviewEnabled   on
       System {
-	Name			"Driver"
-	Location		[0, 23, 1280, 800]
+	Name			"Controller"
+	Location		[150, 76, 1132, 789]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1156,29 +1139,28 @@ Model {
 	TiledPageScale		1
 	ShowPageBoundaries	off
 	ZoomFactor		"100"
-	SIDHighWatermark	"96"
-	Block {
-	  BlockType		  Inport
-	  Name			  "turn"
-	  SID			  "26::96"
-	  Position		  [20, 101, 40, 119]
-	  ZOrder		  76
-	  IconDisplay		  "Port number"
-	}
+	SIDHighWatermark	"93"
 	Block {
 	  BlockType		  Demux
 	  Name			  " Demux "
-	  SID			  "26::90"
+	  SID			  "3::90"
 	  Ports			  [1, 1]
 	  Position		  [270, 230, 320, 270]
 	  ZOrder		  70
 	  Outputs		  "1"
 	}
 	Block {
+	  BlockType		  Ground
+	  Name			  " Ground "
+	  SID			  "3::92"
+	  Position		  [20, 121, 40, 139]
+	  ZOrder		  72
+	}
+	Block {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
-	  SID			  "26::89"
-	  Tag			  "Stateflow S-Function steeringwheel 1"
+	  SID			  "3::89"
+	  Tag			  "Stateflow S-Function test1 1"
 	  Ports			  [1, 2]
 	  Position		  [180, 100, 230, 160]
 	  ZOrder		  69
@@ -1189,49 +1171,49 @@ Model {
 	  SFcnIsStateOwnerBlock	  off
 	  Port {
 	    PortNumber		    2
-	    Name		    "dr_out"
+	    Name		    "ON"
 	  }
 	}
 	Block {
 	  BlockType		  Terminator
 	  Name			  " Terminator "
-	  SID			  "26::91"
+	  SID			  "3::91"
 	  Position		  [460, 241, 480, 259]
 	  ZOrder		  71
 	}
 	Block {
 	  BlockType		  Outport
-	  Name			  "dr_out"
-	  SID			  "26::95"
+	  Name			  "ON"
+	  SID			  "3::93"
 	  Position		  [460, 101, 480, 119]
-	  ZOrder		  75
+	  ZOrder		  73
 	  IconDisplay		  "Port number"
 	}
 	Line {
-	  ZOrder		  15
-	  SrcBlock		  "turn"
+	  Name			  "ON"
+	  ZOrder		  7
+	  Labels		  [0, 0]
+	  SrcBlock		  " SFunction "
+	  SrcPort		  2
+	  DstBlock		  "ON"
+	  DstPort		  1
+	}
+	Line {
+	  ZOrder		  8
+	  SrcBlock		  " Ground "
 	  SrcPort		  1
 	  DstBlock		  " SFunction "
 	  DstPort		  1
 	}
 	Line {
-	  Name			  "dr_out"
-	  ZOrder		  16
-	  Labels		  [0, 0]
-	  SrcBlock		  " SFunction "
-	  SrcPort		  2
-	  DstBlock		  "dr_out"
-	  DstPort		  1
-	}
-	Line {
-	  ZOrder		  17
+	  ZOrder		  9
 	  SrcBlock		  " Demux "
 	  SrcPort		  1
 	  DstBlock		  " Terminator "
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  18
+	  ZOrder		  10
 	  SrcBlock		  " SFunction "
 	  SrcPort		  1
 	  DstBlock		  " Demux "
@@ -1240,46 +1222,12 @@ Model {
       }
     }
     Block {
-      BlockType		      Memory
-      Name		      "Memory"
-      SID		      "27"
-      Position		      [-205, 30, -175, 60]
-      ZOrder		      18
-    }
-    Block {
-      BlockType		      Scope
-      Name		      "Scope2"
-      SID		      "6"
-      Ports		      [1]
-      Position		      [25, 14, 55, 46]
-      ZOrder		      7
-      ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
-      "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
-      "ources','WiredSimulink',true,'DataLoggingVariableName','ScopeData2'),extmgr.Configuration('Visuals','Time Domain"
-      "',true,'SerializedDisplays',{struct('MinYLimReal','-1.23881','MaxYLimReal','1.24876','YLabelReal','','MinYLimMag"
-      "','0.00000','MaxYLimMag','1.24876','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'Axes"
-      "Color',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.06666"
-      "66666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.8313"
-      "72549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686"
-      " 0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines"
-      "',1,'LineNames',{{'SteeringPlant/x_out'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('M"
-      "inYLimReal','-1.23881','MaxYLimReal','1.24876','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','1.24876','Le"
-      "gendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.6862"
-      "74509803922 0.686274509803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764"
-      "705882353 0.16078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.8313"
-      "72549019608 0.0745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configura"
-      "tion('Tools','Plot Navigation',true,'OnceAtStop',false,'PreviousAutoscale','XY'),extmgr.Configuration('Tools','M"
-      "easurements',true,'Version','2018b')),'Version','2018b','Position',[1854 119 560 420])"
-      NumInputPorts	      "1"
-      Floating		      off
-    }
-    Block {
       BlockType		      SubSystem
-      Name		      "SteeringPlant"
-      SID		      "5"
-      Ports		      [1, 2]
-      Position		      [-150, 17, -90, 73]
-      ZOrder		      6
+      Name		      "Plant"
+      SID		      "1"
+      Ports		      [1, 1]
+      Position		      [285, 101, 410, 199]
+      ZOrder		      2
       ErrorFcn		      "Stateflow.Translate.translate"
       PermitHierarchicalResolution "ExplicitOnly"
       TreatAsAtomicUnit	      on
@@ -1287,9 +1235,9 @@ Model {
       SFBlockType	      "Chart"
       ContentPreviewEnabled   on
       System {
-	Name			"SteeringPlant"
-	Location		[1388, 182, 2668, 959]
-	Open			off
+	Name			"Plant"
+	Location		[118, 49, 1100, 762]
+	Open			on
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
 	ExecutionDomainType	"Deduce"
@@ -1304,19 +1252,19 @@ Model {
 	TiledPageScale		1
 	ShowPageBoundaries	off
 	ZoomFactor		"100"
-	SIDHighWatermark	"97"
+	SIDHighWatermark	"94"
 	Block {
 	  BlockType		  Inport
-	  Name			  "dr"
-	  SID			  "5::96"
+	  Name			  "ON"
+	  SID			  "1::94"
 	  Position		  [20, 101, 40, 119]
-	  ZOrder		  76
+	  ZOrder		  74
 	  IconDisplay		  "Port number"
 	}
 	Block {
 	  BlockType		  Demux
 	  Name			  " Demux "
-	  SID			  "5::90"
+	  SID			  "1::90"
 	  Ports			  [1, 1]
 	  Position		  [270, 230, 320, 270]
 	  ZOrder		  70
@@ -1325,83 +1273,61 @@ Model {
 	Block {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
-	  SID			  "5::89"
-	  Tag			  "Stateflow S-Function steeringwheel 2"
-	  Ports			  [1, 3]
-	  Position		  [180, 100, 230, 180]
+	  SID			  "1::89"
+	  Tag			  "Stateflow S-Function test1 3"
+	  Ports			  [1, 2]
+	  Position		  [180, 100, 230, 160]
 	  ZOrder		  69
 	  FunctionName		  "sf_sfun"
-	  PortCounts		  "[1 3]"
+	  PortCounts		  "[1 2]"
 	  SFunctionDeploymentMode off
 	  EnableBusSupport	  on
 	  SFcnIsStateOwnerBlock	  off
 	  Port {
 	    PortNumber		    2
-	    Name		    "x_out"
-	  }
-	  Port {
-	    PortNumber		    3
-	    Name		    "turn"
+	    Name		    "temp_out"
 	  }
 	}
 	Block {
 	  BlockType		  Terminator
 	  Name			  " Terminator "
-	  SID			  "5::91"
+	  SID			  "1::91"
 	  Position		  [460, 241, 480, 259]
 	  ZOrder		  71
 	}
 	Block {
 	  BlockType		  Outport
-	  Name			  "x_out"
-	  SID			  "5::93"
+	  Name			  "temp_out"
+	  SID			  "1::93"
 	  Position		  [460, 101, 480, 119]
 	  ZOrder		  73
 	  IconDisplay		  "Port number"
 	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "turn"
-	  SID			  "5::97"
-	  Position		  [460, 136, 480, 154]
-	  ZOrder		  77
-	  Port			  "2"
-	  IconDisplay		  "Port number"
-	}
 	Line {
-	  ZOrder		  41
-	  SrcBlock		  "dr"
+	  ZOrder		  11
+	  SrcBlock		  "ON"
 	  SrcPort		  1
 	  DstBlock		  " SFunction "
 	  DstPort		  1
 	}
 	Line {
-	  Name			  "x_out"
-	  ZOrder		  42
+	  Name			  "temp_out"
+	  ZOrder		  12
 	  Labels		  [0, 0]
 	  SrcBlock		  " SFunction "
 	  SrcPort		  2
-	  DstBlock		  "x_out"
+	  DstBlock		  "temp_out"
 	  DstPort		  1
 	}
 	Line {
-	  Name			  "turn"
-	  ZOrder		  43
-	  Labels		  [0, 0]
-	  SrcBlock		  " SFunction "
-	  SrcPort		  3
-	  DstBlock		  "turn"
-	  DstPort		  1
-	}
-	Line {
-	  ZOrder		  44
+	  ZOrder		  13
 	  SrcBlock		  " Demux "
 	  SrcPort		  1
 	  DstBlock		  " Terminator "
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  45
+	  ZOrder		  14
 	  SrcBlock		  " SFunction "
 	  SrcPort		  1
 	  DstBlock		  " Demux "
@@ -1410,57 +1336,81 @@ Model {
       }
     }
     Block {
-      BlockType		      ToWorkspace
-      Name		      "To Workspace"
-      SID		      "24"
+      BlockType		      Scope
+      Name		      "Scope"
+      SID		      "2"
       Ports		      [1]
-      Position		      [10, 65, 70, 95]
-      ZOrder		      15
-      VariableName	      "result"
-      MaxDataPoints	      "inf"
-      SaveFormat	      "Timeseries"
-      Save2DSignal	      "3-D array (concatenate along third dimension)"
-      FixptAsFi		      on
-      SampleTime	      "-1"
+      Position		      [470, 134, 500, 166]
+      ZOrder		      3
+      ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
+      "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
+      "ources','WiredSimulink',true),extmgr.Configuration('Visuals','Time Domain',true,'SerializedDisplays',{struct('Mi"
+      "nYLimReal','-6.25','MaxYLimReal','56.25','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','56.25','LegendVisi"
+      "bility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803"
+      "922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.0666666666666667;0.0745098039215686 0.6235294117647"
+      "06 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.831372549019608 0.0745098039215686;0.7176470588235"
+      "29 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863],'Title','%<SignalLabel>','"
+      "LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines',1,'LineNames',{{'Plant'}},'ShowContent',true"
+      ",'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal','-6.25','MaxYLimReal','56.25','YLabelReal','','M"
+      "inYLimMag','0.00000','MaxYLimMag','56.25','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',fals"
+      "e,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[0.07"
+      "45098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;1 1 0.0666666666666667;0.717647058823529"
+      " 0.274509803921569 1;0.392156862745098 0.831372549019608 0.0745098039215686;0.0588235294117647 1 1;1 0.074509803"
+      "9215686 0.650980392156863])),extmgr.Configuration('Tools','Plot Navigation',true,'PreviousAutoscale','XY'),extmg"
+      "r.Configuration('Tools','Measurements',true,'Version','2018b')),'Version','2018b','Position',[693 202 560 420])"
+      NumInputPorts	      "1"
+      Floating		      off
+    }
+    Block {
+      BlockType		      Scope
+      Name		      "Scope1"
+      SID		      "4"
+      Ports		      [1]
+      Position		      [285, 44, 315, 76]
+      ZOrder		      5
+      ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
+      "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
+      "ources','WiredSimulink',true,'DataLoggingVariableName','ScopeData1'),extmgr.Configuration('Visuals','Time Domain"
+      "',true,'SerializedDisplays',{struct('MinYLimReal','-0.125','MaxYLimReal','1.125','YLabelReal','','MinYLimMag','0"
+      ".00000','MaxYLimMag','1.125','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor'"
+      ",[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.06666666666"
+      "66667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.8313725490"
+      "19608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 0.650"
+      "980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines',1,'L"
+      "ineNames',{{'Controller'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal','-0"
+      ".125','MaxYLimReal','1.125','YLabelReal','','MinYLimMag','0.00000','MaxYLimMag','1.125','LegendVisibility','off'"
+      ",'XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0.6862745"
+      "09803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.160784313"
+      "72549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.831372549019608 0.0745098"
+      "039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configuration('Tools','Plot Na"
+      "vigation',true,'PreviousAutoscale','XY'),extmgr.Configuration('Tools','Measurements',true,'Version','2018b')),'V"
+      "ersion','2018b')"
+      NumInputPorts	      "1"
+      Floating		      off
     }
     Line {
-      ZOrder		      6
-      SrcBlock		      "SteeringPlant"
+      ZOrder		      2
+      SrcBlock		      "Plant"
       SrcPort		      1
-      Points		      [47, 0]
+      DstBlock		      "Scope"
+      DstPort		      1
+    }
+    Line {
+      ZOrder		      3
+      SrcBlock		      "Controller"
+      SrcPort		      1
+      Points		      [22, 0]
       Branch {
-	ZOrder			36
-	Points			[0, 50]
-	DstBlock		"To Workspace"
+	ZOrder			7
+	Points			[0, -90]
+	DstBlock		"Scope1"
 	DstPort			1
       }
       Branch {
-	ZOrder			27
-	DstBlock		"Scope2"
+	ZOrder			6
+	DstBlock		"Plant"
 	DstPort			1
       }
-    }
-    Line {
-      ZOrder		      32
-      SrcBlock		      "SteeringPlant"
-      SrcPort		      2
-      Points		      [9, 0; 0, 37; -224, 0]
-      DstBlock		      "Driver"
-      DstPort		      1
-    }
-    Line {
-      ZOrder		      34
-      SrcBlock		      "Driver"
-      SrcPort		      1
-      DstBlock		      "Memory"
-      DstPort		      1
-    }
-    Line {
-      ZOrder		      35
-      SrcBlock		      "Memory"
-      SrcPort		      1
-      DstBlock		      "SteeringPlant"
-      DstPort		      1
     }
   }
 }
@@ -1472,26 +1422,23 @@ Model {
 Stateflow {
   machine {
     id			    1
-    name		    "steeringwheel"
-    created		    "23-May-2019 11:08:43"
+    name		    "test1"
+    created		    "07-May-2020 15:55:33"
     isLibrary		    0
     sfVersion		    80000014
-    firstTarget		    22
+    firstTarget		    21
   }
   chart {
     id			    2
     machine		    1
-    name		    "Driver"
+    name		    "Controller"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [-397.749 595.851 -179.66 301.14]
-    zoomFactor		    0.8
+    viewLimits		    [0 441 0 373]
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 3 0 0]
     viewObj		    2
     visible		    1
-    subviewS {
-    }
-    ssIdHighWaterMark	    10
+    ssIdHighWaterMark	    6
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
     chartFileNumber	    1
@@ -1499,19 +1446,21 @@ Stateflow {
     saturateOnIntegerOverflow 1
     userSpecifiedStateTransitionExecutionOrder 1
     disableImplicitCasting  1
+    plantModelingInfo {
+    }
     actionLanguage	    2
     firstData		    5
     firstTransition	    7
   }
   state {
     id			    3
-    labelString		    "ConstLeftTurn\ndu:\ndr_out = -4;\n"
-    position		    [210.4 153.3 116.8 81.8]
+    labelString		    "Idle\ndu:\nTime_dot = 1;\nON = 0;"
+    position		    [213 189 90 60]
     fontSize		    12
     chart		    2
     treeNode		    [2 0 0 4]
     subviewer		    2
-    ssIdNumber		    1
+    ssIdNumber		    3
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
     eml {
@@ -1519,13 +1468,13 @@ Stateflow {
   }
   state {
     id			    4
-    labelString		    "ConstRightTurn\ndu:\ndr_out = 0.1;"
-    position		    [429.4 154.2 100.6 79.6]
+    labelString		    "Activated\ndu:\nTime_dot = 1;\nON = 1;"
+    position		    [430 189 90 60]
     fontSize		    12
     chart		    2
     treeNode		    [2 0 3 0]
     subviewer		    2
-    ssIdNumber		    3
+    ssIdNumber		    5
     type		    OR_STATE
     decomposition	    CLUSTER_STATE
     eml {
@@ -1533,191 +1482,8 @@ Stateflow {
   }
   data {
     id			    5
-    ssIdNumber		    9
-    name		    "dr_out"
-    scope		    OUTPUT_DATA
-    machine		    1
-    props {
-      array {
-	size			"-1"
-      }
-      type {
-	method			SF_INHERITED_TYPE
-	primitive		SF_DOUBLE_TYPE
-	isSigned		1
-	wordLength		"16"
-      }
-      complexity	      SF_COMPLEX_INHERITED
-      frame		      SF_FRAME_NO
-      unit {
-	name			"inherit"
-      }
-    }
-    dataType		    "Inherit: Same as Simulink"
-    linkNode		    [2 0 6]
-  }
-  data {
-    id			    6
-    ssIdNumber		    10
-    name		    "turn"
-    scope		    INPUT_DATA
-    machine		    1
-    props {
-      array {
-	size			"-1"
-      }
-      type {
-	method			SF_INHERITED_TYPE
-	primitive		SF_DOUBLE_TYPE
-	isSigned		1
-	wordLength		"16"
-      }
-      complexity	      SF_COMPLEX_INHERITED
-      frame		      SF_FRAME_INHERITED
-      unit {
-	name			"inherit"
-      }
-    }
-    dataType		    "Inherit: Same as Simulink"
-    linkNode		    [2 5 0]
-  }
-  transition {
-    id			    7
-    labelString		    ""
-    labelPosition	    [490.073 139.2 2 14]
-    fontSize		    12
-    src {
-      intersection	      [0 0 1 0 490.0727 124.2 0 0]
-    }
-    dst {
-      id		      4
-      intersection	      [1 0 -1 0.6031 490.0727 154.2 0 0]
-    }
-    midPoint		    [490.0727 139.2]
-    chart		    2
-    dataLimits		    [487.673 492.473 124.2 154.2]
-    subviewer		    2
-    drawStyle		    SMART
-    slide {
-      sticky		      BOTH_STICK
-    }
-    executionOrder	    1
     ssIdNumber		    2
-    linkNode		    [2 0 8]
-  }
-  transition {
-    id			    8
-    labelString		    "[turn == 0]"
-    labelPosition	    [346.438 165.8 56.641 14]
-    fontSize		    12
-    src {
-      id		      3
-      intersection	      [2 1 0 0.3778 327.2 184.2 0 0]
-    }
-    dst {
-      id		      4
-      intersection	      [4 -1 -0 0.6231 429.4 184.2 0 0]
-    }
-    midPoint		    [374.3 184.2]
-    chart		    2
-    dataLimits		    [327.2 429.4 181.8 186.6]
-    subviewer		    2
-    drawStyle		    SMART
-    slide {
-      sticky		      BOTH_STICK
-    }
-    executionOrder	    1
-    ssIdNumber		    4
-    linkNode		    [2 7 9]
-  }
-  transition {
-    id			    9
-    labelString		    "[turn == 1]"
-    labelPosition	    [347.12 219.3 56.641 14]
-    fontSize		    12
-    src {
-      id		      4
-      intersection	      [4 -1 0 0.2714 429.4 212.2 0 0]
-    }
-    dst {
-      id		      3
-      intersection	      [2 1 -0 0.72 327.2 212.2 0 0]
-    }
-    midPoint		    [382.3 212.2]
-    chart		    2
-    dataLimits		    [327.2 429.4 209.8 214.6]
-    subviewer		    2
-    drawStyle		    SMART
-    slide {
-      sticky		      BOTH_STICK
-    }
-    executionOrder	    1
-    ssIdNumber		    7
-    linkNode		    [2 8 0]
-  }
-  instance {
-    id			    10
-    machine		    1
-    name		    "Driver"
-    chart		    2
-  }
-  chart {
-    id			    11
-    machine		    1
-    name		    "SteeringPlant"
-    windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [117.9 738.9 69.6 370.1]
-    zoomFactor		    0.5
-    screen		    [1 1 3200 1200 1.25]
-    treeNode		    [0 12 0 0]
-    viewObj		    11
-    visible		    1
-    ssIdHighWaterMark	    11
-    decomposition	    CLUSTER_CHART
-    updateMethod	    CONTINUOUS
-    chartFileNumber	    2
-    allowGlobalAccessToExportedFunctions 0
-    saturateOnIntegerOverflow 1
-    userSpecifiedStateTransitionExecutionOrder 1
-    disableImplicitCasting  1
-    plantModelingInfo {
-    }
-    actionLanguage	    2
-    firstData		    14
-    firstTransition	    18
-  }
-  state {
-    id			    12
-    labelString		    "SteeringLeft\ndu:\nr_dot = dr;\nx_out = cos(r);\n"
-    position		    [238 154 90 81]
-    fontSize		    12
-    chart		    11
-    treeNode		    [11 0 0 13]
-    subviewer		    11
-    ssIdNumber		    1
-    type		    OR_STATE
-    decomposition	    CLUSTER_STATE
-    eml {
-    }
-  }
-  state {
-    id			    13
-    labelString		    "SteeringRight\ndu:\nr_dot = dr;\nx_out = cos(r);"
-    position		    [464.6 154.5 89 80]
-    fontSize		    12
-    chart		    11
-    treeNode		    [11 0 12 0]
-    subviewer		    11
-    ssIdNumber		    3
-    type		    OR_STATE
-    decomposition	    CLUSTER_STATE
-    eml {
-    }
-  }
-  data {
-    id			    14
-    ssIdNumber		    5
-    name		    "r"
+    name		    "Time"
     scope		    LOCAL_DATA
     machine		    1
     props {
@@ -1738,12 +1504,12 @@ Stateflow {
       }
     }
     dataType		    "Inherit: From definition in chart"
-    linkNode		    [11 0 15]
+    linkNode		    [2 0 6]
   }
   data {
-    id			    15
-    ssIdNumber		    6
-    name		    "x_out"
+    id			    6
+    ssIdNumber		    1
+    name		    "ON"
     scope		    OUTPUT_DATA
     machine		    1
     props {
@@ -1763,12 +1529,186 @@ Stateflow {
       }
     }
     dataType		    "Inherit: Same as Simulink"
-    linkNode		    [11 14 16]
+    linkNode		    [2 5 0]
+  }
+  transition {
+    id			    7
+    labelString		    "{\nTime = 0;\n}"
+    labelPosition	    [243 141 51.859 38]
+    fontSize		    12
+    src {
+      intersection	      [0 0 1 0 233 123 0 0]
+    }
+    dst {
+      id		      3
+      intersection	      [1 0 -1 0.2222 233 189 0 0]
+    }
+    midPoint		    [233 144.75]
+    chart		    2
+    dataLimits		    [230.6 235.4 123 189]
+    subviewer		    2
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    4
+    linkNode		    [2 0 8]
+  }
+  transition {
+    id			    8
+    labelString		    "[ Time >= 5]"
+    labelPosition	    [339.83 197 65.297 14]
+    fontSize		    12
+    src {
+      id		      3
+      intersection	      [2 1 0 0.5 303 219 0 0]
+    }
+    dst {
+      id		      4
+      intersection	      [4 -1 -0 0.5 430 219 0 0]
+    }
+    midPoint		    [362.5 219]
+    chart		    2
+    dataLimits		    [303 430 216.6 221.4]
+    subviewer		    2
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    6
+    linkNode		    [2 7 0]
+  }
+  instance {
+    id			    9
+    machine		    1
+    name		    "Controller"
+    chart		    2
+  }
+  chart {
+    id			    10
+    machine		    1
+    name		    "Plant"
+    windowPosition	    [199.5 216.75 417 348.75]
+    viewLimits		    [0 441 0 373]
+    screen		    [1 1 3200 1200 1.25]
+    treeNode		    [0 11 0 0]
+    viewObj		    10
+    visible		    1
+    subviewS {
+    }
+    ssIdHighWaterMark	    15
+    decomposition	    CLUSTER_CHART
+    updateMethod	    CONTINUOUS
+    chartFileNumber	    3
+    allowGlobalAccessToExportedFunctions 0
+    saturateOnIntegerOverflow 1
+    userSpecifiedStateTransitionExecutionOrder 1
+    disableImplicitCasting  1
+    plantModelingInfo {
+    }
+    actionLanguage	    2
+    firstData		    14
+    firstTransition	    17
+  }
+  state {
+    id			    11
+    labelString		    "Q1\ndu:\ntemp_dot = 0;\ntemp_out = temp;"
+    position		    [264 119.5 130 82]
+    fontSize		    12
+    chart		    10
+    treeNode		    [10 0 0 12]
+    subviewer		    10
+    ssIdNumber		    1
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+    }
+  }
+  state {
+    id			    12
+    labelString		    "Q2\ndu:\ntemp_dot = temp * 2;\ntemp_out = temp;"
+    position		    [527 120 133 81]
+    fontSize		    12
+    chart		    10
+    treeNode		    [10 0 11 13]
+    subviewer		    10
+    ssIdNumber		    3
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+    }
+  }
+  state {
+    id			    13
+    labelString		    "Q3\ndu:\ntemp_dot = 0;\ntemp_out = temp;"
+    position		    [527 298 127 82]
+    fontSize		    12
+    chart		    10
+    treeNode		    [10 0 12 0]
+    subviewer		    10
+    ssIdNumber		    5
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+    }
+  }
+  data {
+    id			    14
+    ssIdNumber		    7
+    name		    "temp"
+    scope		    LOCAL_DATA
+    machine		    1
+    props {
+      updateMethod	      SF_CONTINUOUS_TIME_DATA
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_INHERITED
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: From definition in chart"
+    linkNode		    [10 0 15]
+  }
+  data {
+    id			    15
+    ssIdNumber		    8
+    name		    "temp_out"
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_NO
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [10 14 16]
   }
   data {
     id			    16
     ssIdNumber		    10
-    name		    "dr"
+    name		    "ON"
     scope		    INPUT_DATA
     machine		    1
     props {
@@ -1788,115 +1728,90 @@ Stateflow {
       }
     }
     dataType		    "Inherit: Same as Simulink"
-    linkNode		    [11 15 17]
-  }
-  data {
-    id			    17
-    ssIdNumber		    11
-    name		    "turn"
-    scope		    OUTPUT_DATA
-    machine		    1
-    props {
-      array {
-	size			"-1"
-      }
-      type {
-	method			SF_INHERITED_TYPE
-	primitive		SF_DOUBLE_TYPE
-	isSigned		1
-	wordLength		"16"
-      }
-      complexity	      SF_COMPLEX_INHERITED
-      frame		      SF_FRAME_NO
-      unit {
-	name			"inherit"
-      }
-    }
-    dataType		    "Inherit: Same as Simulink"
-    linkNode		    [11 16 0]
+    linkNode		    [10 15 0]
   }
   transition {
-    id			    18
-    labelString		    "{r = 0.5 * pi;}"
-    labelPosition	    [275.15 129.458 68.516 14]
+    id			    17
+    labelString		    "{\ntemp = 10;\n}"
+    labelPosition	    [305.317 72.5 58.984 38]
     fontSize		    12
     src {
-      intersection	      [0 0 1 0 268.9 120.2 0 0]
+      intersection	      [0 0 1 0 293 53 0 0]
     }
     dst {
-      id		      12
-      intersection	      [1 0 -1 0.3433 268.9 154 0 0]
+      id		      11
+      intersection	      [1 0 -1 0.2231 293 119.5 0 0]
     }
-    midPoint		    [268.9 129.875]
-    chart		    11
-    dataLimits		    [266.5 271.3 120.2 154]
-    subviewer		    11
+    midPoint		    [293 74.9375]
+    chart		    10
+    dataLimits		    [290.6 295.4 53 119.5]
+    subviewer		    10
     drawStyle		    SMART
     slide {
       sticky		      BOTH_STICK
     }
     executionOrder	    1
     ssIdNumber		    2
-    linkNode		    [11 0 19]
+    linkNode		    [10 0 18]
+  }
+  transition {
+    id			    18
+    labelString		    "[ON == 1]"
+    labelPosition	    [431.537 140.5 53.969 14]
+    fontSize		    12
+    src {
+      id		      11
+      intersection	      [2 1 0 0.4756 394 158.5 0 0]
+    }
+    dst {
+      id		      12
+      intersection	      [4 -1 -0 0.5247 527 158.5 0 0]
+    }
+    midPoint		    [456.5 158.5]
+    chart		    10
+    dataLimits		    [394 527 156.1 160.9]
+    subviewer		    10
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    6
+    linkNode		    [10 17 19]
   }
   transition {
     id			    19
-    labelString		    "[cos(r) <= -0.99]\n{turn = 1;}"
-    labelPosition	    [347.325 154.5 87.266 26]
+    labelString		    "[temp >= 50]\n{\ntemp = 0;\n}"
+    labelPosition	    [589 223.022 69.312 50]
     fontSize		    12
     src {
       id		      12
-      intersection	      [2 1 0 0.3765 328 184.5 0 0]
+      intersection	      [3 0 1 0.609 579 201 0 0]
     }
     dst {
       id		      13
-      intersection	      [4 -1 -0 0.625 464.6 184.5 0 0]
+      intersection	      [1 -0 -1 0.4094 579 298 0 0]
     }
-    midPoint		    [392.3 184.5]
-    chart		    11
-    dataLimits		    [328 464.6 182.1 186.9]
-    subviewer		    11
+    midPoint		    [579 245.5]
+    chart		    10
+    dataLimits		    [576.6 581.4 201 298]
+    subviewer		    10
     drawStyle		    SMART
     slide {
       sticky		      BOTH_STICK
     }
     executionOrder	    1
-    ssIdNumber		    4
-    linkNode		    [11 18 20]
-  }
-  transition {
-    id			    20
-    labelString		    "[cos(r) >= 0.99]\n{turn = 0;}"
-    labelPosition	    [345.937 219.2 83.281 26]
-    fontSize		    12
-    src {
-      id		      13
-      intersection	      [4 -1 0 0.275 464.6 212.5 0 0]
-    }
-    dst {
-      id		      12
-      intersection	      [2 1 -0 0.7222 328 212.5 0 0]
-    }
-    midPoint		    [400.3 212.5]
-    chart		    11
-    dataLimits		    [328 464.6 210.1 214.9]
-    subviewer		    11
-    drawStyle		    SMART
-    slide {
-      sticky		      BOTH_STICK
-    }
-    executionOrder	    1
-    ssIdNumber		    7
-    linkNode		    [11 19 0]
+    ssIdNumber		    11
+    linkNode		    [10 18 0]
   }
   instance {
-    id			    21
+    id			    20
     machine		    1
-    name		    "SteeringPlant"
-    chart		    11
+    name		    "Plant"
+    chart		    10
   }
   target {
-    id			    22
+    id			    21
     machine		    1
     name		    "sfun"
     description		    "Default Simulink S-Function Target."

@@ -1,4 +1,4 @@
-# Defines QSHIOA and Trnasition classes
+# Defines HOHA and Trnasition classes
 from Variable import Variable
 from Location import Location
 from Transition import Transition
@@ -6,7 +6,7 @@ from Calculation import *
 from PrecomputedLagrange import *
 import math
 
-class QSHIOA:
+class HOHA:
 
     def __init__(self, data):
         # name
@@ -74,7 +74,7 @@ class QSHIOA:
         return names
 
     def compute_delta(self, order, vtol, max_step):
-        LTE = vtol
+        LTE = 1e-6
         Var = {**self.I, **self.X} # union of I and X
         name = self.instance_name
         loc = self.loc_id
@@ -107,3 +107,28 @@ class QSHIOA:
             state += [ ":".join(map(str, var.get_token_values())) for var in variables.values() ] 
 
         return state
+
+
+"""  ignore --- 
+    def compute_delta(self, order, vtol, max_step):
+        LTE = vtol
+        Var = {**self.I, **self.X} # union of I and X
+        name = self.instance_name
+        loc = self.loc_id
+
+        # (name, loc) is the key to find precomputed Lagrange error expressions
+        Lagrange_equations = lagrange_loc[(name, loc)] (Var)
+        validity_time = calculate_validity_time(Lagrange_equations, LTE, order, max_step)
+
+        exit_guards = [ t.guards for t in self.current_location.Transitions]
+        zero_crossing_time = calculate_zero_crossing_time(exit_guards, Var)
+
+        if zero_crossing_time == None: 
+            return validity_time
+        
+        if validity_time < zero_crossing_time:
+            return validity_time
+        else:
+            return zero_crossing_time
+
+"""

@@ -3,130 +3,80 @@ import csv
 import json
 import time as T
 
-# MQSS implementation needs serious code refinement ...
-# This is because this implementation is in the middle stage of extending to HOHA
-# It worsk as inteneded tho.
-
 class Simulator:
     def __init__(self, data, setup):
         # name of the system for the output file writing
         self.system_name = data['systemName']
-        # initialize QSHIOAs
+
+        # simulation configuration parameters
+        self.max_time = setup['max-time']
+        self.default_step = setup['default-step']
+        self.vtol = float(setup['vtol'])
+        self.ttol = float(setup['ttol'])
+        self.iter = int(setup['iteration'])
+
+        # instantiate objects : QSHIOAs and lines
         self.QSHIOAs = { q['name'] : QSHIOA(q) for q in data['QSHIOAs']}
         self.Lines = data['Lines']
         
-        self.max_time = setup['max-time']
-        self.default_step = setup['default-step']
-        self.vtol = setup['vtol']
-        self.ttol = setup['ttol']
-        self.iter = setup['iteration']
-
     def run(self):
-        # simulation preparation
-        time = 0
-        count = 1
-        self.csv_setup()
+        # simulation starts
+        time = 0            # simulation time
+        count = 1           # step counter
+        self.csv_setup()    # output recording init
+        self.record(time)   # recording the initial system state 
 
-        each_execution_time = 0.0
-        full_execution_time = 0.0
-
-        beginning = T.time()
         # main loop
         while(True):
-            # Load the input variable values by exchanging the tokens
-            self.token_exchange()
 
-            # inter-location transition execution
-            inter_transition_triggered = False
+            # Loading the input variable values
+            self.IO_exchange() 
+
+            # Inter-location transition
+            interLocEnabled = False
             for q in self.QSHIOAs.values():
-                # if there is at least one inter-location transition, indicate it by using a bool flag
-                if q.inter_location_transition(self.vtol) == True:
-                    inter_transition_triggered = True
-            if inter_transition_triggered == True:
-                # record zener transition
-                # self.csv_record_system_state(time)
-                continue 
+                interLocEnabled = interLocEnabled or q.inter_location_transition(self.vtol)
+            if interLocEnabled: # if there are any inter-loc transition, 
+                continue # we don't proceed to the intra-loc transition execution
 
-            # Update X tokens, then update O tokens 
-            for q in self.QSHIOAs.values():
-                q.update_token_X(1)
-                q.update_token_O(1)
-            # exchange (derivative) tokens
-            self.token_exchange(1)
-
-            # using the token values, derive variable expressions and exchange the expression.
-            self.expression_exchange()
-
-            # write to the file
-            self.csv_record_system_state(time, each_execution_time)
-
-            # terminate the simulation when the maximum time is reached
-            if time == self.max_time:
-                print("Time: %s" % str(time))
-                break
-
-            start = T.time() # to measure execution time of each simulation step
-
-            # compute the next time step
+            # step size calculation
             delta = []
             for q in self.QSHIOAs.values():
-                delta = delta + q.compute_delta(self.iter, self.ttol)
-            
+                d_step = q.compute_delta(self.iter, self.ttol)
+                if d_step : delta.append( min(d_step) )
+
+            # we have no clue about finding the step size, if there is no transition in the system
             if not delta:
-                time_stpe = self.default_step
+                # sys.exit() # we can just exit the simulation
+                time_step = self.default_step 
             else:
                 time_step = min(delta)
 
-            if time == 0:
-                time_step = 0.001 # initial step size ... 
-            elif time_step > 0.1:
-                time_step = 0.1
+            if count == 1 : time_step = 0.001 # temporarily we use the initial step size 
+            if (time + time_step) > self.max_time : time_step = self.max_time - time
+            if time == self.max_time: 
+                print("Simulation time %f second(s) is reached. End of simulation." % time)
+                break
 
-            # if the next time step exceeds the maximum simulation time,
-            # we adjust the time step to stop exactly at the maximum simulation time
-            if (time + time_step) > self.max_time:
-                time_step = self.max_time - time
-
-            # update the state variables
+            # Intra-location transition
             for q in self.QSHIOAs.values():
                 q.intra_location_transition(time_step)
-                q.update_token_O()
 
-            end = T.time() # to measure simulation step execution time
-            each_execution_time = end - start
-
-            print("%d, Time: %f, Step: %f, ET: %f" % (count, time, time_step, each_execution_time))
+            print("%d, Time: %f, Step: %f" % (count, time, time_step))
             time += time_step
             count += 1
+            self.record(time)
 
-        finish = T.time()
-        full_execution_time = finish - beginning
-        print("Simulation Completed (Execution Time %f sec)" % full_execution_time)
-
-    def expression_exchange(self):
-        for q in self.QSHIOAs.values():
-            q.derive_variable_expression()
-            
+    def IO_exchange(self):
         for line in self.Lines:
-            src_output_var = self.QSHIOAs[ line['srcBlockName'] ].O[ line['srcVarName'] ]
-            dst_input_var = self.QSHIOAs[ line['dstBlockName'] ].I[ line['dstVarName'] ]
-            dst_input_var.ex1 = src_output_var.ex1
-            dst_input_var.ex2 = src_output_var.ex2
+            self.QSHIOAs[ line['dstBlockName'] ].I[ line['dstVarName'] ] = self.QSHIOAs[ line['srcBlockName'] ].O[ line['srcVarName'] ]
 
-    def token_exchange(self, index=0):
-        for line in self.Lines:
-            src_output_var = self.QSHIOAs[ line['srcBlockName'] ].O[ line['srcVarName'] ]
-            dst_input_var = self.QSHIOAs[ line['dstBlockName'] ].I[ line['dstVarName'] ]
-            new_value = src_output_var.get_token_value(index)
-            dst_input_var.set_token_value(new_value, index)
-
-    def csv_record_system_state(self, time, ET):
-        row = [time, ET]
+    def record(self, time):
+        row = [time]
         for q in self.QSHIOAs.values():
             row += q.get_current_state()
-        self.rows.append(row) # save multiple rows
-        # don't open the file for every line,
-        # but when we have 50 lines to write
+        self.rows.append(row)
+
         if len(self.rows) > 50:
             with open(self.system_name + '.csv', 'a') as csvFile:
                 writer = csv.writer(csvFile)
@@ -137,7 +87,7 @@ class Simulator:
 
     def csv_setup(self):
         # this is the 1st row, with column titles
-        row = ["Time", "ExecutionTime"]
+        row = ["Time"]
         for name, q in self.QSHIOAs.items():
             row.append(str(name) + " location")
             row += q.get_variable_names()
@@ -169,6 +119,12 @@ if __name__ == "__main__":
     with open(setup['intermediate-file']) as inputFile:
         infile = json.load(inputFile)
 
+    # instantiate a simulator object
     mySim = Simulator(infile, setup)
+    
+    start_time = T.time()
     mySim.run()
+    execution_time = T.time() - start_time
+
+    print("Execution Time %f sec" % execution_time)
     mySim.finish()

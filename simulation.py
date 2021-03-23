@@ -19,17 +19,16 @@ def execute_HOHA(command):
     # run the HOHA simulation
     current_path = os.getcwd()
     os.chdir(current_path + '/generated') # navigate to this folder
-    if platform == "win32":
-        os.system("Clear")
-    else:
-        os.system("clear")
     os.system("python3 run.py")
     os.chdir(current_path) # get back to the original path
     print("HOHA execution")
 
 def execute_MQSS(command):
+    if command['order'] <= 1:
+        print("MQSS order should be at least 2")
+        sys.exit()
     # convert the symbols in the system into sympy symbols
-    os.system("python3 MQSS/conversion.py generated/" + command["intermediate-file"]) # run the conversion script 
+    os.system("python3 MQSS/conversion.py generated/" + command["intermediate-file"] + " " + str(command["order"])) # run the conversion script 
     if platform == "win32":
         os.system("copy MQSS/src/* generated/") # copy the src files in the MQSS folder
     else:
@@ -38,10 +37,6 @@ def execute_MQSS(command):
     # run the simulation
     current_path = os.getcwd() # absolute current path
     os.chdir(current_path + '/generated') # navigate to this folder
-    if platform == "win32":
-        os.system("Clear")
-    else:
-        os.system("clear")
     os.system("python3 run.py")
     os.chdir(current_path) # get back
 

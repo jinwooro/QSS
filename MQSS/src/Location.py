@@ -1,5 +1,4 @@
 import sympy as S
-from Util import *
 
 class Location:
 
@@ -7,53 +6,57 @@ class Location:
         # location name
         self.name = json_data['name'] 
         # ODEs, key = x_name, value = array of sympy derivative format
-        self.ODEs = { f['LHS'] : S.sympify(f['derivatives']) for f in json_data['ODEs'] }
+        self.ODEs = { f['subject'] : ( S.sympify(f['lowQSS']), S.sympify(f['highQSS']) ) for f in json_data['ODEs'] }
         # updates, key = x_name, value = array of sympy derivative format
-        self.Updates = { h['LHS'] : S.sympify(h['derivatives']) for h in json_data['outputUpdates'] }
+        self.Updates = { h['LHS'] : S.sympify(h['RHS']) for h in json_data['outputUpdates'] }
+        self.entries = { e['LHS'] : S.sympify(e['RHS']) for e in json_data['entries'] }
         self.Transitions = []
+
+    def get_QSS(self, Variables):
+        self.hqss_list = []
+        lqss_list = []
+        for name, (lqss, hqss) in self.ODEs.items():
+            hqss_pair = (S.sympify(name), hqss.subs(Variables))
+            lqss_pair = (S.sympify(name), lqss.subs(Variables))
+            self.hqss_list.append(hqss_pair)
+            lqss_list.append(lqss_pair)
+        return self.hqss_list, lqss_list
 
     def add_outgoing_transition(self, tran):
         self.Transitions.append(tran)
 
-    def compute_O_token(self, X, O, token_index):
-        for o, H in self.Updates.items():
-            h = H[token_index] # select the correct expression based on the token index 
-            new_value = calculate_value(h, X)
-            O[o].set_token_value(new_value, token_index)
+    def update_continuous_variables(self, X, time):
+        for name, hqss in self.hqss_list:
+            name = str(name)
+            value = hqss.subs(S.sympify('t'), time)
+            X[name] = value
 
-    def compute_X_token(self, I, X, token_index):
-        union = {**I, **X}
-        for x_dot, F in self.ODEs.items():
-            f = F[token_index]
-            new_value = calculate_value(f, union)
-            name = x_dot.split("_dot")[0]
-            X[name].set_token_value(new_value, token_index)
+    def en(self, I, O, X):
+        Variables = [ (S.sympify(name), value) for name, value in {**X, **I}.items() ] # convert dictionary to list of tuples
+        for LHS, RHS in self.entries.items():
+            if LHS in X: # entries can modify X
+                X[LHS] = RHS.subs(Variables)
+            elif LHS in O: # entries can modify O
+                O[LHS] = RHS.subs(Variables)
 
-    def take_transition(self, I, O, X, vtol):
-        # for each transition, 
-        for tran in self.Transitions:
-            flag = tran.trigger(I, O, X, vtol)
-            # True, if the transition is triggered
-            if flag == True:
-                return True, tran.destination
-        return False, 0
+    def h(self, O, X):
+        Variables = [ (S.sympify(name), value) for name, value in X.items() ] # convert dictionary to list of tuples
+        for LHS, RHS in self.Updates.items():
+            O[LHS] = RHS.subs(Variables)
 
-    def get_f(self):
-        f_vector = { x_dot.split("_dot")[0] : f[1] for x_dot, f in self.ODEs.items() }
-        return f_vector
-
-    def get_h(self):
-        h_vector = { o : h[0] for o, h in self.Updates.items() } 
-        return h_vector
-
-    def get_Updates(self):
-        return self.Updates
-    
     def get_name(self):
         return self.name
 
-    def get_transitions(self):
-        return self.Transitions
+    def get_enabled_transition(self, I, X, vtol):
+        # return any enabled transition
+        # when more than one transition is enabled, then return the first found one
+        for t in self.Transitions:
+            if t.is_enabled(I, X, vtol): # vtol is the state tolerance value
+                return t
+        # if no transition is enabled, then return None
+        return None
+
+
 
 
 

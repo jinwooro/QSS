@@ -33,11 +33,12 @@ def calculate_validity_time (Lagranges, LTE, order, max_step):
         if res.fun == 0:
             continue # this will make the Lagrange term zero
         else: 
+            # e = 1/M, where M is the maximum value of the largrange term
             e = abs(res.fun)
-            # check if the expected error meets the requirement
-            expected_error = e * time ** (order + 1) / math.factorial(order + 1)
-            if expected_error >= LTE: # when it fails, we compute the time
-                time = (LTE * math.factorial(order + 1) / e) ** (1 / (order + 1))
+            # calculate the maximum possible step size
+            step = (LTE * math.factorial(order + 1) / e) ** (1 / (order + 1))
+            if step < time:
+                time = step
     return time
 
 def calculate_zero_crossing_time(guard_set, Var):

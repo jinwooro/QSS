@@ -23,10 +23,10 @@ Sim2HIOA/build/*
 !Sim2HIOA/src/*
 !Sim2HIOA/src/adapter/*
 !Sim2HIOA/src/structure/*
-
+!images/*.png
 !default_setup.json
-examples/*
 !examples/**/*.mdl
 !benchmark_results/* 
 
+!examples/heat_watertank/*.mdl
 /bin/

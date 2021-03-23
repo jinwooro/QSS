@@ -1,4 +1,4 @@
-from QSHIOA import QSHIOA
+from HOHA import HOHA
 import csv
 import sys
 import json
@@ -10,18 +10,19 @@ class Simulator:
         self.system_name = data['systemName']
 
         # extract data
-        self.QSHIOAs = { q['name'] : QSHIOA(q) for q in data['HOHAs']}
+        self.HOHAs = { q['name'] : HOHA(q) for q in data['HOHAs']}
         self.Lines = data['Lines']
 
+        # extract configuration settings
         self.order = setup['order']
         self.max_time = setup['max-time']
         self.max_step = setup['max-step']
         self.vtol = setup['vtol']
 
     def run(self):
+
         time = 0    # simulation time (NOT physical time)
         count = 0   # simulation step count 
-
         # setup csv writing for measuring
         self.csv_setup()
         # start measuring time for the entire simulation
@@ -37,14 +38,14 @@ class Simulator:
 
         # 2. Inter-location transition (in short, InterLT)
 
-            for q in self.QSHIOAs.values():
+            for q in self.HOHAs.values():
                 q.inter_location_transition(self.vtol)
 
         # 3. Exchange smooth-tokens (these are required for taylor approximation)
 
             # Done iteratively due to the token dependencies
             for index in range(1, self.order + 1):
-                for q in self.QSHIOAs.values():
+                for q in self.HOHAs.values():
                     q.update_X(index)
                     q.update_O(index)
                 self.exchange_value(index)
@@ -58,10 +59,10 @@ class Simulator:
                 print("Time: %s" % str(time))
                 break
             
-        # 5. Compute and collect the delta values from each QSHIOA instances
+        # 5. Compute and collect the delta values from each HOHA instances
 
             calculation_start = T.time() 
-            delta = [q.compute_delta(self.order, self.vtol, self.max_step) for q in self.QSHIOAs.values()]
+            delta = [q.compute_delta(self.order, self.vtol, self.max_step) for q in self.HOHAs.values()]
             # next step size is the minimum delta
             time_step = min(delta)
             calculation_end = T.time()
@@ -72,7 +73,7 @@ class Simulator:
                 time_step = self.max_time - time
 
             # update the state variables
-            for q in self.QSHIOAs.values():
+            for q in self.HOHAs.values():
                 q.intra_location_transition(time_step)
                 q.update_O()
 
@@ -86,13 +87,13 @@ class Simulator:
 
     def exchange_value(self, index=0):
         for line in self.Lines:
-            o = self.QSHIOAs[ line['srcBlockName'] ].O[ line['srcVarName'] ]
+            o = self.HOHAs[ line['srcBlockName'] ].O[ line['srcVarName'] ]
             output = o.get_value(index)
-            self.QSHIOAs[ line['dstBlockName'] ].I[ line['dstVarName'] ].set_value(output, index)
+            self.HOHAs[ line['dstBlockName'] ].I[ line['dstVarName'] ].set_value(output, index)
 
     def csv_record_system_state(self, time):
         row = [time]
-        for q in self.QSHIOAs.values():
+        for q in self.HOHAs.values():
             row += q.get_current_state()
         self.rows.append(row) # save multiple rows
         # don't open the file for every line,
@@ -108,7 +109,7 @@ class Simulator:
     def csv_setup(self):
         # this is the 1st row, with column titles
         row = ["Time"]
-        for name, q in self.QSHIOAs.items():
+        for name, q in self.HOHAs.items():
             row.append(str(name) + " location")
             row += q.get_variable_names()
     

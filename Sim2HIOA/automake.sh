@@ -1,3 +1,4 @@
+mkdir build
 cd src
 javac -d ../build -cp ".:../lib/*" SimQSS.java
 
