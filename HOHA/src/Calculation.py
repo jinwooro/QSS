@@ -1,7 +1,7 @@
 import sympy as S
 import math
 from mpmath import mp, findroot
-from scipy.optimize import minimize_scalar
+from scipy.optimize import minimize_scalar, brent
 import numpy as np
 
 # frequently used variable
@@ -28,17 +28,24 @@ def filter_positive_real_roots(roots):
 # larger than the requirement 
 def calculate_validity_time (Lagranges, LTE, order, max_step):
     time = max_step # max time
-    for eq in Lagranges: 
-        res = minimize_scalar(eq, bounds = [0, time], method='bounded')
-        if res.fun == 0:
-            continue # this will make the Lagrange term zero
-        else: 
-            # e = 1/M, where M is the maximum value of the largrange term
-            e = abs(res.fun)
-            # calculate the maximum possible step size
-            step = (LTE * math.factorial(order + 1) / e) ** (1 / (order + 1))
-            if step < time:
-                time = step
+    for eq in Lagranges:
+        # if the Lagrange expression is just a constant, i.e., has no t variable, then skip
+        def equation(t):
+            return (eq(t))
+        
+        try:
+            res = minimize_scalar(equation, bounds =(0, time), method='bounded')
+            if res.fun == 0:
+                continue # this will make the Lagrange term zero
+            else: 
+                # e = 1/M, where M is the maximum value of the largrange term
+                e = abs(res.fun)
+                # calculate the maximum possible step size
+                step = (LTE * math.factorial(order + 1) / e) ** (1 / (order + 1))
+                if step < time:
+                    time = step
+        except:
+            print(f"something wrong with solving the equation")
     return time
 
 def calculate_zero_crossing_time(guard_set, Var):
@@ -49,7 +56,7 @@ def calculate_zero_crossing_time(guard_set, Var):
 
         # g contains derivative expressions for this guard. Substitute the variables with numbers.
         derivatives = [ substitution(ele, Var) for ele in g ]
-
+       
         # Obtain the taylor coefficients of this guard
         taylor_coefficients = []
         for i in range(0, len(derivatives)):

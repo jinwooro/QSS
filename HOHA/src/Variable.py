@@ -1,4 +1,5 @@
 import sympy as S
+import numbers
 
 class Variable:
     def __init__(self, data):
@@ -46,5 +47,6 @@ class Variable:
         return self.name + " = " + str(self.values)
 
     def __getitem__(self, i):
+        return float(self.values[i].evalf())
         return self.values[i]
     
